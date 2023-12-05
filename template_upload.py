@@ -116,82 +116,58 @@ for filename in filenames:
         #                                                     uploader = uploader)
         # logfile.append(f"dataset Processor: {uploader['repository']}")
 
-    try:
-        logfile.append('=== Inserting Dataset Database ===')
-        uploader['database'] = nu.insert_dataset_database(cur = cur,
-                                                        yml_dict = yml_dict,
-                                                        uploader = uploader)
-        logfile.append(f"Dataset Database: {uploader['database']}")
-        test_dict['database'] = True
-    except Exception as e:
-        test_dict['database'] = False
-        logfile.append(f"Database Error: {e}")
+    logfile.append('=== Inserting Dataset Database ===')
+    uploader['database'] = nu.insert_dataset_database(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    uploader = uploader)
+    logfile.append(f"Dataset Database: {uploader['database']}")
 
-    try:
-        logfile.append('=== Inserting Samples ===')
-        uploader['samples'] = nu.insert_sample(cur, 
-                                            yml_dict = yml_dict,
-                                            csv_template = csv_template,
-                                            uploader = uploader)
-        logfile.append(f"Dataset Samples: {uploader['samples']}")
-        test_dict['samples'] = True
-    except Exception as e:
-        test_dict['samples'] = False
-        logfile.append(f"Samples Error: {e}")
-
-    try:
-        logfile.append('=== Inserting Sample Analyst ===')
-        uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
-                                            yml_dict = yml_dict,
-                                            csv_template = csv_template,
-                                            uploader = uploader)
-        logfile.append(f"Sample Analyst: {uploader['sampleAnalyst']}")
-        test_dict['sampleAnalyst'] = True
-    except Exception as e:
-        test_dict['sampleAnalyst'] = False
-        logfile.append(f"Sample Analysts Error: {e}")
-
-    try:
-        logfile.append('=== Inserting Sample Age ===')
-        uploader['sampleAge'] = nu.insert_sample_age(cur, 
-                                            yml_dict = yml_dict,
-                                            csv_template = csv_template,
-                                            uploader = uploader)
-        logfile.append(f"Sample Age: {uploader['sampleAge']}")
-        test_dict['sampleAge'] = True
-    except Exception as e:
-        test_dict['sampleAge'] = False
-        logfile.append(f"Sample Age Error: {e}")
-
-    try:
-        logfile.append('=== Inserting Data ===')
-        uploader['data'] = nu.insert_data(cur, 
+# Not yet
+    logfile.append('=== Inserting Samples ===')
+    uploader['samples'] = nu.insert_sample(cur, 
                                         yml_dict = yml_dict,
                                         csv_template = csv_template,
                                         uploader = uploader)
-        logfile.append(f"Data: {uploader['data']}")
-        test_dict['data'] = True
-    except Exception as e:
-        test_dict['data'] = False
-        logfile.append(f"Data Error: {e}")
+    logfile.append(f"Dataset Samples: {uploader['samples']}")
+
+    logfile.append('=== Inserting Sample Analyst ===')
+    uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
+                                        yml_dict = yml_dict,
+                                        csv_template = csv_template,
+                                        uploader = uploader)
+    logfile.append(f"Sample Analyst: {uploader['sampleAnalyst']}")
+
+    logfile.append('=== Inserting Sample Age ===')
+    uploader['sampleAge'] = nu.insert_sample_age(cur, 
+                                        yml_dict = yml_dict,
+                                        csv_template = csv_template,
+                                        uploader = uploader)
+    logfile.append(f"Sample Age: {uploader['sampleAge']}")
+
+    logfile.append('=== Inserting Data ===')
+    uploader['data'] = nu.insert_data(cur, 
+                                    yml_dict = yml_dict,
+                                    csv_template = csv_template,
+                                    uploader = uploader)
+    logfile.append(f"Data: {uploader['data']}")
 
     modified_filename = filename.replace('data/', 'data/upload_logs/')
     with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
         for i in logfile:
             writer.write(i)
             writer.write('\n')
-
-    all_true = all(value for value in test_dict.values())
+    
+    all_true = all([uploader[key]['valid'] for key in uploader if 'valid' in uploader[key]])
 
     if all_true:
         print(f"{filename} was uploaded.")
-        conn.commit()
-        #conn.rollback()
+        #conn.commit()
+        conn.rollback()
     else:
         if not os.path.exists(corrupted_files):
             os.makedirs(corrupted_files)
         corrupted_path = os.path.join(corrupted_files, os.path.basename(filename))
-        #os.replace(filename, corrupted_path)
+        os.replace(filename, corrupted_path)
         print(f"filename {filename} could not be uploaded.\nMoved {filename} to the 'corrupted_files' folder.")
 
         conn.rollback()
