@@ -1,10 +1,11 @@
 import logging
+import numpy as np
 from .pull_params import pull_params
 
 def insert_site(cur, yml_dict, csv_template):
     """_Insert a site to Neotoma_
 
-    def insertSite(cur, yml_dict, csv_template)
+    Inserts site data into Neotoma.
 
     Args:
         cur (_psycopg2.extensions.cursor_): _A cursor pointing to the Neotoma 
@@ -13,8 +14,12 @@ def insert_site(cur, yml_dict, csv_template):
         csv_template (_dict_): _The csv file with the required data to be uploaded._
 
     Returns:
-        _int_: _The integer value of the newly created siteid from the Neotoma Database._
+        results_dict (dict): A dictionary containing information about the inserted site.
+            'siteid' (int): IDs for the inserted site.
+            'valid' (bool): Indicates if insertions were successful.
     """
+    results_dict = {'siteid': np.nan, 'valid': False}
+    
     site_query = """
         SELECT ts.insertsite(_sitename := %(sitename)s, 
                              _altitude := %(altitude)s,
@@ -25,7 +30,7 @@ def insert_site(cur, yml_dict, csv_template):
                              _north := %(ns)s,
                              _west := %(ew)s,
                              _south := %(ns)s)
-                """
+                 """
     try:
         # Here we're just checking to make sure that we do have a site coordinate
         # and geometry.
@@ -64,8 +69,22 @@ def insert_site(cur, yml_dict, csv_template):
     inputs['ew'] = coords[0]
     inputs['ns'] = coords[1]
 
-    cur.execute(site_query,
-                inputs)
+    try:
+        cur.execute(site_query,
+                    inputs)
+        results_dict['siteid'] = cur.fetchone()[0]
+        results_dict['valid'] = True
+
+    except Exception as e:
+        logging.error(f"Site Data is not correct. Error message: {e}")
+        error_query = """
+                      insert into ndb.sites (sitename, altitude, area, sitedescription, notes, geog)
+                      values ('placeholder', NULL, NULL, NULL, NULL, NULL)
+                      RETURNING siteid
+                      """
+
+        cur.execute(error_query)
+        results_dict['siteid'] = cur.fetchone()[0]
+        results_dict['valid'] = False
     
-    siteid = cur.fetchone()[0]
-    return siteid
+    return results_dict

@@ -5,6 +5,23 @@ import numpy as np
 from .pull_params import pull_params
 
 def insert_chronology(cur, yml_dict, csv_template, uploader):
+    """
+    Inserts chronology data into Neotoma.
+
+    Args:
+        cur (cursor object): Database cursor to execute SQL queries.
+        yml_dict (dict): Dictionary containing YAML data.
+        csv_template (str): File path to the CSV template.
+        uploader (dict): Dictionary containing uploader details.
+
+    Returns:
+        results_dict (dict): Dictionary containing information about the inserted chronology.
+        Contains keys:
+            'chronology': ID of the inserted chronology.
+            'valid': Boolean indicating if the insertion was successful.
+    """
+    results_dict = {'chronology': np.nan, 'valid': False}
+
     addChron = """
     SELECT ts.insertchronology(_collectionunitid := %(collunitid)s,
                                _agetypeid := %(agetype)s,
@@ -39,14 +56,29 @@ def insert_chronology(cur, yml_dict, csv_template, uploader):
     else:
         logging.error("The provided age type is incorrect..")
 
-    cur.execute(addChron, {'collunitid': int(uploader['collunitid']), 
-                           'contactid': contactid,
-                           'chronologyname': 'Default 210Pb',  # This is a default but might be better to specify in template
-                           'agetype': agetypeid, # Comming from column X210Pb.Date.Units which should be linked to params3
-                           'dateprepared': datetime.datetime.today().date(),  # Default but should be coming from template s
-                           'agemodel': inputs['agemodel'][0],
-                           'maxage': int(max(inputs_age['age'])), 
-                           'minage': int(min(inputs_age['age']))})
-    chronid = cur.fetchone()[0]
+    try:
+        cur.execute(addChron, {'collunitid': int(uploader['collunitid']['collunitid']), 
+                            'contactid': contactid,
+                            'chronologyname': 'Default 210Pb',  # This is a default but might be better to specify in template
+                            'agetype': agetypeid, # Comming from column X210Pb.Date.Units which should be linked to params3
+                            'dateprepared': datetime.datetime.today().date(),  # Default but should be coming from template s
+                            'agemodel': inputs['agemodel'][0],
+                            'maxage': int(max(inputs_age['age'])), 
+                            'minage': int(min(inputs_age['age']))})
+        results_dict['chronology'] = cur.fetchone()[0]
+        results_dict['valid'] = True
+
+    except Exception as e:
+        logging.error(f"Chronology Data is not correct. Error message: {e}")
+        cur.execute(addChron, {'collunitid': int(uploader['collunitid']['collunitid']), 
+                            'contactid': contactid,
+                            'chronologyname': 'NULL', 
+                            'agetype': np.nan, 
+                            'dateprepared': datetime.datetime.today().date(),  
+                            'agemodel': np.nan,
+                            'maxage': np.nan, 
+                            'minage': np.nan})
+        results_dict['chronology'] = cur.fetchone()[0]
+        results_dict['valid'] = False
     
-    return chronid
+    return results_dict

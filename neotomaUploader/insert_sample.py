@@ -30,7 +30,10 @@ def insert_sample(cur, yml_dict, csv_template, uploader):
 
     # There might be several loops so I might need a for loop here
     samples = []
-
+    print("aunits")
+    print(uploader['anunits'])
+    print("inputs")
+    print(inputs2)
     # Assert aunits and samples are same in length
     for j, val in enumerate(uploader['anunits']):
         get_taxonid = """SELECT * FROM ndb.taxa WHERE taxonname %% %(taxonname)s;"""
