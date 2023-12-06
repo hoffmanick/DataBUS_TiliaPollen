@@ -68,7 +68,7 @@ def insert_site(cur, yml_dict, csv_template):
         logging.error("Coordinates are improperly formatted. They must be in the form 'LAT, LONG' [-90 -> 90] and [-180 -> 180].")
     inputs['ew'] = coords[0]
     inputs['ns'] = coords[1]
-
+    
     try:
         cur.execute(site_query,
                     inputs)
