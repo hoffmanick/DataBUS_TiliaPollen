@@ -1,5 +1,4 @@
 import logging
-import numpy as np
 from .pull_params import pull_params
 
 def insert_dataset (cur, yml_dict, csv_template, uploader):
@@ -18,7 +17,7 @@ def insert_dataset (cur, yml_dict, csv_template, uploader):
             'valid' (bool): Indicates if insertions were successful.
        
     """
-    results_dict = {'datasetid': np.nan, 'valid': False}
+    results_dict = {'datasetid': None, 'valid': False}
     dataset_query = """SELECT ts.insertdataset(_collectionunitid:= %(collunitid)s,
                                                _datasettypeid := %(datasettypeid)s,
                                                _datasetname := %(datasetname)s);"""
@@ -30,7 +29,8 @@ def insert_dataset (cur, yml_dict, csv_template, uploader):
                       inputs.items()))
     try:
         cur.execute(dataset_query, {'collunitid': int(uploader['collunitid']['collunitid']),
-                                    'datasettypeid': int(5), #inputs['datasettypeid'],
+                                    'datasettypeid': int(5), 
+                                    #'datasettypeid': inputs['datasettypeid'],
                                     'datasetname': inputs['datasetname']})
         results_dict['datasetid'] = cur.fetchone()[0]
         results_dict['valid'] = True
@@ -38,7 +38,7 @@ def insert_dataset (cur, yml_dict, csv_template, uploader):
     except Exception as e:
         logging.error(f"Dataset Info is not correct. {e}")
         cur.execute(dataset_query, {'collunitid': int(uploader['collunitid']['collunitid']),
-                                    'datasettypeid': np.nan,
+                                    'datasettypeid': None,
                                     'datasetname': None})
         results_dict['datasetid'] = cur.fetchone()[0]
         results_dict['valid'] = False

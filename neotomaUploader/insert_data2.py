@@ -25,9 +25,10 @@ def insert_data(cur, yml_dict, csv_template, uploader):
                                             _variableunitsid := %(variableunitsid)s,
                                             _variablecontextid := %(variablecontextid)s)
                 """
-
+    all_data_points = []
     for i in range(len(uploader['samples']['samples'])):
-        counter = 0
+        data_points_for_sample = []  # Collect data points for each sample
+        counter =0
         for val_dict in inputs:
             # Getting TaxonID
             get_taxonid = """SELECT * FROM ndb.taxa WHERE taxonname %% %(taxonname)s;"""
@@ -60,23 +61,34 @@ def insert_data(cur, yml_dict, csv_template, uploader):
                                         'variableunitsid': unitsid,
                                         'variablecontextid': None}) # inputs[i]['variablecontextid']})
                 varid = cur.fetchone()[0]
-            
+
             try:
-                cur.execute(data_query, {'sampleid': int(uploader['samples']['samples'][i]),
-                                        'variableid': int(varid),
-                                        'value': val_dict['value'][i]})
-                result = cur.fetchone()[0]
-                results_dict['data_points'].append(result)
+                val_dict['value'] = [None if item == None else float(item) for item in val_dict['value']]
+                data_points_for_sample.append((int(uploader['samples']['samples'][i]),
+                                              int(varid),
+                                              val_dict['value'][i]))
                 results_dict['valid'].append(True)
 
             except Exception as e:
                 logging.error(f"Samples Data is not correct. {e}")
-                cur.execute(data_query, {'sampleid': int(uploader['samples']['samples'][i]),
-                                         'variableid': None,
-                                         'value': None})
-                result = cur.fetchone()[0]
-                results_dict['data_points'].append(result)
+                data_points_for_sample.append((int(uploader['samples']['samples'][i]),
+                                              None,
+                                              None))
                 results_dict['valid'].append(False)
-    
+        
+        all_data_points.extend(data_points_for_sample)  # Extend data points for all samples
+
+    # Insert all data points at once
+    try:
+        print(all_data_points)
+        cur.executemany(data_query, all_data_points)
+        # Assuming 'data_query' can handle multiple inserts at once
+        results_dict['valid'] = results_dict['valid'].append(True)
+        #results_dict['data_points'].extend(cur.fetchone())
+
+    except Exception as e:
+        logging.error(f"Error inserting data: {e}")
+        results_dict['valid'] = results_dict['valid'].append(False)
+
     results_dict['valid'] = all(results_dict['valid'])
     return results_dict

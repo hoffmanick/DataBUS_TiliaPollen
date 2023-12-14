@@ -1,6 +1,5 @@
 import logging
 from .pull_params import pull_params
-import numpy as np
 import datetime
 
 def insert_sample(cur, yml_dict, csv_template, uploader):
@@ -37,8 +36,7 @@ def insert_sample(cur, yml_dict, csv_template, uploader):
     inputs = pull_params(params, yml_dict, csv_template, 'ndb.samples')
     inputs = dict(map(lambda item: (item[0], None if all([i is None for i in item[1]]) else item[1]),
                       inputs.items()))
-
-    # Assert aunits and samples are same in length
+  
     for j in range(len(uploader['anunits']['anunits'])):
         get_taxonid = """SELECT * FROM ndb.taxa WHERE taxonname %% %(taxonname)s;"""
         cur.execute(get_taxonid, {'taxonname': inputs['taxonname']})
@@ -76,5 +74,7 @@ def insert_sample(cur, yml_dict, csv_template, uploader):
             results_dict['samples'].append(sampleid)
             results_dict['valid'].append(False)
 
+    assert len(uploader['anunits']['anunits']) == len(results_dict['samples']), "Analysis Units and Samples do not have same length"
+    
     results_dict['valid'] = all(results_dict['valid'])
     return results_dict

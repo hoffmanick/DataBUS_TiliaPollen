@@ -1,5 +1,4 @@
 import logging
-import numpy as np
 from .pull_params import pull_params
 
 def insert_collunit(cur, yml_dict, csv_template, uploader):
@@ -16,7 +15,7 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
     Returns:
         _int_: _The integer value of the newly created siteid from the Neotoma Database._
     """
-    results_dict = {'collunitid': np.nan, 'valid': False}
+    results_dict = {'collunitid': None, 'valid': False}
     try:
         # Here we're just checking to make sure that we do have a site coordinate
         # and geometry.
@@ -55,7 +54,9 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
                 'collname': collname,
                 'siteid' : uploader['siteid']['siteid'], 
                 'colltypeid': 3, # to do: put it as input
+                #'colltypeid': inputs['colltypeid'][0],
                 'depenvtid': 19, # to do: put it as input
+                #'depenvtid': inputs['depenvtid'][0],
                 'newdate': inputs['colldate'][0],
                 'location': inputs['location'][0],
                 'ew': coords[0],  

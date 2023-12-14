@@ -30,20 +30,28 @@ def insert_sample_age(cur, yml_dict, csv_template, uploader):
     params = ['age']
     inputs = pull_params(params, yml_dict, csv_template, 'ndb.sampleages')
 
-    inputs['age'] = [float(value) if value != 'NA' else np.nan for value in inputs['age']]
-    inputs['uncertainty'] = [float(value) if value != 'NA' else np.nan for value in inputs['uncertainty']]
+    inputs['age'] = [float(value) if value != 'NA' else None for value in inputs['age']]
+    inputs['uncertainty'] = [float(value) if value != 'NA' else None for value in inputs['uncertainty']]
 
     for i in range(len(uploader['samples']['samples'])):
-        # Matching the different kinds of  taxons
-        # Have to ask about this, why is it that there are multiple taxon in the same row
+        
+        #index = i % len(inputs['age'])
+        try:
+            age_younger = inputs['age'][i]-inputs['uncertainty'][i]
+        except Exception as e:
+            age_younger = None
+        
+        try:
+            age_older = inputs['age'][i]+inputs['uncertainty'][i]
+        except Exception as e:
+            age_older = None
 
-        index = i % len(inputs['age'])
         try:
             cur.execute(sample_age_query, {'sampleid': uploader['samples']['samples'][i],
                                            'chronologyid': uploader['chronology']['chronology'],
-                                           'age': inputs['age'][index],
-                                           'ageyounger': inputs['age'][index]-inputs['uncertainty'][index], 
-                                           'ageolder': inputs['age'][index]+inputs['uncertainty'][index]})
+                                           'age': inputs['age'][i],
+                                           'ageyounger': age_younger, 
+                                           'ageolder': age_older})
             
             result = cur.fetchone()[0]
             results_dict['sampleAge'].append(result)

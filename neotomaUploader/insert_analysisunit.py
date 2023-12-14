@@ -1,6 +1,3 @@
-from .retrieve_dict import retrieve_dict
-from .clean_column import clean_column
-import numpy as np
 import logging
 from .pull_params import pull_params
 
@@ -54,11 +51,11 @@ def insert_analysisunit(cur, yml_dict, csv_template, uploader):
         except Exception as e:
             logging.error(f"Analysis Unit Data is not correct. Error message: {e}")
             cur.execute(add_unit, {'collunitid': uploader['collunitid']['collunitid'],
-                                    'depth': np.nan,
-                                    'thickness': np.nan,
-                                    'faciesid': np.nan,
-                                    'mixed': np.nan,
-                                    'igsn': np.nan,
+                                    'depth': None,
+                                    'thickness': None,
+                                    'faciesid': None,
+                                    'mixed': None,
+                                    'igsn': None,
                                     'notes': 'NULL'})
             anunitid = cur.fetchone()[0]
             results_dict['anunits'].append(anunitid)

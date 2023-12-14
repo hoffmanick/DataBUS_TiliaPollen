@@ -1,5 +1,4 @@
 import logging
-import numpy as np
 from .pull_params import pull_params
 
 def insert_chron_control(cur, yml_dict, csv_template, uploader):
@@ -40,8 +39,8 @@ def insert_chron_control(cur, yml_dict, csv_template, uploader):
     params_age = ['age']
     inputs_age = pull_params(params_age, yml_dict, csv_template, 'ndb.sampleages')
 
-    inputs_age['age'] = [float(value) if value != 'NA' else np.nan for value in inputs_age['age']]
-    inputs_age['uncertainty'] = [float(value) if value != 'NA' else np.nan for value in inputs_age['uncertainty']]
+    inputs_age['age'] = [float(value) if value != 'NA' else None for value in inputs_age['age']]
+    inputs_age['uncertainty'] = [float(value) if value != 'NA' else None for value in inputs_age['uncertainty']]
     
     agetype = list(set(inputs_age['unitcolumn']))
     agetype = agetype[0]
@@ -56,6 +55,16 @@ def insert_chron_control(cur, yml_dict, csv_template, uploader):
             agetypeid = 1
         else:
             logging.error("The provided age type is incorrect..")
+
+        try:
+            ageyoung = inputs_age['age'][i] + inputs_age['uncertainty'][i]
+        except Exception as e:
+            ageyoung = None
+        
+        try:
+            ageold = inputs_age['age'][i] -  inputs_age['uncertainty'][i]
+        except Exception as e:
+            ageold = None
         try:
             cur.execute(addcontrol, {'chronid': int(uploader['chronology']['chronology']),
                                     'annuid': int(uploader['anunits']['anunits'][i]),
@@ -64,8 +73,8 @@ def insert_chron_control(cur, yml_dict, csv_template, uploader):
                                     'agetypeid': agetypeid,
                                     'age': inputs_age['age'][i],
                                     'notes':inputs['notes'][i],
-                                    'ageyoung': inputs_age['age'][i] + inputs_age['uncertainty'][i],
-                                    'ageold': inputs_age['age'][i] -  inputs_age['uncertainty'][i]})
+                                    'ageyoung': ageyoung,
+                                    'ageold': ageold})
             results_dict['chron_control_units'].append(cur.fetchone()[0])
             results_dict['valid'].append(True)
 
@@ -73,13 +82,13 @@ def insert_chron_control(cur, yml_dict, csv_template, uploader):
             logging.error(f"Chronology Data is not correct. Error message: {e}")
             cur.execute(addcontrol, {'chronid': int(uploader['chronology']['chronology']),
                                     'annuid': int(uploader['anunits']['anunits'][i]),
-                                    'depth': np.nan,
-                                    'thickness': np.nan,
-                                    'agetypeid': np.nan,
-                                    'age': np.nan,
-                                    'notes': 'NULL',
-                                    'ageyoung': np.nan,
-                                    'ageold': np.nan})
+                                    'depth': None,
+                                    'thickness': None,
+                                    'agetypeid': None,
+                                    'age': None,
+                                    'notes': None,
+                                    'ageyoung': None,
+                                    'ageold': None})
             results_dict['chron_control_units'].append(cur.fetchone()[0])
             results_dict['valid'].append(False)
     results_dict['valid'] = all(results_dict['valid'])

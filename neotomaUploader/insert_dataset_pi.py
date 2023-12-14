@@ -13,10 +13,10 @@ def insert_dataset_pi(cur, yml_dict, csv_template, uploader):
 
     Returns:
         results_dict (dict): A dictionary containing information about the inserted dataset principal investigators.
-            - 'contids' (list): List of dictionaries containing details of the contacts, including their IDs and order.
+            - 'dataset_pi_ids' (list): List of dictionaries containing details of the contacts, including their IDs and order.
             - 'valid' (bool): Indicates if all insertions were successful.
     """
-    results_dict = {'contids': [], 'valid': []}
+    results_dict = {'dataset_pi_ids': [], 'valid': []}
     params = ['contactname']
     inputs = pull_params(params, yml_dict, csv_template, 'ndb.contacts')
     
@@ -46,6 +46,6 @@ def insert_dataset_pi(cur, yml_dict, csv_template, uploader):
                                    'piorder': None})
             results_dict['valid'].append(False)
 
-    results_dict['contids'] = contids
+    results_dict['dataset_pi_ids'] = contids
     results_dict['valid'] = all(results_dict['valid'])
     return results_dict

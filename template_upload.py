@@ -7,7 +7,7 @@ import neotomaUploader as nu
 
 load_dotenv()
 
-data = json.loads(os.getenv('PGDB_LOCAL'))
+data = json.loads(os.getenv('PGDB_LOCAL2'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
 
@@ -59,6 +59,7 @@ for filename in filenames:
         # logfile.append(f"Geopolitical Unit: {uploader['geopolid']}")
 
     logfile.append('=== Inserting Collection Units ===')
+    # Placeholders are present
     uploader['collunitid'] = nu.insert_collunit(cur = cur,
                                             yml_dict = yml_dict,
                                             csv_template = csv_template,
@@ -73,6 +74,7 @@ for filename in filenames:
     logfile.append(f"anunits: {uploader['anunits']}")
 
     logfile.append('=== Inserting Chronology ===')
+    # Placeholders exist
     uploader['chronology'] = nu.insert_chronology(cur = cur,
                                                 yml_dict = yml_dict,
                                                 csv_template = csv_template,
@@ -87,6 +89,7 @@ for filename in filenames:
     logfile.append(f"chroncontrol: {uploader['chroncontrol']}")
 
     logfile.append('=== Inserting Dataset ===')
+    # Placeholders exist
     uploader['datasetid'] = nu.insert_dataset(cur = cur,
                                             yml_dict = yml_dict,
                                             csv_template = csv_template,
@@ -144,6 +147,7 @@ for filename in filenames:
     logfile.append(f"Sample Age: {uploader['sampleAge']}")
 
     logfile.append('=== Inserting Data ===')
+    # TaxonID PlaceHolder
     uploader['data'] = nu.insert_data(cur, 
                                     yml_dict = yml_dict,
                                     csv_template = csv_template,
