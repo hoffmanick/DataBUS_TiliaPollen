@@ -51,16 +51,14 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
                                        _gpslongitude := %(ew)s)
                 """
     inputs = {'handle': collname[:10], # Must be smaller than 10 chars
-                'collname': collname,
-                'siteid' : uploader['siteid']['siteid'], 
-                'colltypeid': 3, # to do: put it as input
-                #'colltypeid': inputs['colltypeid'][0],
-                'depenvtid': 19, # to do: put it as input
-                #'depenvtid': inputs['depenvtid'][0],
-                'newdate': inputs['colldate'][0],
-                'location': inputs['location'][0],
-                'ew': coords[0],  
-                'ns': coords[1]}
+              'collname': collname,
+              'siteid' : uploader['siteid']['siteid'], 
+              'colltypeid': 3, # inputs['colltypeid'][0],
+              'depenvtid': 19, # inputs['depenvtid'][0],
+              'newdate': inputs['colldate'][0],
+              'location': inputs['location'][0],
+              'ew': coords[0],  
+              'ns': coords[1]}
     
     try:
         cur.execute(collunit_query,
@@ -70,17 +68,16 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
     
     except Exception as e:
         logging.error(f"Collection Unit Data is not correct. Error message: {e}")
-        error_query = """
-        INSERT INTO ndb.collectionunits
-                        (handle, siteid, colltypeid, depenvtid, collunitname, colldate, 
-                         colldevice, gpslatitude, gpslongitude, gpsaltitude, gpserror, 
-						 waterdepth, substrateid, slopeaspect, slopeangle, location, notes)
-        VALUES  ('placeholder', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-                  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
-
-        RETURNING collectionunitid
-        """
-        cur.execute(error_query)
+        inputs = {'handle': 'Placeholder',
+                  'collname': None,
+                  'siteid' : uploader['siteid']['siteid'], 
+                  'colltypeid': None,
+                  'depenvtid': None,
+                  'newdate': None,
+                  'location': None,
+                  'ew': None,  
+                  'ns': None}
+        cur.execute(collunit_query, inputs)
         results_dict['collunitid'] = cur.fetchone()[0]
         results_dict['valid'] = False
          
