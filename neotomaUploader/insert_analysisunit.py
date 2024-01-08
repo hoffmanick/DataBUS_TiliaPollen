@@ -37,14 +37,18 @@ def insert_analysisunit(cur, yml_dict, csv_template, uploader):
             mixed_input = inputs['mixed'][i]
         
         try:
-            cur.execute(add_unit, {'collunitid': uploader['collunitid']['collunitid'],
+            inputs_dict = {'collunitid': uploader['collunitid']['collunitid'],
                                     'depth': inputs['depth'][i],
                                     'thickness': inputs['thickness'][i],
                                     'faciesid': inputs['faciesid'][i],
                                     'mixed': mixed_input,
                                     'igsn': inputs['igsn'][i],
-                                    'notes': inputs['notes'][i]})
+                                    'notes': inputs['notes'][i]}
+            cur.execute(add_unit, inputs_dict)
             anunitid = cur.fetchone()[0]
+            #print('Review Analysis Unit')
+            #print(anunitid)
+            #print(inputs_dict)
             results_dict['anunits'].append(anunitid)
             results_dict['valid'].append(True)
         
@@ -56,7 +60,7 @@ def insert_analysisunit(cur, yml_dict, csv_template, uploader):
                                     'faciesid': None,
                                     'mixed': None,
                                     'igsn': None,
-                                    'notes': 'NULL'})
+                                    'notes': 'None'})
             anunitid = cur.fetchone()[0]
             results_dict['anunits'].append(anunitid)
             results_dict['valid'].append(False)

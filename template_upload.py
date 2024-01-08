@@ -7,11 +7,13 @@ import neotomaUploader as nu
 
 load_dotenv()
 
-data = json.loads(os.getenv('PGDB_LOCAL2'))
+data = json.loads(os.getenv('PGDB_LOCAL'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
 
 cur = conn.cursor()
+# Be able to read inserted data that has not been committed yet
+cur.execute("BEGIN ISOLATION LEVEL READ UNCOMMITTED")
 
 args = nu.parse_arguments()
 

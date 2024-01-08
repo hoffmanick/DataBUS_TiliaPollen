@@ -47,15 +47,16 @@ def insert_sample(cur, yml_dict, csv_template, uploader):
             taxonid = None
 
         try:    
-            cur.execute(sample_query, {'analysisunitid': int(uploader['anunits']['anunits'][j]),
-                                    'datasetid': int(uploader['datasetid']['datasetid']),
-                                    'samplename': inputs['samplename'],
-                                    'sampledate': inputs['sampledate'], # datetime.datetime.today().date(),
-                                    'analysisdate': inputs['analysisdate'],
-                                    'taxonid': taxonid,
-                                    'labnumber': inputs['lab_number'],
-                                    'prepmethod': inputs['prepmethod'],
-                                    'notes': inputs['notes']})
+            inputs_dict = {'analysisunitid': int(uploader['anunits']['anunits'][j]),
+                           'datasetid': int(uploader['datasetid']['datasetid']),
+                           'samplename': inputs['samplename'],
+                           'sampledate': inputs['sampledate'],
+                           'analysisdate': inputs['analysisdate'],
+                           'taxonid': taxonid,
+                           'labnumber': inputs['lab_number'],
+                           'prepmethod': inputs['prepmethod'],
+                           'notes': inputs['notes']}
+            cur.execute(sample_query, inputs_dict)
             sampleid = cur.fetchone()[0]
             results_dict['samples'].append(sampleid)
             results_dict['valid'].append(True)

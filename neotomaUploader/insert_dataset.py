@@ -28,10 +28,10 @@ def insert_dataset (cur, yml_dict, csv_template, uploader):
     inputs = dict(map(lambda item: (item[0], None if all([i is None for i in item[1]]) else item[1]),
                       inputs.items()))
     try:
-        cur.execute(dataset_query, {'collunitid': int(uploader['collunitid']['collunitid']),
-                                    'datasettypeid': int(5), 
-                                    #'datasettypeid': inputs['datasettypeid'],
-                                    'datasetname': inputs['datasetname']})
+        inputs_dict = {'collunitid': int(uploader['collunitid']['collunitid']),
+                       'datasettypeid': int(3), # inputs['datasettypeid'],
+                       'datasetname': inputs['datasetname']}
+        cur.execute(dataset_query, inputs_dict)
         results_dict['datasetid'] = cur.fetchone()[0]
         results_dict['valid'] = True
     
