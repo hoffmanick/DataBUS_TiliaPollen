@@ -77,13 +77,14 @@ def insert_site(cur, yml_dict, csv_template):
 
     except Exception as e:
         logging.error(f"Site Data is not correct. Error message: {e}")
-        error_query = """
-                      insert into ndb.sites (sitename, altitude, area, sitedescription, notes, geog)
-                      values ('placeholder', NULL, NULL, NULL, NULL, NULL)
-                      RETURNING siteid
-                      """
+        inputs = {"sitename": 'Placeholder', 
+                  "altitude": None,
+                  "area": None,
+                  "sitedescription": None, 
+                  "notes": None, 
+                  "geog": None}
 
-        cur.execute(error_query)
+        cur.execute(site_query, inputs)
         results_dict['siteid'] = cur.fetchone()[0]
         results_dict['valid'] = False
     
