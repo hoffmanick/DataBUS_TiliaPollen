@@ -19,6 +19,8 @@ for key, value in data.items():
 
 print(data_list[0])
 
+units_entries = list()
+uncertainty_entries = list()
 for entry in data_list:
     if entry['notes'] is None:
         del entry['notes']
@@ -35,7 +37,16 @@ for entry in data_list:
     if entry['units'] is None:
         del entry['units']
     if entry['unitcolumn'] is None:
-        del entry['unitcolumn']        
+        del entry['unitcolumn']   
+    else:
+        unit_dict = {'column': entry['unitcolumn'],
+                     'neotoma': 'ndb.variableunits.variableunits',
+                     'notes': entry['notes'],
+                     'required': False,
+                     'rowwise': True,
+                     'type': entry['type'],
+                     'vocab': entry['vocab']}
+        units_entries.append(unit_dict)   
     if entry['uncertaintycolumn'] is None:
         del entry['uncertaintycolumn']
         del entry['uncertaintybasis']
@@ -43,6 +54,25 @@ for entry in data_list:
         entry['uncertainty'] = {'uncertaintycolumn': entry['uncertaintycolumn'], 
                                 'uncertaintybasis': entry['uncertaintybasis'], 
                                 'unitcolumn': entry['unitcolumn']}
+        uncertainty_dict = {'column': entry['uncertaintycolumn'],
+                            'formatorrange': entry['formatorrange'],
+                            'neotoma': 'ndb.variableunits.variableunits',
+                            'required': False,
+                            'rowwise': True,
+                            'taxonid': entry['taxonid'],
+                            'taxonname': entry['taxonname'],
+                            'type': entry['type'],
+                            'units': entry['units']}
+        uncertainty_entries.append(uncertainty_dict)
+
+data_list = data_list + units_entries + uncertainty_entries
+
+final_dict = {'apiVersion': 'neotoma v2.0',
+              'headers': 2,
+              'kind': 'Development',
+              'databaseid': 37,
+              'lab_number': 5,
+              'metadata': data_list}
 
 with open('new_template.yaml', "w") as f:
-    yaml.dump(data_list, f)
+    yaml.dump(final_dict, f)
