@@ -96,5 +96,5 @@ final_dict = {'apiVersion': 'neotoma v2.0',
               'lab_number': 5,
               'metadata': data_list}
 
-with open('new_template.yaml', "w") as f:
+with open('template.yml', "w") as f:
     yaml.dump(final_dict, f)
