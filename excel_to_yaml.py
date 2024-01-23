@@ -4,8 +4,6 @@ import yaml
 import ast
 
 df = pd.read_excel('GOOD_template_spreadsheet.xlsx')
-print(df.head())
-
 df = df[df['Column']!="—NA—"]
 df = df.replace({np.nan: None})
 
@@ -16,47 +14,36 @@ df['vocab'] = df['vocab'].str.replace("‘", '"')
 df['vocab'] = df['vocab'].str.replace("’", '"')
 #df['vocab'] = df['vocab'].apply(lambda x: ast.literal_eval(x) if x is not None else None)
 
-data = df.groupby('column').apply(lambda x: x.to_dict(orient='index')).to_dict()
+data = df.groupby(['column', 'neotoma']).apply(lambda x: x.to_dict(orient='index')).to_dict()
 
 data_list = []
 
 for key, value in data.items():
     data_list.append(list(value.values())[0])
 
-print(data_list[0])
-
 units_entries = list()
 uncertainty_units_entries = list()
 uncertainty_entries = list()
 for entry in data_list:
-    if entry['units'] is None:
-        del entry['units']
+    if entry['unitcolumn'] is None:
+        del entry['unitcolumn']
     else:
-        units_dict = {'column': entry['units'],
+        units_dict = {'column': entry['unitcolumn'],
                      'neotoma': 'ndb.variableunits.variableunits',
                      'required': False,
                      'rowwise': True,
                      'type': 'string',
                      'vocab': entry['vocab']}
         units_entries.append(units_dict)
-    if entry['unitcolumn'] is None:
-        del entry['unitcolumn']   
-    else:
-        uncertainty_unit_dict = {'column': entry['unitcolumn'],
-                     'neotoma': 'ndb.values',
-                     'notes': entry['notes'],
-                     'required': False,
-                     'rowwise': True,
-                     'type': entry['type'],
-                     'vocab': entry['vocab']}
-        uncertainty_units_entries.append(uncertainty_unit_dict)   
     if entry['uncertaintycolumn'] is None:
         del entry['uncertaintycolumn']
         del entry['uncertaintybasis']
+        del entry['uncertaintyunitcolumn']
     else:
         entry['uncertainty'] = {'uncertaintycolumn': entry['uncertaintycolumn'], 
                                 'uncertaintybasis': entry['uncertaintybasis'], 
-                                'unitcolumn': entry['unitcolumn']}
+                                'unitcolumn': entry['uncertaintyunitcolumn']}
+        
         uncertainty_dict = {'column': entry['uncertaintycolumn'],
                             'formatorrange': entry['formatorrange'],
                             'neotoma': 'ndb.values',
@@ -69,7 +56,15 @@ for entry in data_list:
         uncertainty_entries.append(uncertainty_dict)
         del entry['uncertaintycolumn']
         del entry['uncertaintybasis']
-        del entry['unitcolumn']
+        uncertainty_unit_dict = {'column': entry['uncertaintyunitcolumn'],
+                     'neotoma': 'ndb.values',
+                     'notes': entry['notes'],
+                     'required': False,
+                     'rowwise': True,
+                     'type': entry['type'],
+                     'vocab': entry['vocab']}
+        uncertainty_units_entries.append(uncertainty_unit_dict)
+        del entry['uncertaintyunitcolumn']       
     if entry['vocab'] is None:
         del entry['vocab']
     if entry['formatorrange'] is None:

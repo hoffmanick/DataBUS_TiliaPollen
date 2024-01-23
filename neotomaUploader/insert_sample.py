@@ -31,11 +31,13 @@ def insert_sample(cur, yml_dict, csv_template, uploader):
                                           _notes := %(notes)s)
                     """
     
-    params = ['lab_number', 'sampledate', 'analysisdate', 'labnumber', 'prepmethod', 
+    params = ['labnumber', 'sampledate', 'analysisdate', 'prepmethod', 
               'notes', 'taxonname', 'samplename']       
     inputs = pull_params(params, yml_dict, csv_template, 'ndb.samples')
+
     inputs = dict(map(lambda item: (item[0], None if all([i is None for i in item[1]]) else item[1]),
                       inputs.items()))
+    #inputs['labnumber'] = yml_dict['lab_number']
   
     for j in range(len(uploader['anunits']['anunits'])):
         get_taxonid = """SELECT * FROM ndb.taxa WHERE taxonname %% %(taxonname)s;"""
@@ -53,7 +55,7 @@ def insert_sample(cur, yml_dict, csv_template, uploader):
                            'sampledate': inputs['sampledate'],
                            'analysisdate': inputs['analysisdate'],
                            'taxonid': taxonid,
-                           'labnumber': inputs['lab_number'],
+                           'labnumber': inputs['labnumber'],
                            'prepmethod': inputs['prepmethod'],
                            'notes': inputs['notes']}
             cur.execute(sample_query, inputs_dict)

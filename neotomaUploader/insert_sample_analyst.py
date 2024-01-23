@@ -23,6 +23,8 @@ def insert_sample_analyst(cur, yml_dict, csv_template, uploader):
     
     contids = []
     baseid = 1
+    inputs['contactid'] = list(dict.fromkeys(inputs['contactid']))
+ 
     for i in inputs['contactid']:
         cur.execute(get_contact, {'contactname': i})
         contids.append({'contactname': i, 'id': cur.fetchone()[0], 'order': baseid})

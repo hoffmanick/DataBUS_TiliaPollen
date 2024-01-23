@@ -66,12 +66,13 @@ def insert_site(cur, yml_dict, csv_template):
         assert coords[1] >= -180 and coords[1] <= 180
     except AssertionError:
         logging.error("Coordinates are improperly formatted. They must be in the form 'LAT, LONG' [-90 -> 90] and [-180 -> 180].")
-    inputs['ew'] = coords[0]
-    inputs['ns'] = coords[1]
-    
+    inputs['ns'] = coords[0]
+    inputs['ew'] = coords[1]
+
     try:
         cur.execute(site_query,
                     inputs)
+
         results_dict['siteid'] = cur.fetchone()[0]
         results_dict['valid'] = True
 

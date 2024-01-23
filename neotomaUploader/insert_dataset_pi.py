@@ -17,14 +17,15 @@ def insert_dataset_pi(cur, yml_dict, csv_template, uploader):
             - 'valid' (bool): Indicates if all insertions were successful.
     """
     results_dict = {'dataset_pi_ids': [], 'valid': []}
-    params = ['contactname']
-    inputs = pull_params(params, yml_dict, csv_template, 'ndb.contacts')
+    params = ['contactid']
+    inputs = pull_params(params, yml_dict, csv_template, 'ndb.datasetpis')
     
     get_contact = """SELECT * FROM ndb.contacts WHERE contactname %% %(name)s;"""
     
     baseid = 1
     contids = []
-    for i in inputs['contactname']:
+    inputs['contactid'] = list(dict.fromkeys(inputs['contactid']))
+    for i in inputs['contactid']:
         cur.execute(get_contact, {'name': i})
         contids.append({'name': i, 'id': cur.fetchone()[0], 'order': baseid})
         baseid = baseid + 1

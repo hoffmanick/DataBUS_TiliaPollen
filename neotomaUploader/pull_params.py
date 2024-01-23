@@ -36,10 +36,11 @@ def pull_params(params, yml_dict, csv_template, table):
                             #clean_valor = list(map(lambda x: datetime.datetime.strptime(x, '%Y-%m-%d').date(), chain(*clean_valor)))
                             clean_valor = list(map(lambda x: datetime.datetime.strptime(x, '%Y-%m-%d').date(), clean_valor))
                         case "int":
-                            clean_valor = list(map(int, clean_valor[0]))
+                            clean_valor = list(map(int, clean_valor))
                         case "float":
-                            clean_valor = list(map(float, clean_valor[0]))
-                        case "coordinates (latlong)":
+                            clean_valor = [float(value) if value != 'NA' else None for value in clean_valor]
+                            #clean_valor = list(map(float, clean_valor))
+                        case "coordinates (lat,long)":
                             clean_valor = [float(num) for num in clean_valor[0].split(',')]
                 add_unit_inputs[i] = clean_valor
                 if 'unitcolumn' in val:

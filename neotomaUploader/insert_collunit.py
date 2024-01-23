@@ -57,8 +57,8 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
               'depenvtid': 19, # inputs['depenvtid'][0],
               'newdate': inputs['colldate'][0],
               'location': inputs['location'][0],
-              'ew': coords[0],  
-              'ns': coords[1]}
+              'ew': coords[1],  
+              'ns': coords[0]}
     
     try:
         cur.execute(collunit_query,

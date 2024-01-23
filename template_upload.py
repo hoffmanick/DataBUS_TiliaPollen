@@ -7,13 +7,13 @@ import neotomaUploader as nu
 
 load_dotenv()
 
-data = json.loads(os.getenv('PGDB_LOCAL'))
+data = json.loads(os.getenv('PGDB_TANK'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
 
 cur = conn.cursor()
 # Be able to read inserted data that has not been committed yet
-cur.execute("BEGIN ISOLATION LEVEL READ UNCOMMITTED")
+#cur.execute("BEGIN ISOLATION LEVEL READ UNCOMMITTED")
 
 args = nu.parse_arguments()
 
@@ -39,7 +39,7 @@ for filename in filenames:
         # This possibly needs to be fixed. How do we know that there is one or more header rows?
 
     uploader = {}
-
+ 
     yml_dict = nu.yml_to_dict(yml_file=args['yml'])
     yml_data = yml_dict['metadata']
 

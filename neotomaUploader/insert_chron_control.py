@@ -33,9 +33,12 @@ def insert_chron_control(cur, yml_dict, csv_template, uploader):
             _agelimitolder := %(ageold)s,
             _notes := %(notes)s)"""
     
+    # Should this be ndb.chroncontrols instead of ndb.analysisunits?
+    # In template.xls I have added the ndb.chroncontrols, however, I refer the same columns as analysisunits
     params = ["depth", "thickness", 'notes',]
-    inputs = pull_params(params, yml_dict, csv_template, 'ndb.analysisunits')
+    inputs = pull_params(params, yml_dict, csv_template, 'ndb.chroncontrols')
 
+    # In template.xls I have ndb.geochroncontrols.age - what is the difference? Which one should I consider for chroncontrols?
     params_age = ['age']
     inputs_age = pull_params(params_age, yml_dict, csv_template, 'ndb.sampleages')
 

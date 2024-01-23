@@ -19,6 +19,7 @@ def insert_data_processor(cur, yml_dict, csv_template, uploader):
     results_dict = {'processorid': [], 'valid': []}
     params = ['contactid']
     inputs = pull_params(params, yml_dict, csv_template, 'ndb.sampleanalysts')
+    inputs['contactid'] = list(set(inputs['contactid']))
 
     get_contact = """SELECT * FROM ndb.contacts WHERE contactname %% %(name)s;"""
 
