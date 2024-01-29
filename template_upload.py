@@ -5,6 +5,21 @@ import glob
 from dotenv import load_dotenv
 import neotomaUploader as nu
 
+"""
+Use this command after having validated the files to 
+upload to Neotoma.
+To run, you can use: 
+python template_upload.py
+
+In that case, the default template 'template.yml' is used.
+
+You can also use a different template file by running:
+python template_upload.py --template='template_xlsx.xlsx'
+
+Change 'template_xlsx.xlsx' to desired filename as long as 
+template file that has an .xlsx or .yml extension
+"""
+
 load_dotenv()
 
 data = json.loads(os.getenv('PGDB_LOCAL2'))
@@ -12,8 +27,6 @@ data = json.loads(os.getenv('PGDB_LOCAL2'))
 conn = psycopg2.connect(**data, connect_timeout = 5)
 
 cur = conn.cursor()
-# Be able to read inserted data that has not been committed yet
-#cur.execute("BEGIN ISOLATION LEVEL READ UNCOMMITTED")
 
 args = nu.parse_arguments()
 
@@ -40,7 +53,7 @@ for filename in filenames:
 
     uploader = {}
  
-    yml_dict = nu.template_to_dict(temp_file=args['yml'])
+    yml_dict = nu.template_to_dict(temp_file=args['template'])
     yml_data = yml_dict['metadata']
 
     # Verify that the CSV columns and the YML keys match

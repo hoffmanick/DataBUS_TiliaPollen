@@ -4,7 +4,6 @@ import os
 import pandas as pd
 from .excel_to_yaml import excel_to_yaml
 
-#def yml_to_dict(yml_file):
 def template_to_dict(temp_file):
     """_Read in valid .xlsx or .yml file._
 
@@ -30,7 +29,8 @@ def template_to_dict(temp_file):
         excel_to_yaml(data, file_name)
         file_name = file_name + '.yml'
 
-        data = yaml.load(file_name, Loader=SafeLoader)
+        with open(file_name, encoding="UTF-8") as file:
+            data = yaml.load(file, Loader=SafeLoader)
         return data
     
     else:

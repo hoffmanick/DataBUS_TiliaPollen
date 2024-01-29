@@ -6,7 +6,7 @@ def parse_arguments():
        Args:
             none
         Returns:
-            _dict_: A dict object with two parameters, 'data' and 'yml',
+            _dict_: A dict object with two parameters, 'data' and 'template',
                     indicating the location of the data files to be used,
                     and the yaml document used for validation.
     """
@@ -22,7 +22,7 @@ def parse_arguments():
                         nargs = '?',
                         const = 'template.yml',
                         default = 'template.yml',
-                        help = 'YAML Template file to use for validation')
+                        help = 'YAML/XLSX Template file to use for validation')
 
     args = parser.parse_args()
 
@@ -32,4 +32,4 @@ def parse_arguments():
     if not os.path.isfile(args.template):
         raise FileNotFoundError(f"The file '{args.template}' could not be found within the current path.")
 
-    return {'data': args.data, 'yml': args.template}
+    return {'data': args.data, 'template': args.template}
