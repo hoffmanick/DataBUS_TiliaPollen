@@ -40,7 +40,7 @@ for filename in filenames:
 
     uploader = {}
  
-    yml_dict = nu.template_to_dict(yml_file=args['yml'])
+    yml_dict = nu.template_to_dict(temp_file=args['yml'])
     yml_data = yml_dict['metadata']
 
     # Verify that the CSV columns and the YML keys match
