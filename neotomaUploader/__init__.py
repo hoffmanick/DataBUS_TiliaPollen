@@ -23,7 +23,7 @@ from .check_file import check_file
 from .insert_geopol import insert_geopol
 from .insert_collunit import insert_collunit
 from .csv_validator import csv_validator
-from .csv_validator import yml_to_dict
+from .template_to_dict import template_to_dict
 from .vocabDict import vocabDict
 from .parse_arguments import parse_arguments
 from .csv_to_yaml import csv_to_yaml

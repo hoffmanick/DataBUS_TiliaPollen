@@ -10,7 +10,7 @@ def valid_agent(cur, csv_template, yml_dict):
     Args:
         cur (_psycopg2.extensions.cursor_): _A cursor pointing to the Neotoma Paleoecology Database._
         csv_template (_string_): _A user name or individual._
-        yml_dict (_dict_): _The dictionary object passed by yml_to_dict._
+        yml_dict (_dict_): _The dictionary object passed by template_to_dict._
     """
     response = { 'pass': False, 'name': None, 'message': [] }
 

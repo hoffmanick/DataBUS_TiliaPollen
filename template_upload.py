@@ -7,7 +7,7 @@ import neotomaUploader as nu
 
 load_dotenv()
 
-data = json.loads(os.getenv('PGDB_TANK'))
+data = json.loads(os.getenv('PGDB_LOCAL2'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
 
@@ -40,7 +40,7 @@ for filename in filenames:
 
     uploader = {}
  
-    yml_dict = nu.yml_to_dict(yml_file=args['yml'])
+    yml_dict = nu.template_to_dict(yml_file=args['yml'])
     yml_data = yml_dict['metadata']
 
     # Verify that the CSV columns and the YML keys match
