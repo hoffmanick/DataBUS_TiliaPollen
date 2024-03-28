@@ -18,8 +18,7 @@ args = nu.parse_arguments()
 
 load_dotenv()
 
-#data = json.loads(os.getenv('PGDB_HOLDING'))
-data = json.loads(os.getenv('PGDB_LOCAL'))
+data = json.loads(os.getenv('PGDB_TANK'))
 
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
@@ -43,24 +42,29 @@ for filename in filenames:
         yml_data = yml_dict['metadata']
 
         # Obtain the unitcols and units to be used
+        # Make the vocab in the yml be checked against the db
         vocab_ = nu.vocabDict(yml_data)
 
         # Verify that the CSV columns and the YML keys match
         csvValid = nu.csv_validator(filename = filename,
                                    yml_data = yml_data)
+     
         # Log if the file is valid
         logfile = logfile + csvValid
 
         testset = {}
+        
         # Loads CSV file
         df = pd.read_csv(filename)
         csv_template = nu.read_csv(filename)
 
         # Testing Data Units:
         unittest = nu.validUnits(df, vocab_)
-        logfile.append('=== Checking Template Unit Definitions ===')
-        testset['units'] = unittest['pass']
-        logfile = logfile + unittest['message']
+        print(unittest)
+        break
+        #logfile.append('=== Checking Template Unit Definitions ===')
+        #testset['units'] = unittest['pass']
+        #logfile = logfile + unittest['message']
         ########## Testing site coordinates:
         # sitename
         logfile.append('=== Checking Against Current Sites ===')

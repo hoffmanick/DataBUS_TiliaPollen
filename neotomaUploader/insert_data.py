@@ -11,7 +11,6 @@ def insert_data(cur, yml_dict, csv_template, uploader):
                  """
     params = ['value']
     inputs = pull_params(params, yml_dict, csv_template, 'ndb.data')
-
     params2 = ['variableelementid', 'variablecontextid']
     inputs2 = pull_params(params2, yml_dict, csv_template, 'ndb.data')
     
@@ -37,25 +36,24 @@ def insert_data(cur, yml_dict, csv_template, uploader):
                                           _variableunitsid := %(variableunitsid)s,
                                           _variablecontextid := %(variablecontextid)s)
                 """
-    # print("Variable Units Table I have access to:")
-    # test_query = """SELECT * FROM ndb.variableunits"""
-    # cur.execute(test_query)
-    # test_data = cur.fetchall()
-    # df = pd.DataFrame(test_data)
-    # column_names = [desc[0] for desc in cur.description]
-    # df.columns = column_names
-    # print(df)
-    # df.to_csv('file.csv')
-    # results_dict['valid'].append(False)
-
+ 
+    #taxon_list = []
+    tb = """SELECT * FROM ndb.taxa where taxonid = 51086;"""
+    cur.execute(tb)
+    tb_tb = cur.fetchall()
+    print(tb_tb)
     for i in range(len(uploader['samples']['samples'])):
+
         counter = 0
         for val_dict in inputs:
+
             get_taxonid = """SELECT * FROM ndb.taxa WHERE LOWER(taxonname) = %(taxonname)s;"""
             cur.execute(get_taxonid, {'taxonname': val_dict['taxonname'].lower()})
             taxonid = cur.fetchone()
+            
             if taxonid != None:
                 taxonid = int(taxonid[0])
+                #taxon_list.append((val_dict['taxonname'].lower(), taxonid))
             else:
                 counter +=1
                 taxonid = counter #placeholder
@@ -117,6 +115,18 @@ def insert_data(cur, yml_dict, csv_template, uploader):
                 results_dict['data_points'].append(result)
                 results_dict['valid'].append(False)
     
+    # print("Variable Units Table I have access to:")
+    # test_query = """SELECT * FROM ndb.taxa"""
+    # cur.execute(test_query)
+    # test_data = cur.fetchall()
+    # df = pd.DataFrame(test_data)
+    # column_names = [desc[0] for desc in cur.description]
+    # df.columns = column_names
+    # print(df)
+    # df.to_csv('file.csv')
+    # results_dict['valid'].append(False)
+    # print(taxon_list)
+
     results_dict['valid'] = all(results_dict['valid'])
     # Return to the default isolation level
     #cur.execute("SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL DEFAULT")

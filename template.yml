@@ -224,8 +224,8 @@ metadata:
   neotoma: ndb.values
   required: false
   rowwise: true
-  taxonid: ???
-  taxonname: 210Pb/210Po
+  taxonid: '52472'
+  taxonname: Excess 210Pb
   type: float
   vocab: null
 - column: Error..Unsupported.210Pb..1SD.Units
@@ -319,6 +319,11 @@ metadata:
   rowwise: false
   type: string
   vocab: '["fixed"]'
+- column: Site ID
+  neotoma: ndb.sites.siteid
+  required: false
+  rowwise: false
+  type: integer
 - column: Site.coordinates
   neotoma: ndb.collectionunits.geog
   required: false
@@ -400,8 +405,8 @@ metadata:
   neotoma: ndb.data.value
   required: false
   rowwise: true
-  taxonid: ???
-  taxonname: 210Pb/210Po
+  taxonid: 52472
+  taxonname: Excess 210Pb
   type: float
   uncertainty:
     uncertaintybasis: null

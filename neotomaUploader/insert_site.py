@@ -69,6 +69,12 @@ def insert_site(cur, yml_dict, csv_template):
     inputs['ns'] = coords[0]
     inputs['ew'] = coords[1]
 
+    # if inputs['siteid'] is not None:
+    #     results_dict['siteid'] = inputs['siteid']
+    #     # Guarantee that the fields in the db are the same as the reported on the csv
+        
+    #     results_dict['valid'] = True
+
     try:
         cur.execute(site_query,
                     inputs)

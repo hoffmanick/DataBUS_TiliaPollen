@@ -4,7 +4,7 @@ from itertools import chain
 from .retrieve_dict import retrieve_dict
 from .clean_column import clean_column
 
-def pull_params(params, yml_dict, csv_template, table):
+def pull_params(params, yml_dict, csv_template, table=None):
     """_Pull parameters associated with an insert statement from the yml/csv tables._
 
     Args:
