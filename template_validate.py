@@ -15,12 +15,8 @@ import neotomaUploader as nu
 
 # Obtain arguments and parse them to handle command line arguments
 args = nu.parse_arguments()
-
 load_dotenv()
-
 data = json.loads(os.getenv('PGDB_TANK'))
-
-
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
@@ -40,82 +36,72 @@ for filename in filenames:
         # Load the yml template as a dictionary
         yml_dict = nu.template_to_dict(temp_file=args['template'])
         yml_data = yml_dict['metadata']
-
-        # Obtain the unitcols and units to be used
-        # Make the vocab in the yml be checked against the db
+        validator = {}
+        csv_file = nu.read_csv(filename)
+        
+        # Get the unitcols and units to be used
+        # Check that the vocab in the template matches the csv vcocab
         vocab_ = nu.vocabDict(yml_data)
 
-        # Verify that the CSV columns and the YML keys match
+        logfile.append('=== Validating File ===')
         csvValid = nu.csv_validator(filename = filename,
                                    yml_data = yml_data)
-     
-        # Log if the file is valid
-        logfile = logfile + csvValid
+        logfile.append(csvValid)
 
-        testset = {}
-        
-        # Loads CSV file
+        logfile.append('=== Checking Template Unit Definitions ===')
         df = pd.read_csv(filename)
-        csv_template = nu.read_csv(filename)
+        validator['units'] = nu.validUnits(df, vocab_)
+        logfile.append(f"units: {validator['units']}")
 
-        # Testing Data Units:
-        unittest = nu.validUnits(df, vocab_)
-        print(unittest)
-        break
-        #logfile.append('=== Checking Template Unit Definitions ===')
-        #testset['units'] = unittest['pass']
-        #logfile = logfile + unittest['message']
-        ########## Testing site coordinates:
-        # sitename
         logfile.append('=== Checking Against Current Sites ===')
-        sitecheck = nu.valid_site(cur = cur,
+        validator['sites'] = nu.valid_site(cur = cur,
                                  yml_dict = yml_dict,
-                                 csv_template = csv_template)
-        testset['sites'] = sitecheck['pass']
-        logfile = logfile + sitecheck['message']
-
+                                 csv_file = csv_file)
+        logfile.append(f"units: {validator['sites']}")
+        print(validator['sites'])
+        break
         ########### Collection Date
         # colldate
         logfile.append('=== Checking All Date Formats ===')
         # format is retrieved in validDate via the yml
         dateCheck = nu.valid_date(yml_dict,
-                                csv_template)
+                                csv_file)
         logfile = logfile + dateCheck['message']
-        testset['date'] = dateCheck['pass']
+        validator['date'] = dateCheck['pass']
 
         ########### Collection Units
         logfile.append('=== Checking Against Collection Units ===')
         nameCheck = nu.valid_collectionunit(cur,
                                     yml_dict,
-                                    csv_template)
+                                    csv_file)
         logfile = logfile + nameCheck['message']
-        testset['colunits'] = nameCheck['pass']
+        validator['colunits'] = nameCheck['pass']
         
         ########### Geopolitical unit:
         #logfile.append('=== Checking Against Geopolitical Units ===')
         # Commenting for now so that I can run the script
         # namecheck = nu.validGeoPol(cur, geog, coords)
         #logfile = logfile + namecheck['message']
-        #testset['geopol'] = namecheck['pass']
+        #validator['geopol'] = namecheck['pass']
 
         ########### PI names:
         logfile.append('=== Checking Against Contact Names ===')
         namecheck = nu.valid_agent(cur,
-                                  csv_template,
+                                  csv_file,
                                   yml_dict)
         logfile = logfile + namecheck['message']
 
         ########### Make sure the dating horizon is in the analysis units:
         logfile.append('=== Checking the Dating Horizon is Valid ===')
         horizoncheck = nu.valid_horizon(yml_dict,
-                                       csv_template)
-        testset['datinghorizon'] = horizoncheck['pass']
+                                       csv_file)
+        validator['datinghorizon'] = horizoncheck['pass']
         logfile = logfile + horizoncheck['message']
 
         ########### Taxa names:
         logfile.append('=== Checking Against Taxa Names ===')
         namecheck = nu.valid_taxa(cur,
-                                  csv_template,
+                                  csv_file,
                                   yml_dict)
         logfile = logfile + namecheck['message']
 

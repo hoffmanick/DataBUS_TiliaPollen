@@ -60,7 +60,7 @@ for filename in filenames:
     csv_valid = nu.csv_validator(filename = filename,
                                 yml_data = yml_data)
 
-    logfile.append('=== Inserting new Site ===')
+    logfile.append('=== Inserting New Site ===')
     uploader['siteid'] = nu.insert_site(cur = cur,
                                     yml_dict = yml_dict,
                                     csv_template = csv_template)
