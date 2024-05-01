@@ -1,6 +1,4 @@
-from .yaml_values import yaml_values
 from .pull_params import pull_params
-import logging
 
 def valid_site(cur, yml_dict, csv_file):
     """_Is the site a valid new site?_
@@ -21,44 +19,45 @@ def valid_site(cur, yml_dict, csv_file):
     Returns:
         _dict_: _A dict object with two properties, the boolean `pass` and a `sitelist` with all close sites._
     """
-    response = {'pass': False,
+    response = {'valid': [],
                 'hemisphere': False, 
                 'sitelist': [],
                 'matched': {'namematch': False, 'distmatch': False},
+                'namematch':False,
                 'message': []}
-
-    ## Retrieve the fields needed from the yml.
-    #coords = yaml_values(yml_dict, csv_file, 'ndb.sites.geog')
 
     params = ["sitename", "altitude", "area", "sitedescription", "notes", "geog"]#, "siteid"]
     inputs = pull_params(params, yml_dict, csv_file, 'ndb.sites')
     inputs['siteid'] = None # Placeholder until I get site IDs
     coords = inputs['geog']
-    print(coords)
 
     try:
         assert len(coords) == 2
         assert coords[0] >= -90 and coords[0] <= 90
         assert coords[1] >= -180 and coords[1] <= 180
+        response['valid'].append(True)
     except AssertionError:
         if len(coords) > 2:
-            logging.error('✗ There are multiple columns mapped to coordinates in your template.')
+            response['message'].append('✗ There are multiple columns mapped to coordinates in your template.')
+            response['valid'].append(False)
         else:
-            logging.error('✗ There are no columns mapped to coordinates in your template.')
-        return response
+            response['message'].append('✗ There are no columns mapped to coordinates in your template.')
+            response['valid'].append(False)
+
     sitename = inputs['sitename']
     try:
         assert len(sitename) == 1
+        response['valid'].append(True)
     except AssertionError:
         if len(sitename) > 1:
             response['message'].append('✗ There are multiple columns mapped to sitenames in your template.')
+            response['valid'].append(False)
         else:
             response['message'].append('✗ There are no columns mapped to sitenames in your template.')
+            response['valid'].append(False)
 
-    # Evaluate whether it's a new site, or not.
     coord_dict = {'lat': coords[0],
-                  'long': coords[1]}
-    
+                  'long': coords[1]}    
     # Get the allowed hemispheres for the record.
     hemis = ""
     if coord_dict['lat'] >= 0:
@@ -83,7 +82,6 @@ def valid_site(cur, yml_dict, csv_file):
         close_sites = cur.fetchall()
         if len(close_sites) > 0:
             # There are sites within 10km get the siteid, name, coordinates and distance.
-            response['valid'] = False
             response['message'].append('?  One or more sites exist close to the requested site.')
             for i in close_sites:
                 site = {'id': str(i[0]), 'name': i[1], 'coordlo': str(i[2]), 'coordla': str(i[3]), 'distance (m)': round(i[13], 0)}
@@ -94,19 +92,19 @@ def valid_site(cur, yml_dict, csv_file):
             # Distmatch should be independent of the sitename
             response['matched']['distmatch'] = next((item['distance (m)'] for item in response['sitelist']), None) == 0
             if response['matched']['namematch'] and response['matched']['distmatch']:
-                response['valid'] = True
+                response['namematch'] = True
                 response['message'].append('✔  Valid site: Site currently exists at the reported location and the name is matched.')
             elif response['matched']['namematch']:
-                response['valid'] = False
+                response['namematch'] = False
                 response['message'].append('?  Site name matches, but locations differ.')
             elif response['matched']['distmatch']:
-                response['valid'] = False
+                response['namematch'] = False
                 response['message'].append('?  Location matches, but site names differ.')
-            if response['valid'] is False:
+            if response['namematch'] is False:
                 for i in response['sitelist']:
                     response['message'].append(f"  * siteid: {i['id']};  sitename: {i['name']:<25}; distance (m): {i['distance (m)']:<7} coords: [{i['coordla']}, {i['coordlo']}]")
         else:
-            response['valid'] = True
+            response['valid'].append(True)
             response['sitelist'] = [{'id': None, 'name': None, 'coordlo': None, 'coordla': None, 'distance (m)': None}]
             response['matched'] = {'namematch': False, 'distmatch': False}
             response['message'].append('✔  There are no sites close to the proposed site.')
@@ -115,30 +113,31 @@ def valid_site(cur, yml_dict, csv_file):
         cur.execute(site_query, inputs['siteid'])
         site_info = cur.fetchall()
         if site_info == None:
-            response['valid'] = False
+            response['valid'].append(False)
             response['message'].append(f"? Site ID {inputs['siteid']} is not currently associated to a site in Neotoma.")
         else:
             site = {'id': str(i[0]), 'name': i[1], 'coordlo': str(i[2]), 'coordla': str(i[3])}
             response['sitelist'].append(site)
             if site['name'] != inputs['sitename']:
-                response['valid'] = False
+                response['valid'].append(False)
                 response['message'].append(f"✗ The sitenames do not match. Current sitename in Neotoma: {site['name']}. Proposed name: {inputs['sitenmae']}.")
             else:
-                response['valid'] = True
+                response['valid'].append(True)
                 response['message'].append("✔  Names match.")
             
             if site['coordlo'] != inputs['coords'][1]:
-                response['valid'] = False
+                response['valid'].append(False)
                 response['message'].append(f"✗ Longitudes do not match. Current coords in Neotoma: {site['coordlo']}. Proposed coords: {inputs['coords'][1]}.")
             else:
-                response['valid'] = True
+                response['valid'].append(True)
                 response['message'].append("✔  Longitudes match.")
 
             if site['coordla'] != inputs['coords'][0]:
-                response['valid'] = False
+                response['valid'].append(False)
                 response['message'].append(f"✗ Latitudes do not match. Current coords in Neotoma: {site['coordlo']}. Proposed coords: {inputs['coords'][0]}.")
             else:
-                response['valid'] = True
+                response['valid'].append(True)
                 response['message'].append("✔  Latitues match.")
+    response['valid'] = all(response['valid'])
                 
     return response

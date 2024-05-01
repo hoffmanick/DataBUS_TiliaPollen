@@ -16,7 +16,7 @@ import neotomaUploader as nu
 # Obtain arguments and parse them to handle command line arguments
 args = nu.parse_arguments()
 load_dotenv()
-data = json.loads(os.getenv('PGDB_TANK'))
+data = json.loads(os.getenv('PGDB_LOCAL2'))
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
@@ -48,56 +48,45 @@ for filename in filenames:
                                    yml_data = yml_data)
         logfile.append(csvValid)
 
-        logfile.append('=== Checking Template Unit Definitions ===')
+        logfile.append('=== Validating Template Unit Definitions ===')
         df = pd.read_csv(filename)
         validator['units'] = nu.validUnits(df, vocab_)
         logfile.append(f"units: {validator['units']}")
 
-        logfile.append('=== Checking Against Current Sites ===')
+        logfile.append('=== Validating Sites ===')
         validator['sites'] = nu.valid_site(cur = cur,
                                  yml_dict = yml_dict,
                                  csv_file = csv_file)
-        logfile.append(f"units: {validator['sites']}")
-        print(validator['sites'])
-        break
-        ########### Collection Date
-        # colldate
-        logfile.append('=== Checking All Date Formats ===')
-        # format is retrieved in validDate via the yml
-        dateCheck = nu.valid_date(yml_dict,
-                                csv_file)
-        logfile = logfile + dateCheck['message']
-        validator['date'] = dateCheck['pass']
+        logfile.append(f"Sites: {validator['sites']}")
 
         ########### Collection Units
         logfile.append('=== Checking Against Collection Units ===')
-        nameCheck = nu.valid_collectionunit(cur,
-                                    yml_dict,
-                                    csv_file)
-        logfile = logfile + nameCheck['message']
-        validator['colunits'] = nameCheck['pass']
-        
+        validator['collunits'] = nu.valid_collectionunit(cur = cur,
+                                                         yml_dict = yml_dict,
+                                                         csv_file = csv_file)
+        logfile.append(f"Collection Units: {validator['collunits']}")
+
         ########### Geopolitical unit:
-        #logfile.append('=== Checking Against Geopolitical Units ===')
-        # Commenting for now so that I can run the script
-        # namecheck = nu.validGeoPol(cur, geog, coords)
-        #logfile = logfile + namecheck['message']
-        #validator['geopol'] = namecheck['pass']
+        # logfile.append('=== Checking Against Geopolitical Units ===')
+        # validator['geopol'] = nu.validGeoPol(cur = cur,
+        #                            yml_dict = yml_dict,
+        #                            csv_file = csv_file)
+        # logfile.append(f"Geopol: {validator['geopol']}")
 
         ########### PI names:
         logfile.append('=== Checking Against Contact Names ===')
-        namecheck = nu.valid_agent(cur,
-                                  csv_file,
-                                  yml_dict)
-        logfile = logfile + namecheck['message']
+        validator['agent'] = nu.valid_agent(cur,
+                                            csv_file,
+                                            yml_dict)
+        logfile.append(f"Agent: {validator['agent']}")
 
         ########### Make sure the dating horizon is in the analysis units:
         logfile.append('=== Checking the Dating Horizon is Valid ===')
-        horizoncheck = nu.valid_horizon(yml_dict,
-                                       csv_file)
-        validator['datinghorizon'] = horizoncheck['pass']
-        logfile = logfile + horizoncheck['message']
+        validator['horizoncheck'] = nu.valid_horizon(yml_dict,
+                                                     csv_file)
+        logfile.append(f"Dating Horizon: {validator['horizoncheck']}")
 
+        break
         ########### Taxa names:
         logfile.append('=== Checking Against Taxa Names ===')
         namecheck = nu.valid_taxa(cur,
