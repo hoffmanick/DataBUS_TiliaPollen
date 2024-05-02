@@ -34,6 +34,16 @@ metadata:
   required: true
   rowwise: false
   type: string
+- column: Core.number.or.code
+  neotoma: ndb.collectionunits.handle
+  required: true
+  rowwise: false
+  type: string
+- column: Reference
+  neotoma: ndb.collectionunits.refrence
+  required: false
+  rowwise: false
+  type: string
 - column: Cumulative.210Pb.Inventory
   neotoma: ndb.leadmodels.cumulativeinventory
   required: false
@@ -276,7 +286,7 @@ metadata:
   taxonname: 214Bi
   type: float
   vocab: null
-- column: Error.214Bi..Units
+- column: Error..214Bi..Units
   neotoma: ndb.values
   notes: null
   required: false
@@ -498,7 +508,7 @@ metadata:
   uncertainty:
     uncertaintybasis: null
     uncertaintycolumn: Error.214Bi
-    unitcolumn: Error.214Bi..Units
+    unitcolumn: Error..214Bi..Units
   unitcolumn: X214Bi.Units
 - column: X214Bi.Units
   neotoma: ndb.variableunits.variableunits

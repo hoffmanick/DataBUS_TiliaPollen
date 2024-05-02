@@ -26,11 +26,10 @@ def valid_site(cur, yml_dict, csv_file):
                 'doublematch':False,
                 'message': []}
 
-    params = ["sitename", "altitude", "area", "sitedescription", "notes", "geog"]#, "siteid"]
+    params = ["sitename", "altitude", "area", "sitedescription", "notes", "geog", "siteid"]
     inputs = pull_params(params, yml_dict, csv_file, 'ndb.sites')
-    inputs['siteid'] = None # Placeholder until I get site IDs
+    inputs['siteid'] = int(inputs['siteid'][0])
     coords = inputs['geog']
-
     try:
         assert len(coords) == 2
         assert coords[0] >= -90 and coords[0] <= 90
@@ -108,35 +107,37 @@ def valid_site(cur, yml_dict, csv_file):
             response['matched'] = {'namematch': False, 'distmatch': False}
             response['message'].append('✔  There are no sites close to the proposed site.')
     else:
+        response['message'].append("Verifying if the site exists already in neotoma with the same siteID")
         site_query = """SELECT * from ndb.sites where siteid = %(siteid)s"""
-        cur.execute(site_query, inputs['siteid'])
+        cur.execute(site_query, {'siteid': inputs['siteid']})
         site_info = cur.fetchall()
         if site_info == None:
             response['valid'].append(False)
             response['message'].append(f"? Site ID {inputs['siteid']} is not currently associated to a site in Neotoma.")
         else:
-            site = {'id': str(i[0]), 'name': i[1], 'coordlo': str(i[2]), 'coordla': str(i[3])}
-            response['sitelist'].append(site)
-            if site['name'] != inputs['sitename']:
-                response['valid'].append(False)
-                response['message'].append(f"✗ The sitenames do not match. Current sitename in Neotoma: {site['name']}. Proposed name: {inputs['sitenmae']}.")
-            else:
-                response['valid'].append(True)
-                response['message'].append("✔  Names match.")
-            
-            if site['coordlo'] != inputs['coords'][1]:
-                response['valid'].append(False)
-                response['message'].append(f"✗ Longitudes do not match. Current coords in Neotoma: {site['coordlo']}. Proposed coords: {inputs['coords'][1]}.")
-            else:
-                response['valid'].append(True)
-                response['message'].append("✔  Longitudes match.")
+            response['message'].append(f"✔  Site ID found in Neotoma:")
+            for i in site_info:
+                site = {'id': str(i[0]), 'name': i[1], 'coordlo': str(i[2]), 'coordla': str(i[3])}
+                response['sitelist'].append(site)
+                if site['name'] != inputs['sitename'][0]:
+                    response['valid'].append(False)
+                    response['message'].append(f"✗ The sitenames do not match. Current sitename in Neotoma: {site['name']}. Proposed name: {inputs['sitename'][0]}.")
+                else:
+                    response['valid'].append(True)
+                    response['message'].append("✔  Names match.")
+                if float(site['coordlo']) != coords[1]:
+                    response['valid'].append(False)
+                    response['message'].append(f"✗ Longitudes do not match. Current coords in Neotoma: {site['coordlo']}. Proposed coords: {coords[1]}.")
+                else:
+                    response['valid'].append(True)
+                    response['message'].append("✔  Longitudes match.")
 
-            if site['coordla'] != inputs['coords'][0]:
-                response['valid'].append(False)
-                response['message'].append(f"✗ Latitudes do not match. Current coords in Neotoma: {site['coordlo']}. Proposed coords: {inputs['coords'][0]}.")
-            else:
-                response['valid'].append(True)
-                response['message'].append("✔  Latitues match.")
+                if float(site['coordla']) != coords[0]:
+                    response['valid'].append(False)
+                    response['message'].append(f"✗ Latitudes do not match. Current coords in Neotoma: {site['coordla']}. Proposed coords: {coords[0]}.")
+                else:
+                    response['valid'].append(True)
+                    response['message'].append("✔  Latitudes match.")
     response['valid'] = all(response['valid'])
                 
     return response
