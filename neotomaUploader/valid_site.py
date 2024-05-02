@@ -20,10 +20,10 @@ def valid_site(cur, yml_dict, csv_file):
         _dict_: _A dict object with two properties, the boolean `pass` and a `sitelist` with all close sites._
     """
     response = {'valid': [],
-                'hemisphere': False, 
+                'hemisphere': '', 
                 'sitelist': [],
                 'matched': {'namematch': False, 'distmatch': False},
-                'namematch':False,
+                'doublematch':False,
                 'message': []}
 
     params = ["sitename", "altitude", "area", "sitedescription", "notes", "geog"]#, "siteid"]
@@ -59,16 +59,15 @@ def valid_site(cur, yml_dict, csv_file):
     coord_dict = {'lat': coords[0],
                   'long': coords[1]}    
     # Get the allowed hemispheres for the record.
-    hemis = ""
     if coord_dict['lat'] >= 0:
-        hemis+="N"
+        response['hemisphere']+="N"
     else:
-        hemis+="S"
+        response['hemisphere']+="S"
     if coord_dict['long'] >= 0:
-        hemis+="E"
+        response['hemisphere']+="E"
     else:
-        hemis+="W"
-    response['message'].append(f'? This set is expected to be in the {hemis} hemisphere.')
+        response['hemisphere']+="W"
+    response['message'].append(f"? This set is expected to be in the {response['hemisphere']} hemisphere.")
 
     # When not given a SiteID
     if inputs['siteid'] is None:
@@ -92,15 +91,15 @@ def valid_site(cur, yml_dict, csv_file):
             # Distmatch should be independent of the sitename
             response['matched']['distmatch'] = next((item['distance (m)'] for item in response['sitelist']), None) == 0
             if response['matched']['namematch'] and response['matched']['distmatch']:
-                response['namematch'] = True
+                response['doublematch'] = True
                 response['message'].append('✔  Valid site: Site currently exists at the reported location and the name is matched.')
             elif response['matched']['namematch']:
-                response['namematch'] = False
+                response['doublematch'] = False
                 response['message'].append('?  Site name matches, but locations differ.')
             elif response['matched']['distmatch']:
-                response['namematch'] = False
+                response['doublematch'] = False
                 response['message'].append('?  Location matches, but site names differ.')
-            if response['namematch'] is False:
+            if response['doublematch'] is False:
                 for i in response['sitelist']:
                     response['message'].append(f"  * siteid: {i['id']};  sitename: {i['name']:<25}; distance (m): {i['distance (m)']:<7} coords: [{i['coordla']}, {i['coordlo']}]")
         else:

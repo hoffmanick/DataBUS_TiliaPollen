@@ -1,5 +1,4 @@
 import logging
-import pandas as pd
 from .pull_params import pull_params
 
 def insert_data(cur, yml_dict, csv_template, uploader):

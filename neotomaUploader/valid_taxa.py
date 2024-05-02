@@ -1,5 +1,4 @@
-from .valid_column import valid_column
-from .yaml_values import yaml_values
+from .pull_params import pull_params
 
 def valid_taxa(cur, csv_template, yml_dict):
     """_Get taxa content from Neotoma_
@@ -10,18 +9,20 @@ def valid_taxa(cur, csv_template, yml_dict):
         yml_dict (_dict_): _The dictionary object passed by yml_to_dict._
     """
     
-    response = { 'pass': False, 'name': None, 'message': [] }
-
-    pattern = r'(values)'
-    taxa_dict = yaml_values(yml_dict, csv_template, pattern)
+    response = { 'valid': False, 'message': [] }
+    
+    params = ['value']
+    taxa_dict = pull_params(params, yml_dict, csv_template, 'ndb.data')
+    params2 = ['variableelementid', 'variablecontextid']
+    inputs2 = pull_params(params2, yml_dict, csv_template, 'ndb.data')
 
     for element in taxa_dict:
-        response['message'].append(f"  === Checking Against Taxa {element['column']} ===")
-        taxa_message = valid_column(element)
+        response['message'].append(f"  === Checking Against Taxa {element['taxonname']} ===")
+        #taxa_message = valid_column(element)
         taxonname = element['taxonname']
         taxamatch = []
-        if len(taxa_message) > 0:
-            response['message'].append(taxa_message)
+        #if len(taxa_message) > 0:
+        #    response['message'].append(taxa_message)
  
         response['message'].append(f"  *** Named Taxa: {taxonname} ***")
         nameQuery = """
@@ -46,5 +47,7 @@ def valid_taxa(cur, csv_template, yml_dict):
                 for i in taxon['match']:
                     response['message'].append(f"   * {i[1]}")
         if all(matches):
-            response['pass'] = True
+            response['valid'] = True
+        
+        # TODO: Verify that 'variableelementid', 'variablecontextid' also exist
     return response

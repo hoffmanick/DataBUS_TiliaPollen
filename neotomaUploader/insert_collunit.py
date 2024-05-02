@@ -28,6 +28,7 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
                 "gpslatitude", "gpslongitude", "gpsaltitude", "gpserror", 
                 "waterdepth", "substrateid", "slopeaspect", "slopeangle", "location", "notes", "geog"]
     inputs = pull_params(params, yml_dict, csv_template, 'ndb.collectionunits')
+    print(inputs)
     
     try:
         coords = inputs['geog']

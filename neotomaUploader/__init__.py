@@ -15,6 +15,10 @@ from .read_csv import read_csv
 from .validUnits import validUnits
 from .valid_site import valid_site
 from .valid_collectionunit import valid_collectionunit
+from .valid_analysisunit import valid_analysisunit
+from .valid_chronologies import valid_chronologies
+from .valid_chroncontrols import valid_chroncontrols
+from .valid_dataset import valid_dataset
 from .validGeoPol import validGeoPol
 from .valid_horizon import valid_horizon
 from .hash_file import hash_file

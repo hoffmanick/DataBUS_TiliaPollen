@@ -16,11 +16,9 @@ def valid_horizon(yml_dict, csv_template):
     
     params = ['depth']
     depths = pull_params(params, yml_dict, csv_template, 'ndb.analysisunits')
-    print(depths)
 
     params2 = ['datinghorizon']
     horizon = pull_params(params2, yml_dict, csv_template, 'ndb.leadmodels')
-    print(horizon)
     
     if len(horizon['datinghorizon']) == 1:
         matchingdepth = [i == horizon['datinghorizon'][0] for i in depths['depth']]

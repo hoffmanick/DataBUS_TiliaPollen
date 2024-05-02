@@ -18,7 +18,8 @@ def csv_validator(filename, yml_data):
     Returns:
         _type_: _description_
     """
-    log_file = []
+    log_file = {'valid': False, 'message': []}
+    #log_file = []
     # Take directly from .yml file
     col_values = [d.get('column') for d in yml_data]
 
@@ -29,7 +30,7 @@ def csv_validator(filename, yml_data):
         # Load csv file as data frame and extract columns
         df = pd.read_csv(filename)
     except pd.errors.ParserError:
-        log_file.append(f"✗  Error opening file '{filename}': {e}"+ '\n')    
+        log_file['message'].append(f"✗  Error opening file '{filename}': {e}"+ '\n')    
 
     df_columns = list(df.columns)
     # Verify that all columns from the DF are in the YAML file
@@ -41,10 +42,12 @@ def csv_validator(filename, yml_data):
     # Report in the log
     if diff_col == diff_val:
         message = ["✔  The column names and flattened YAML keys match"]
-        log_file = log_file + message
+        log_file['message'] = log_file['message'] + message
+        log_file['valid'] = True
     else:
-        log_file = log_file + ["✗  The column names and flattened YAML keys do not match"]
-        log_file = log_file + [f"Columns from the YAML template are not in the data frame: '{diff_val}'"]
-        log_file = log_file + [f"Columns from the data frame not in the YAML template: '{diff_col}'"]
+        log_file['message'] = log_file['message'] + ["✗  The column names and flattened YAML keys do not match"]
+        log_file['message'] = log_file['message'] + [f"Columns from the data frame not in the YAML template: {diff_val}"]
+        log_file['message'] = log_file['message'] + [f"Columns from the YAML template are not in the data frame: {diff_col}"]
+        log_file['valid'] = False
 
     return log_file
