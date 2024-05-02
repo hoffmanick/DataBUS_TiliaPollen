@@ -14,7 +14,7 @@ from .valid_agent import valid_agent
 from .read_csv import read_csv
 from .validUnits import validUnits
 from .valid_site import valid_site
-from .valid_collectionunit import valid_collectionunit
+from .valid_collunit import valid_collunit
 from .valid_analysisunit import valid_analysisunit
 from .valid_chronologies import valid_chronologies
 from .valid_chroncontrols import valid_chroncontrols

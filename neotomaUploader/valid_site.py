@@ -28,7 +28,10 @@ def valid_site(cur, yml_dict, csv_file):
 
     params = ["sitename", "altitude", "area", "sitedescription", "notes", "geog", "siteid"]
     inputs = pull_params(params, yml_dict, csv_file, 'ndb.sites')
-    inputs['siteid'] = int(inputs['siteid'][0])
+    if inputs['siteid'][0] == 'NA':
+        inputs['siteid'] = None
+    else:
+        inputs['siteid'] = int(inputs['siteid'][0])
     coords = inputs['geog']
     try:
         assert len(coords) == 2

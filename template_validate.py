@@ -17,7 +17,7 @@ from neotomaUploader.logging_dict import logging_dict
 # Obtain arguments and parse them to handle command line arguments
 args = nu.parse_arguments()
 load_dotenv()
-data = json.loads(os.getenv('PGDB_LOCAL2'))
+data = json.loads(os.getenv('PGDB_TANK'))
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
@@ -71,30 +71,27 @@ for filename in filenames:
         # logfile.append(f"Geopol: {validator['geopol']}")
 
         logfile.append('\n === Checking Against Collection Units ===')
-        validator['collunits'] = nu.valid_collectionunit(cur = cur,
+        validator['collunits'] = nu.valid_collunit(cur = cur,
                                                          yml_dict = yml_dict,
                                                          csv_file = csv_file)
         logfile = logging_dict(validator['collunits'], logfile, 'sitelist')
 
-        # TODO: Validate Analysis Units
         logfile.append('\n === Checking Against Analysis Units ===')
         validator['analysisunit'] = nu.valid_analysisunit(yml_dict = yml_dict,
                                                           csv_file = csv_file)
         logfile = logging_dict(validator['analysisunit'], logfile)
 
-        # TODO: Validate chronologies:
         logfile.append('\n === Checking Chronologies ===')
         validator['chronologies'] = nu.valid_chronologies(yml_dict = yml_dict,
                                                           csv_file = csv_file)
         logfile = logging_dict(validator['chronologies'], logfile)
 
-        # TODO: Validate chroncontrols
         logfile.append('\n === Checking Chron Controls ===')
         validator['chron_controls'] = nu.valid_chroncontrols(yml_dict = yml_dict,
                                                           csv_file = csv_file)
         logfile = logging_dict(validator['chron_controls'], logfile)
 
-        # TODO: Validate dataset
+        # TODO: Validate dataset - looks like this should be a geochron
         logfile.append('\n === Checking Dataset ===')
         validator['dataset'] = nu.valid_dataset(cur = cur,
                                                 yml_dict = yml_dict,
@@ -108,7 +105,6 @@ for filename in filenames:
                                             yml_dict)
         logfile = logging_dict(validator['agent'], logfile)
 
-        ########### Make sure the dating horizon is in the analysis units:
         logfile.append('\n === Checking the Dating Horizon is Valid ===')
         validator['horizoncheck'] = nu.valid_horizon(yml_dict,
                                                      csv_file)
@@ -119,6 +115,10 @@ for filename in filenames:
                                           csv_file,
                                           yml_dict)
         logfile = logging_dict(validator['taxa'], logfile)
+
+        #TODO: Validate datauncertainties
+
+        #TODO: validate uncertaintybases
      
         ########### Write to log.
         modified_filename = filename.replace('data/', 'data/validation_logs/')

@@ -1,7 +1,7 @@
 import itertools
 from .pull_params import pull_params
 
-def valid_collectionunit(cur, yml_dict, csv_file):
+def valid_collunit(cur, yml_dict, csv_file):
     """Is the collection unit valid as a new unit?
 
     Args:
@@ -69,9 +69,10 @@ def valid_collectionunit(cur, yml_dict, csv_file):
         if len(close_handles) > 0:
             goodcols = [i[-2] for i in close_handles]
             if any([j == handlename[0] for j in goodcols]):
-                response['message'].append('?  A collection unit with this name already exists at the site.')
+                response['message'].append('?  A collection unit with this name already exists nearby.')
+
             else:
-                response['message'].append('?  The collection unit handle does not occur within close sites:')
+                response['message'].append('?  The collection unit handle does not occur within close sites.')
                 sitecol = itertools.groupby([{'sitename': k[1], 'collunit': k[-2]} for k in close_handles], lambda x: x['sitename'])
                 sitemsg = [{'site':key, 'collunits': [k['collunit'] for k in list(value)]} for key, value in sitecol] 
                 for i in sitemsg: 
