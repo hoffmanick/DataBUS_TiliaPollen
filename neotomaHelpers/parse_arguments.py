@@ -23,6 +23,12 @@ def parse_arguments():
                         const = 'template.yml',
                         default = 'template.yml',
                         help = 'YAML/XLSX Template file to use for validation')
+    parser.add_argument('--overwrite',
+                        type = bool,
+                        nargs = '?',
+                        const = False,
+                        default = False,
+                        help = 'True/False overwriting option for uploader')
 
     args = parser.parse_args()
 
@@ -32,4 +38,4 @@ def parse_arguments():
     if not os.path.isfile(args.template):
         raise FileNotFoundError(f"The file '{args.template}' could not be found within the current path.")
 
-    return {'data': args.data, 'template': args.template}
+    return {'data': args.data, 'template': args.template, 'overwrite':args.overwrite}

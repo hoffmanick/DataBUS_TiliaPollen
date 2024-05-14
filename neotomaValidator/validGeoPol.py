@@ -1,4 +1,4 @@
-from .pull_params import pull_params
+from neotomaHelpers.pull_params import pull_params
 
 def validGeoPol(cur, yml_dict, csv_file, geopolitical):
     """_Is the listed geopolitical unit valid?_

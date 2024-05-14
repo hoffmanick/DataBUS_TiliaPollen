@@ -11,13 +11,14 @@ import os
 import psycopg2
 import pandas as pd
 from dotenv import load_dotenv
-import neotomaUploader as nu
-from neotomaUploader.logging_dict import logging_dict
+import neotomaValidator as nv
+import neotomaHelpers as nh
+from neotomaHelpers.logging_dict import logging_dict
 
 # Obtain arguments and parse them to handle command line arguments
-args = nu.parse_arguments()
+args = nh.parse_arguments()
 load_dotenv()
-data = json.loads(os.getenv('PGDB_TANK'))
+data = json.loads(os.getenv('PGDB_LOCAL2'))
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
@@ -30,88 +31,88 @@ for filename in filenames:
     print(filename)
     logfile = []
 
-    hashcheck = nu.hash_file(filename)
-    filecheck = nu.check_file(filename)
+    hashcheck = nh.hash_file(filename)
+    filecheck = nv.check_file(filename)
     logfile = logfile + hashcheck['message'] + filecheck['message']
 
     if hashcheck['pass'] and filecheck['pass']:
         print("  - File is correct and hasn't changed since last validation.")
     else:
         # Load the yml template as a dictionary
-        yml_dict = nu.template_to_dict(temp_file=args['template'])
+        yml_dict = nh.template_to_dict(temp_file=args['template'])
         yml_data = yml_dict['metadata']
         validator = {}
-        csv_file = nu.read_csv(filename)
+        csv_file = nh.read_csv(filename)
         
         # Get the unitcols and units to be used
         # Check that the vocab in the template matches the csv vcocab
-        vocab_ = nu.vocabDict(yml_data)
+        vocab_ = nv.vocabDict(yml_data)
 
         logfile.append('=== File Validation ===')
-        validator['csvValid'] = nu.csv_validator(filename = filename,
+        validator['csvValid'] = nv.csv_validator(filename = filename,
                                    yml_data = yml_data)
         logfile = logging_dict(validator['csvValid'], logfile)
 
         logfile.append('\n === Validating Template Unit Definitions ===')
         df = pd.read_csv(filename)
-        validator['units'] = nu.validUnits(df, vocab_)
+        validator['units'] = nv.validUnits(df, vocab_)
         logfile = logging_dict(validator['units'], logfile)
 
         logfile.append('\n === Validating Sites ===')
-        validator['sites'] = nu.valid_site(cur = cur,
+        validator['sites'] = nv.valid_site(cur = cur,
                                  yml_dict = yml_dict,
                                  csv_file = csv_file)
         logfile = logging_dict(validator['sites'], logfile, 'sitelist')
         
         ########### Geopolitical unit:
         # logfile.append('=== Checking Against Geopolitical Units ===')
-        # validator['geopol'] = nu.validGeoPol(cur = cur,
+        # validator['geopol'] = nv.validGeoPol(cur = cur,
         #                            yml_dict = yml_dict,
         #                            csv_file = csv_file)
         # logfile.append(f"Geopol: {validator['geopol']}")
 
         logfile.append('\n === Checking Against Collection Units ===')
-        validator['collunits'] = nu.valid_collunit(cur = cur,
+        validator['collunits'] = nv.valid_collunit(cur = cur,
                                                          yml_dict = yml_dict,
                                                          csv_file = csv_file)
         logfile = logging_dict(validator['collunits'], logfile, 'sitelist')
 
         logfile.append('\n === Checking Against Analysis Units ===')
-        validator['analysisunit'] = nu.valid_analysisunit(yml_dict = yml_dict,
+        validator['analysisunit'] = nv.valid_analysisunit(yml_dict = yml_dict,
                                                           csv_file = csv_file)
         logfile = logging_dict(validator['analysisunit'], logfile)
 
         logfile.append('\n === Checking Chronologies ===')
-        validator['chronologies'] = nu.valid_chronologies(yml_dict = yml_dict,
+        validator['chronologies'] = nv.valid_chronologies(yml_dict = yml_dict,
                                                           csv_file = csv_file)
         logfile = logging_dict(validator['chronologies'], logfile)
 
         logfile.append('\n === Checking Chron Controls ===')
-        validator['chron_controls'] = nu.valid_chroncontrols(yml_dict = yml_dict,
+        validator['chron_controls'] = nv.valid_chroncontrols(yml_dict = yml_dict,
                                                           csv_file = csv_file)
         logfile = logging_dict(validator['chron_controls'], logfile)
 
         # TODO: Validate dataset - looks like this should be a geochron
         logfile.append('\n === Checking Dataset ===')
-        validator['dataset'] = nu.valid_dataset(cur = cur,
+        validator['dataset'] = nv.valid_dataset(cur = cur,
                                                 yml_dict = yml_dict,
                                                 csv_file = csv_file)
         logfile = logging_dict(validator['dataset'], logfile)
 
         ########### PI names:
         logfile.append('\n === Checking Against Contact Names ===')
-        validator['agent'] = nu.valid_agent(cur,
+        validator['agent'] = nv.valid_agent(cur,
                                             csv_file,
                                             yml_dict)
         logfile = logging_dict(validator['agent'], logfile)
 
         logfile.append('\n === Checking the Dating Horizon is Valid ===')
-        validator['horizoncheck'] = nu.valid_horizon(yml_dict,
+        validator['horizoncheck'] = nv.valid_horizon(yml_dict,
                                                      csv_file)
         logfile = logging_dict(validator['horizoncheck'], logfile)
 
         logfile.append('\n === Validating Taxa Names ===')
-        validator['taxa'] = nu.valid_taxa(cur,
+        validator['taxa'] = nv.valid_taxa(cur,
                                           csv_file,
                                           yml_dict)
         logfile = logging_dict(validator['taxa'], logfile)

@@ -1,4 +1,4 @@
-from .pull_params import pull_params
+from neotomaHelpers.pull_params import pull_params
 
 def valid_horizon(yml_dict, csv_template):
     """_Is the dated horizon one of the accepted dates?_
