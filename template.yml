@@ -1,541 +1,564 @@
----
 apiVersion: neotoma v2.0
+databaseid: 37
 headers: 2
 kind: Development
-databaseid: 37
 lab_number: 5
 metadata:
-  - column: Site.name
-    link: https://open.neotomadb.org/dbschema/tables/sites.html
-    neotoma: ndb.sites.sitename
-    notes: null
-    required: true
-    rowwise: false
-    type: string
-    vocab: null
-  - column: Core.number.or.code
-    link: https://open.neotomadb.org/dbschema/tables/collectionunits.html
-    neotoma: ndb.collectionunits.handle
-    notes: null
-    required: true
-    rowwise: false
-    type: string/number
-    vocab: null
-  - column: Publications
-    link: null
-    neotoma: ndb.publications
-    notes: Would it be easier to get a number of DOIs
-    required: true
-    rowwise: false
-    type: string
-    vocab: null
-  - column: Location
-    neotoma: ndb.geopoliticalunits
-    notes: We can extract this from the coordinates.
-    required: true
-    rowwise: false
-    type: string
-    vocab: null
-  - column: Geographic.coordinates
-    neotoma: ndb.sites.geog
-    notes: Spatial (lat/long pair or geoJSON)
-    required: true
-    rowwise: false
-    type: coordinates (latlong)
-    vocab: null
-  - column: Geographic.coordinates
-    neotoma: ndb.collectionunits.geog
-    notes: Spatial (lat/long pair or geoJSON)
-    required: true
-    rowwise: false
-    type: coordinates (latlong)
-    vocab: null
-  - column: Coordinate.precision
-    neotoma: ndb.collectionunits.location
-    notes: null
-    required: false
-    rowwise: false
-    type: string
-    vocab: ['core-site','GPS','core-site approximate','lake center']
-  - column: Site.coordinates
-    neotoma: '???'
-    notes: null
-    required: true
-    rowwise: false
-    type: string
-    vocab: null
-  - column: Depositional.Env
-    neotoma: '???'
-    notes: null
-    required: false
-    rowwise: false
-    type: string
-    vocab: null
-  - column: Date.of.core.collection
-    format: '%Y-%m-%d'
-    neotoma: ndb.collectionunits.colldate
-    notes: Full-date notation as defined by RFC 3339, section 5.6, for example, 2017-07-21
-    required: true
-    rowwise: false
-    type: date
-    vocab: null
-  - column: Principal.Investigator.s.
-    neotoma: ndb.contacts.contactname
-    notes: null
-    required: true
-    rowwise: false
-    type: string
-    vocab: null
-  - column: Analyst
-    neotoma: ndb.sampleanalysts.contactid
-    notes: null
-    required: true
-    rowwise: false
-    type: string
-    vocab: null
-  - column: Modeler
-    neotoma: ndb.chronologies.contactid
-    notes: null
-    required: true
-    rowwise: false
-    type: string
-    vocab: null
-  - column: X210.LeadModel
-    neotoma: ndb.chronologies.agemodel
-    notes: null
-    required: false
-    rowwise: false
-    type: string
-    vocab: ['CRS', 'CIC', 'CF:CS', 'PLUM', 'other']
-  - column: X210.Lead.Model.Notes
-    neotoma: ndb.chronologies.notes
-    notes: null
-    required: false
-    rowwise: false
-    type: string
-    vocab: null
-  - column: Method.for.estimating.supported.210Pb
-    neotoma: ndb.leadmodels.basis
-    notes: null
-    required: false
-    rowwise: false
-    type: string
-    vocab: ['asymptote of alpha', 'gamma point-subtraction', 'gamma average']
-  - column: X210Pb.dating.horizon
-    neotoma: ndb.leadmodels.datinghorizon
-    notes: null
-    required: true
-    rowwise: false
-    type: number
-    vocab: null
-  - column: Cumulative.210Pb.Inventory
-    neotoma: ndb.leadmodels.cumulativeinventory
-    notes: null
-    required: false
-    rowwise: null
-    type: null
-    vocab: null
-  - column: Depth
-    neotoma: ndb.analysisunits.depth
-    notes: null
-    required: true
-    rowwise: true
-    type: number
-    vocab: null
-  - column: Thickness
-    neotoma: ndb.analysisunits.thickness
-    notes: null
-    required: false
-    rowwise: true
-    type: number
-    vocab: null
-  - column: Depth.position
-    neotoma: '???'
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['Top', 'Mid', 'Bottom']
-  - column: Dry.Density
-    neotoma: ndb.data.value
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: 5782
-    taxonname: bulk density
-    type: number
-    unitcolumn: Dry.Density.Units
-    vocab: null
-  - column: Dry.Density.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['g/cm3']
-  - column: Cumulative.dry.mass
-    neotoma: ndb.data.value
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: cumulative dry mass
-    type: number
-    vocab: null
-  - column: Cumulative.dry.mass.units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['g/cm2']
-  - column: Total.210Pb.Alpha..synonym.Total.210Po.
-    neotoma: ndb.data.value
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 210Pb/210Po
-    type: number
-    uncertainty:
-      uncertaintybasis: null
-      uncertaintycolumn: Error..total.210Pb.alpha.
-      unitcolumn: Error..total.210Pb.alpha..units
-    unitcolumn: Total.210Pb.Alpha..synonym.Total.210Po..Units
-    vocab: null
-  - column: Total.210Pb.Alpha..synonym.Total.210Po..Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: Error..total.210Pb.alpha.
-    neotoma: ndb.values
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 210Pb/210Po
-    type: number
-    vocab: null
-  - column: Error..total.210Pb.alpha..units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: Total.210Pb.Gamma
-    neotoma: ndb.data.value
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 210Pb
-    type: number
-    uncertainty:
-      uncertaintybasis: null
-      uncertaintycolumn: Error..total.210Pb.Gamma.
-      unitcolumn: Error..total.210Pb.Gamma..Units
-    unitcolumn: Total.210Pb.Gamma.Units
-    vocab: null
-  - column: Total.210Pb.Gamma.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: Error..total.210Pb.Gamma.
-    neotoma: ndb.values
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 210Pb
-    type: number
-    vocab: null
-  - column: Error..total.210Pb.Gamma..Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: X214Pb
-    neotoma: ndb.data.value
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 214Pb
-    type: number
-    uncertainty:
-      uncertaintybasis: null
-      uncertaintycolumn: Error..214Pb.
-      unitcolumn: Error..214Pb..Units
-    unitcolumn: X214Pb.Units
-    vocab: null
-  - column: X214Pb.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: Error..214Pb.
-    neotoma: ndb.values
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 214Pb
-    type: number
-    vocab: null
-  - column: Error..214Pb..Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: X214Bi
-    neotoma: ndb.data.value
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 214Bi
-    type: number
-    uncertainty:
-      uncertaintybasis: null
-      uncertaintycolumn: Error.214Bi
-      unitcolumn: Error..214Bi..Units
-    unitcolumn: X214Bi.Units
-    vocab: null
-  - column: X214Bi.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: Error.214Bi
-    neotoma: ndb.values
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 214Bi
-    type: number
-    vocab: null
-  - column: Error..214Bi..Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: X137Cs
-    neotoma: ndb.data.value
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 137Cs
-    type: number
-    uncertainty:
-      uncertaintybasis: null
-      uncertaintycolumn: Error..137Cs.
-      unitcolumn: Error..137Cs..Units
-    unitcolumn: X137Cs.Units
-    vocab: null
-  - column: X137Cs.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: Error..137Cs.
-    neotoma: ndb.values
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 137Cs
-    type: number
-    vocab: null
-  - column: Error..137Cs..Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: Assigned.137Cs.Date
-    neotoma: ndb.geochroncontrols.age
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 137Cs date
-    type: number
-    unitcolumn: Assigned.137Cs.Date.Units
-    vocab: null
-  - column: Assigned.137Cs.Date.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['CE/BCE', 'cal yr BP', 'Cal yr BP']
-  - column: Supported.210Pb
-    neotoma: ndb.data.value
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 210Pb/210Po
-    type: number
-    uncertainty:
-      uncertaintybasis: null
-      uncertaintycolumn: Error..Supported.210Pb..1SD
-      unitcolumn: Error..Supported.210Pb..1SD.Units
-    unitcolumn: Supported.210Pb.Units
-    vocab: null
-  - column: Supported.210Pb.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: Error..Supported.210Pb..1SD
-    neotoma: ndb.values
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 210Pb/210Po
-    type: number
-    vocab: null
-  - column: Error..Supported.210Pb..1SD.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: Unsupported.210Pb
-    neotoma: ndb.data.value
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 210Pb/210Po
-    type: number
-    uncertainty:
-      uncertaintybasis: null
-      uncertaintycolumn: Error..Unsupported.210Pb..1SD
-      unitcolumn: Error..Unsupported.210Pb..1SD.Units
-    unitcolumn: Unsupported.210Pb.Units
-    vocab: null
-  - column: Unsupported.210Pb.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: Error..Unsupported.210Pb..1SD
-    neotoma: ndb.values
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 210Pb/210Po
-    type: number
-    vocab: null
-  - column: Error..Unsupported.210Pb..1SD.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['pCi/g', 'Bq/g', 'Bq/kg', 'dpm/g']
-  - column: X210Pb.Date
-    neotoma: ndb.sampleages.age
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 210Pb date
-    type: string
-    uncertainty:
-      uncertaintybasis: Error..210Pb.Date..1SD.Units
-      uncertaintycolumn: Error..210Pb.Date.
-      unitcolumn: null
-    unitcolumn: X210Pb.Date.Units
-    vocab: null
-  - column: X210Pb.Date.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['CE/BCE', 'cal yr BP', 'Cal yr BP']
-  - column: Error..210Pb.Date.
-    neotoma: ndb.values
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: 210Pb date
-    type: number
-    vocab: null
-  - column: Error..210Pb.Date..1SD.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['CE/BCE', 'cal yr BP', 'Cal yr BP']
-  - column: DMAR
-    neotoma: ndb.data.value
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: dry mass accumulation rate
-    type: number
-    uncertainty:
-      uncertaintybasis: null
-      uncertaintycolumn: Error..DMAR.
-      unitcolumn: Error..DMAR..Units`
-    unitcolumn: DMAR.Units
-    vocab: null
-  - column: DMAR.Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: string
-    vocab: ['g/cm2/yr','g/m2/yr','kg/m2/yr']
-  - column: Error..DMAR.
-    neotoma: ndb.values
-    notes: null
-    required: false
-    rowwise: true
-    taxonid: '???'
-    taxonname: dry mass accumulation rate
-    type: number
-    vocab: null
-  - column: Error..DMAR..Units
-    neotoma: ndb.variableunits.variableunits
-    notes: null
-    required: false
-    rowwise: true
-    type: null
-    vocab: ['g/cm2/yr','g/m2/yr','kg/m2/yr']
+- column: Analyst
+  neotoma: ndb.sampleanalysts.contactid
+  overwrite: true
+  required: false
+  rowwise: true
+  type: string
+  vocab: '["fixed"]'
+- column: Assigned.137Cs.Date
+  neotoma: ndb.geochroncontrols.age
+  overwrite: true
+  required: false
+  rowwise: true
+  taxonname: 137Cs
+  type: float
+  unitcolumn: Assigned.137Cs.Date.Units
+- column: Assigned.137Cs.Date.Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: Coordinate.precision
+  neotoma: ndb.collectionunits.location
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+  vocab: '["core-site","GPS","core-site approximate","lake center"]'
+- column: Core.number.or.code
+  neotoma: ndb.collectionunits.handle
+  overwrite: true
+  required: true
+  rowwise: false
+  type: string
+- column: Cumulative.210Pb.Inventory
+  neotoma: ndb.leadmodels.cumulativeinventory
+  overwrite: true
+  required: false
+  rowwise: false
+  type: float
+- column: Cumulative.dry.mass
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  overwrite: true
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: cumulative dry mass
+  type: float
+  unitcolumn: Cumulative.dry.mass.units
+- column: Cumulative.dry.mass.units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: DMAR
+  neotoma: ndb.data.value
+  overwrite: true
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: dry mass accumulation rate
+  type: float
+  uncertainty:
+    uncertaintybasis: null
+    uncertaintycolumn: Error..DMAR.
+    unitcolumn: Error..DMAR..Units
+  unitcolumn: DMAR.Units
+- column: DMAR.Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: Date.of.core.collection
+  formatorrange: '%Y-%m-%d'
+  neotoma: ndb.collectionunits.colldate
+  overwrite: true
+  required: false
+  rowwise: false
+  type: date
+- column: Depositional.Env
+  neotoma: ndb.depenvttypes.depenvt
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+  vocab: '["fixed"]'
+- column: Depth
+  neotoma: ndb.analysisunits.depth
+  overwrite: true
+  required: true
+  rowwise: true
+  type: float
+- column: Depth
+  neotoma: ndb.chroncontrols.depth
+  notes: Use same column as ndb.analysisunits ?
+  overwrite: true
+  required: true
+  rowwise: true
+  type: float
+- column: Depth.position
+  neotoma: ndb.analysisunits.position
+  overwrite: true
+  required: false
+  rowwise: true
+  type: string
+  vocab: '["Top", "Mid", "Bottom"]'
+- column: Depth.position
+  neotoma: ndb.chroncontrols.position
+  notes: Use same column as ndb.analysisunits ?
+  overwrite: true
+  required: false
+  rowwise: true
+  type: string
+  vocab: '["Top", "Mid", "Bottom"]'
+- column: Dry.Density
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  overwrite: true
+  required: false
+  rowwise: true
+  taxonid: 5782
+  taxonname: bulk density
+  type: float
+  unitcolumn: Dry.Density.Units
+- column: Dry.Density.Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: Error..137Cs.
+  formatorrange: '> 0'
+  neotoma: ndb.values
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 137Cs
+  type: float
+  vocab: null
+- column: Error..137Cs..Units
+  neotoma: ndb.values
+  notes: null
+  required: false
+  rowwise: true
+  type: float
+  vocab: null
+- column: Error..210Pb.Date.
+  formatorrange: null
+  neotoma: ndb.values
+  required: false
+  rowwise: true
+  taxonid: null
+  taxonname: null
+  type: float
+  vocab: null
+- column: Error..210Pb.Date.
+  formatorrange: null
+  neotoma: ndb.values
+  required: false
+  rowwise: true
+  taxonid: null
+  taxonname: null
+  type: string
+  vocab: null
+- column: Error..210Pb.Date..1SD.Units
+  neotoma: ndb.values
+  notes: Use same column as sampleages
+  required: false
+  rowwise: true
+  type: float
+  vocab: null
+- column: Error..210Pb.Date..1SD.Units
+  neotoma: ndb.values
+  notes: null
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: Error..214Pb.
+  formatorrange: '> 0'
+  neotoma: ndb.values
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 214Pb
+  type: float
+  vocab: null
+- column: Error..214Pb..Units
+  neotoma: ndb.values
+  notes: null
+  required: false
+  rowwise: true
+  type: float
+  vocab: null
+- column: Error..DMAR.
+  formatorrange: null
+  neotoma: ndb.values
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: dry mass accumulation rate
+  type: float
+  vocab: null
+- column: Error..DMAR..Units
+  neotoma: ndb.values
+  notes: null
+  required: false
+  rowwise: true
+  type: float
+  vocab: null
+- column: Error..Supported.210Pb..1SD
+  formatorrange: null
+  neotoma: ndb.values
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 210Pb/210Po
+  type: float
+  vocab: null
+- column: Error..Supported.210Pb..1SD.Units
+  neotoma: ndb.values
+  notes: null
+  required: false
+  rowwise: true
+  type: float
+  vocab: null
+- column: Error..Unsupported.210Pb..1SD
+  formatorrange: null
+  neotoma: ndb.values
+  required: false
+  rowwise: true
+  taxonid: '52472'
+  taxonname: Excess 210Pb
+  type: float
+  vocab: null
+- column: Error..Unsupported.210Pb..1SD.Units
+  neotoma: ndb.values
+  notes: null
+  required: false
+  rowwise: true
+  type: float
+  vocab: null
+- column: Error..total.210Pb.Gamma.
+  formatorrange: '> 0'
+  neotoma: ndb.values
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 210Pb
+  type: float
+  vocab: null
+- column: Error..total.210Pb.Gamma..Units
+  neotoma: ndb.values
+  notes: null
+  required: false
+  rowwise: true
+  type: float
+  vocab: null
+- column: Error..total.210Pb.alpha.
+  formatorrange: '> 0'
+  neotoma: ndb.values
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 210Pb/210Po
+  type: float
+  vocab: null
+- column: Error..total.210Pb.alpha..units
+  neotoma: ndb.values
+  notes: null
+  required: false
+  rowwise: true
+  type: float
+  vocab: null
+- column: Error.214Bi
+  formatorrange: '> 0'
+  neotoma: ndb.values
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 214Bi
+  type: float
+  vocab: null
+- column: Error.214Bi..Units
+  neotoma: ndb.values
+  notes: null
+  required: false
+  rowwise: true
+  type: float
+  vocab: null
+- column: Geographic.coordinates
+  neotoma: ndb.sites.geog
+  overwrite: true
+  required: true
+  rowwise: false
+  type: coordinates (lat,long)
+- column: Location
+  neotoma: ndb.geopoliticalunits.geopoliticalunit
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+  vocab: '["fixed"]'
+- column: Method.for.estimating.supported.210Pb
+  neotoma: ndb.leadmodels.basis
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+  vocab: '["asymptote of alpha", "gamma point-subtraction", "gamma average"]'
+- column: Modeler
+  neotoma: ndb.chronologies.contactid
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+- column: Principal.Investigator.s.
+  neotoma: ndb.datasetpis.contactid
+  overwrite: true
+  required: true
+  rowwise: false
+  type: string
+  vocab: '["fixed"]'
+- column: Publications
+  formatorrange: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
+  neotoma: ndb.publications.doi
+  notes: The format is the regex for a DOI
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+  vocab: '["fixed"]'
+- column: Site ID
+  neotoma: ndb.sites.siteid
+  overwrite: true
+  required: false
+  rowwise: false
+  type: integer
+- column: Site.coordinates
+  neotoma: ndb.collectionunits.geog
+  overwrite: true
+  required: false
+  rowwise: false
+  type: coordinates (lat,long)
+- column: Site.name
+  neotoma: ndb.sites.sitename
+  overwrite: true
+  required: true
+  rowwise: false
+  type: string
+- column: Supported.210Pb
+  neotoma: ndb.data.value
+  overwrite: true
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 210Pb/210Po
+  type: float
+  uncertainty:
+    uncertaintybasis: null
+    uncertaintycolumn: Error..Supported.210Pb..1SD
+    unitcolumn: Error..Supported.210Pb..1SD.Units
+  unitcolumn: Supported.210Pb.Units
+- column: Supported.210Pb.Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: Thickness
+  neotoma: ndb.analysisunits.thickness
+  overwrite: true
+  required: true
+  rowwise: true
+  type: float
+- column: Thickness
+  neotoma: ndb.chroncontrols.thickness
+  notes: Use same column as ndb.analysisunits ?
+  overwrite: true
+  required: true
+  rowwise: true
+  type: float
+- column: Total.210Pb.Alpha..synonym.Total.210Po.
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  overwrite: true
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 210Pb/210Po
+  type: float
+  uncertainty:
+    uncertaintybasis: null
+    uncertaintycolumn: Error..total.210Pb.alpha.
+    unitcolumn: Error..total.210Pb.alpha..units
+  unitcolumn: Total.210Pb.Alpha..synonym.Total.210Po..Units
+- column: Total.210Pb.Alpha..synonym.Total.210Po..Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: Total.210Pb.Gamma
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  overwrite: true
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 210Pb
+  type: float
+  uncertainty:
+    uncertaintybasis: null
+    uncertaintycolumn: Error..total.210Pb.Gamma.
+    unitcolumn: Error..total.210Pb.Gamma..Units
+  unitcolumn: Total.210Pb.Gamma.Units
+- column: Total.210Pb.Gamma.Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: Unsupported.210Pb
+  neotoma: ndb.data.value
+  overwrite: true
+  required: false
+  rowwise: true
+  taxonid: '52472'
+  taxonname: Excess 210Pb
+  type: float
+  uncertainty:
+    uncertaintybasis: null
+    uncertaintycolumn: Error..Unsupported.210Pb..1SD
+    unitcolumn: Error..Unsupported.210Pb..1SD.Units
+  unitcolumn: Unsupported.210Pb.Units
+- column: Unsupported.210Pb.Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: X137Cs
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  overwrite: true
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 137Cs
+  type: float
+  uncertainty:
+    uncertaintybasis: null
+    uncertaintycolumn: Error..137Cs.
+    unitcolumn: Error..137Cs..Units
+  unitcolumn: X137Cs.Units
+- column: X137Cs.Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: X210.Lead.Model.Notes
+  neotoma: ndb.chronologies.notes
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+- column: X210.LeadModel
+  neotoma: ndb.chronologies.agemodel
+  overwrite: true
+  required: true
+  rowwise: false
+  type: string
+  vocab: '["CRS", "CIC", "CF:CS", "PLUM", "other"]'
+- column: X210Pb.Date
+  neotoma: ndb.chroncontrols.age
+  notes: Use same column as sampleages
+  overwrite: true
+  required: false
+  rowwise: true
+  type: float
+  uncertainty:
+    uncertaintybasis: null
+    uncertaintycolumn: Error..210Pb.Date.
+    unitcolumn: Error..210Pb.Date..1SD.Units
+  unitcolumn: X210Pb.Date.Units
+- column: X210Pb.Date
+  neotoma: ndb.sampleages.age
+  overwrite: true
+  required: false
+  rowwise: true
+  type: string
+  uncertainty:
+    uncertaintybasis: null
+    uncertaintycolumn: Error..210Pb.Date.
+    unitcolumn: Error..210Pb.Date..1SD.Units
+  unitcolumn: X210Pb.Date.Units
+- column: X210Pb.Date.Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: X210Pb.Date.Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: X210Pb.dating.horizon
+  neotoma: ndb.leadmodels.datinghorizon
+  overwrite: true
+  required: false
+  rowwise: false
+  type: float
+- column: X214Bi
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  overwrite: true
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 214Bi
+  type: float
+  uncertainty:
+    uncertaintybasis: null
+    uncertaintycolumn: Error.214Bi
+    unitcolumn: Error.214Bi..Units
+  unitcolumn: X214Bi.Units
+- column: X214Bi.Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null
+- column: X214Pb
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  overwrite: true
+  required: false
+  rowwise: true
+  taxonid: ???
+  taxonname: 214Pb
+  type: float
+  uncertainty:
+    uncertaintybasis: null
+    uncertaintycolumn: Error..214Pb.
+    unitcolumn: Error..214Pb..Units
+  unitcolumn: X214Pb.Units
+- column: X214Pb.Units
+  neotoma: ndb.variableunits.variableunits
+  required: false
+  rowwise: true
+  type: string
+  vocab: null

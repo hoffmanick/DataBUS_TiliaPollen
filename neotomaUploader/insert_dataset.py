@@ -1,8 +1,23 @@
 import logging
-from .pull_params import pull_params
+from neotomaHelpers.pull_params import pull_params
 
 def insert_dataset (cur, yml_dict, csv_template, uploader):
-        #cur, collunitid, datasetname):
+    """
+    Inserts a dataset associated with a collection unit into a database.
+
+    Args:
+        cur (cursor object): Database cursor to execute SQL queries.
+        yml_dict (dict): Dictionary containing YAML data.
+        csv_template (str): File path to the CSV template.
+        uploader (dict): Dictionary containing uploader details.
+
+    Returns:
+        results_dict (dict): A dictionary containing information about the inserted dataset.
+            'datasetid' (int): IDs for the inserted dataset.
+            'valid' (bool): Indicates if insertions were successful.
+       
+    """
+    results_dict = {'datasetid': None, 'valid': False}
     dataset_query = """SELECT ts.insertdataset(_collectionunitid:= %(collunitid)s,
                                                _datasettypeid := %(datasettypeid)s,
                                                _datasetname := %(datasetname)s);"""
@@ -12,9 +27,20 @@ def insert_dataset (cur, yml_dict, csv_template, uploader):
     
     inputs = dict(map(lambda item: (item[0], None if all([i is None for i in item[1]]) else item[1]),
                       inputs.items()))
+    try:
+        inputs_dict = {'collunitid': int(uploader['collunitid']['collunitid']),
+                       'datasettypeid': int(3), # inputs['datasettypeid'],
+                       'datasetname': inputs['datasetname']}
+        cur.execute(dataset_query, inputs_dict)
+        results_dict['datasetid'] = cur.fetchone()[0]
+        results_dict['valid'] = True
     
-    cur.execute(dataset_query, {'collunitid': int(uploader['collunitid']),
-                                'datasettypeid': int(5), #inputs['datasettypeid'],
-                                'datasetname': inputs['datasetname']})
-    datasetid = cur.fetchone()[0]
-    return datasetid
+    except Exception as e:
+        logging.error(f"Dataset Info is not correct. {e}")
+        cur.execute(dataset_query, {'collunitid': int(uploader['collunitid']['collunitid']),
+                                    'datasettypeid': None,
+                                    'datasetname': None})
+        results_dict['datasetid'] = cur.fetchone()[0]
+        results_dict['valid'] = False
+    
+    return results_dict

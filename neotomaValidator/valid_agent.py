@@ -1,8 +1,4 @@
-from .retrieve_dict import retrieve_dict
-from .valid_column import valid_column
-from .yaml_values import yaml_values
-import re
-#def validAgent(cur, agentname):
+from neotomaHelpers.pull_params import pull_params
 
 def valid_agent(cur, csv_template, yml_dict):
     """_Get user agent or contact from Neotoma_
@@ -10,20 +6,25 @@ def valid_agent(cur, csv_template, yml_dict):
     Args:
         cur (_psycopg2.extensions.cursor_): _A cursor pointing to the Neotoma Paleoecology Database._
         csv_template (_string_): _A user name or individual._
-        yml_dict (_dict_): _The dictionary object passed by yml_to_dict._
+        yml_dict (_dict_): _The dictionary object passed by template_to_dict._
     """
-    response = { 'pass': False, 'name': None, 'message': [] }
+    response = { 'valid': False, 'message': [] }
+    
+    #results_dict = {'dataset_pi_ids': [], 'valid': []}
 
-    pattern = r'(contactid|contactname)'
-    agent_dict = yaml_values(yml_dict, csv_template, pattern)
+    params = ['contactid', 'contactname']
+    table = ['ndb.datasetpis', 'ndb.sampleanalysts', 'ndb.chronologies']
+    inputs = pull_params(params, yml_dict, csv_template, table)
 
-    for element in agent_dict:
-        response['message'].append(f"  === Checking Against Dataset {element['column']} ===")
-        agent_message = valid_column(element)
-        agentname = element['values']
+    for i, id in enumerate(inputs):
+        id['contactid'] = list(set(id['contactid']))
+        id['contactname'] = list(set(id['contactname']))
+        id['table'] = table[i]
+
+    for element in inputs:
+        response['message'].append(f"  === Checking Against Database - Table: {element['table']} ===")
+        agentname = element['contactid']
         namematch = []
-        if len(agent_message) > 0:
-            response['message'].append(agent_message)
         for name in agentname:
             response['message'].append(f"  *** Named Individual: {name} ***")
             nameQuery = """
@@ -37,7 +38,7 @@ def valid_agent(cur, csv_template, yml_dict):
         for person in namematch:
             if len(person['match']) ==0:
                 response['message'].append(f"  ✗ No approximate matches found for {person['name']}. Have they been added to Neotoma?")
-                matches.append(False)
+                matches.append(False) 
             elif any([person['name'] == i[1] for i in person['match']]):
                 response['message'].append(f"  ✔ Exact match found for {person['name']}.")
                 matches.append(True)
@@ -47,5 +48,5 @@ def valid_agent(cur, csv_template, yml_dict):
                 for i in person['match']:
                     response['message'].append(f"   * {i[1]}")
         if all(matches):
-            response['pass'] = True
+            response['valid'] = True
     return response

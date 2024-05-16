@@ -11,112 +11,119 @@ import os
 import psycopg2
 import pandas as pd
 from dotenv import load_dotenv
-import neotomaUploader as nu
+import neotomaValidator as nv
+import neotomaHelpers as nh
+from neotomaHelpers.logging_dict import logging_dict
 
 # Obtain arguments and parse them to handle command line arguments
-args = nu.parse_arguments()
-
+args = nh.parse_arguments()
 load_dotenv()
-
-#data = json.loads(os.getenv('PGDB_HOLDING'))
-data = json.loads(os.getenv('PGDB_LOCAL'))
-
-
+data = json.loads(os.getenv('PGDB_LOCAL2'))
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
 filenames = glob.glob(args['data'] + "*.csv")
+valid_logs = 'data/validation_logs'
+if not os.path.exists(valid_logs):
+            os.makedirs(valid_logs)
 
 for filename in filenames:
     print(filename)
     logfile = []
 
-    hashcheck = nu.hash_file(filename)
-    filecheck = nu.check_file(filename)
+    hashcheck = nh.hash_file(filename)
+    filecheck = nv.check_file(filename)
     logfile = logfile + hashcheck['message'] + filecheck['message']
 
     if hashcheck['pass'] and filecheck['pass']:
         print("  - File is correct and hasn't changed since last validation.")
     else:
         # Load the yml template as a dictionary
-        yml_dict = nu.yml_to_dict(yml_file=args['yml'])
+        yml_dict = nh.template_to_dict(temp_file=args['template'])
         yml_data = yml_dict['metadata']
+        validator = {}
+        csv_file = nh.read_csv(filename)
+        
+        # Get the unitcols and units to be used
+        # Check that the vocab in the template matches the csv vcocab
+        vocab_ = nv.vocabDict(yml_data)
 
-        # Obtain the unitcols and units to be used
-        vocab_ = nu.vocabDict(yml_data)
-
-        # Verify that the CSV columns and the YML keys match
-        csvValid = nu.csv_validator(filename = filename,
+        logfile.append('=== File Validation ===')
+        validator['csvValid'] = nv.csv_validator(filename = filename,
                                    yml_data = yml_data)
-        # Log if the file is valid
-        logfile = logfile + csvValid
+        logfile = logging_dict(validator['csvValid'], logfile)
 
-        testset = {}
-        # Loads CSV file
+        logfile.append('\n === Validating Template Unit Definitions ===')
         df = pd.read_csv(filename)
-        csv_template = nu.read_csv(filename)
+        validator['units'] = nv.validUnits(df, vocab_)
+        logfile = logging_dict(validator['units'], logfile)
 
-        # Testing Data Units:
-        unittest = nu.validUnits(df, vocab_)
-        logfile.append('=== Checking Template Unit Definitions ===')
-        testset['units'] = unittest['pass']
-        logfile = logfile + unittest['message']
-        ########## Testing site coordinates:
-        # sitename
-        logfile.append('=== Checking Against Current Sites ===')
-        sitecheck = nu.valid_site(cur = cur,
+        logfile.append('\n === Validating Sites ===')
+        validator['sites'] = nv.valid_site(cur = cur,
                                  yml_dict = yml_dict,
-                                 csv_template = csv_template)
-        testset['sites'] = sitecheck['pass']
-        logfile = logfile + sitecheck['message']
-
-        ########### Collection Date
-        # colldate
-        logfile.append('=== Checking All Date Formats ===')
-        # format is retrieved in validDate via the yml
-        dateCheck = nu.valid_date(yml_dict,
-                                csv_template)
-        logfile = logfile + dateCheck['message']
-        testset['date'] = dateCheck['pass']
-
-        ########### Collection Units
-        logfile.append('=== Checking Against Collection Units ===')
-        nameCheck = nu.valid_collectionunit(cur,
-                                    yml_dict,
-                                    csv_template)
-        logfile = logfile + nameCheck['message']
-        testset['colunits'] = nameCheck['pass']
+                                 csv_file = csv_file)
+        logfile = logging_dict(validator['sites'], logfile, 'sitelist')
         
         ########### Geopolitical unit:
-        #logfile.append('=== Checking Against Geopolitical Units ===')
-        # Commenting for now so that I can run the script
-        # namecheck = nu.validGeoPol(cur, geog, coords)
-        #logfile = logfile + namecheck['message']
-        #testset['geopol'] = namecheck['pass']
+        # logfile.append('=== Checking Against Geopolitical Units ===')
+        # validator['geopol'] = nv.validGeoPol(cur = cur,
+        #                            yml_dict = yml_dict,
+        #                            csv_file = csv_file)
+        # logfile.append(f"Geopol: {validator['geopol']}")
+
+        logfile.append('\n === Checking Against Collection Units ===')
+        validator['collunits'] = nv.valid_collunit(cur = cur,
+                                                         yml_dict = yml_dict,
+                                                         csv_file = csv_file)
+        logfile = logging_dict(validator['collunits'], logfile, 'sitelist')
+
+        logfile.append('\n === Checking Against Analysis Units ===')
+        validator['analysisunit'] = nv.valid_analysisunit(yml_dict = yml_dict,
+                                                          csv_file = csv_file)
+        logfile = logging_dict(validator['analysisunit'], logfile)
+
+        logfile.append('\n === Checking Chronologies ===')
+        validator['chronologies'] = nv.valid_chronologies(yml_dict = yml_dict,
+                                                          csv_file = csv_file)
+        logfile = logging_dict(validator['chronologies'], logfile)
+
+        logfile.append('\n === Checking Chron Controls ===')
+        validator['chron_controls'] = nv.valid_chroncontrols(yml_dict = yml_dict,
+                                                          csv_file = csv_file)
+        logfile = logging_dict(validator['chron_controls'], logfile)
+
+        # TODO: Validate dataset - looks like this should be a geochron
+        logfile.append('\n === Checking Dataset ===')
+        validator['dataset'] = nv.valid_dataset(cur = cur,
+                                                yml_dict = yml_dict,
+                                                csv_file = csv_file)
+        logfile = logging_dict(validator['dataset'], logfile)
 
         ########### PI names:
-        logfile.append('=== Checking Against Contact Names ===')
-        namecheck = nu.valid_agent(cur,
-                                  csv_template,
-                                  yml_dict)
-        logfile = logfile + namecheck['message']
+        logfile.append('\n === Checking Against Contact Names ===')
+        validator['agent'] = nv.valid_agent(cur,
+                                            csv_file,
+                                            yml_dict)
+        logfile = logging_dict(validator['agent'], logfile)
 
-        ########### Make sure the dating horizon is in the analysis units:
-        logfile.append('=== Checking the Dating Horizon is Valid ===')
-        horizoncheck = nu.valid_horizon(yml_dict,
-                                       csv_template)
-        testset['datinghorizon'] = horizoncheck['pass']
-        logfile = logfile + horizoncheck['message']
+        logfile.append('\n === Checking the Dating Horizon is Valid ===')
+        validator['horizoncheck'] = nv.valid_horizon(yml_dict,
+                                                     csv_file)
+        logfile = logging_dict(validator['horizoncheck'], logfile)
 
-        ########### Taxa names:
-        logfile.append('=== Checking Against Taxa Names ===')
-        namecheck = nu.valid_taxa(cur,
-                                  csv_template,
-                                  yml_dict)
-        logfile = logfile + namecheck['message']
+        logfile.append('\n === Validating Taxa Names ===')
+        validator['taxa'] = nv.valid_taxa(cur,
+                                          csv_file,
+                                          yml_dict)
+        logfile = logging_dict(validator['taxa'], logfile)
 
+        #TODO: Validate datauncertainties
+
+        #TODO: validate uncertaintybases
+     
         ########### Write to log.
-        with open(filename + '.log', 'w', encoding = "utf-8") as writer:
+        modified_filename = filename.replace('data/', 'data/validation_logs/')
+        with open(modified_filename + '.valid.log', 'w', encoding = "utf-8") as writer:
             for i in logfile:
                 writer.write(i)
                 writer.write('\n')

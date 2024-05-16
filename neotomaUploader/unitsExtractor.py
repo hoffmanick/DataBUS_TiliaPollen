@@ -1,6 +1,6 @@
 ### Creating the new units dict
 import pandas as pd
-from ymlToDict import ymlToDict
+from neotomaHelpers.ymlToDict import ymlToDict
 
 def unitsExtractor(template, file):
     """
