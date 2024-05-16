@@ -1,7 +1,7 @@
 import datetime
 import logging
 import datetime
-from .pull_params import pull_params
+from neotomaHelpers.pull_params import pull_params
 
 def insert_chronology(cur, yml_dict, csv_template, uploader):
     """

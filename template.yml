@@ -6,12 +6,14 @@ lab_number: 5
 metadata:
 - column: Analyst
   neotoma: ndb.sampleanalysts.contactid
+  overwrite: true
   required: false
   rowwise: true
   type: string
   vocab: '["fixed"]'
 - column: Assigned.137Cs.Date
   neotoma: ndb.geochroncontrols.age
+  overwrite: true
   required: false
   rowwise: true
   taxonname: 137Cs
@@ -25,33 +27,27 @@ metadata:
   vocab: null
 - column: Coordinate.precision
   neotoma: ndb.collectionunits.location
+  overwrite: true
   required: false
   rowwise: false
   type: string
   vocab: '["core-site","GPS","core-site approximate","lake center"]'
 - column: Core.number.or.code
   neotoma: ndb.collectionunits.handle
+  overwrite: true
   required: true
-  rowwise: false
-  type: string
-- column: Core.number.or.code
-  neotoma: ndb.collectionunits.handle
-  required: true
-  rowwise: false
-  type: string
-- column: Reference
-  neotoma: ndb.collectionunits.refrence
-  required: false
   rowwise: false
   type: string
 - column: Cumulative.210Pb.Inventory
   neotoma: ndb.leadmodels.cumulativeinventory
+  overwrite: true
   required: false
   rowwise: false
   type: float
 - column: Cumulative.dry.mass
   formatorrange: '> 0'
   neotoma: ndb.data.value
+  overwrite: true
   required: false
   rowwise: true
   taxonid: ???
@@ -66,6 +62,7 @@ metadata:
   vocab: null
 - column: DMAR
   neotoma: ndb.data.value
+  overwrite: true
   required: false
   rowwise: true
   taxonid: ???
@@ -85,28 +82,33 @@ metadata:
 - column: Date.of.core.collection
   formatorrange: '%Y-%m-%d'
   neotoma: ndb.collectionunits.colldate
+  overwrite: true
   required: false
   rowwise: false
   type: date
 - column: Depositional.Env
   neotoma: ndb.depenvttypes.depenvt
+  overwrite: true
   required: false
   rowwise: false
   type: string
   vocab: '["fixed"]'
 - column: Depth
   neotoma: ndb.analysisunits.depth
+  overwrite: true
   required: true
   rowwise: true
   type: float
 - column: Depth
   neotoma: ndb.chroncontrols.depth
   notes: Use same column as ndb.analysisunits ?
+  overwrite: true
   required: true
   rowwise: true
   type: float
 - column: Depth.position
   neotoma: ndb.analysisunits.position
+  overwrite: true
   required: false
   rowwise: true
   type: string
@@ -114,6 +116,7 @@ metadata:
 - column: Depth.position
   neotoma: ndb.chroncontrols.position
   notes: Use same column as ndb.analysisunits ?
+  overwrite: true
   required: false
   rowwise: true
   type: string
@@ -121,6 +124,7 @@ metadata:
 - column: Dry.Density
   formatorrange: '> 0'
   neotoma: ndb.data.value
+  overwrite: true
   required: false
   rowwise: true
   taxonid: 5782
@@ -286,7 +290,7 @@ metadata:
   taxonname: 214Bi
   type: float
   vocab: null
-- column: Error..214Bi..Units
+- column: Error.214Bi..Units
   neotoma: ndb.values
   notes: null
   required: false
@@ -295,28 +299,33 @@ metadata:
   vocab: null
 - column: Geographic.coordinates
   neotoma: ndb.sites.geog
+  overwrite: true
   required: true
   rowwise: false
   type: coordinates (lat,long)
 - column: Location
   neotoma: ndb.geopoliticalunits.geopoliticalunit
+  overwrite: true
   required: false
   rowwise: false
   type: string
   vocab: '["fixed"]'
 - column: Method.for.estimating.supported.210Pb
   neotoma: ndb.leadmodels.basis
+  overwrite: true
   required: false
   rowwise: false
   type: string
   vocab: '["asymptote of alpha", "gamma point-subtraction", "gamma average"]'
 - column: Modeler
   neotoma: ndb.chronologies.contactid
+  overwrite: true
   required: false
   rowwise: false
   type: string
 - column: Principal.Investigator.s.
   neotoma: ndb.datasetpis.contactid
+  overwrite: true
   required: true
   rowwise: false
   type: string
@@ -325,27 +334,32 @@ metadata:
   formatorrange: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
   neotoma: ndb.publications.doi
   notes: The format is the regex for a DOI
+  overwrite: true
   required: false
   rowwise: false
   type: string
   vocab: '["fixed"]'
 - column: Site ID
   neotoma: ndb.sites.siteid
+  overwrite: true
   required: false
   rowwise: false
   type: integer
 - column: Site.coordinates
   neotoma: ndb.collectionunits.geog
+  overwrite: true
   required: false
   rowwise: false
   type: coordinates (lat,long)
 - column: Site.name
   neotoma: ndb.sites.sitename
+  overwrite: true
   required: true
   rowwise: false
   type: string
 - column: Supported.210Pb
   neotoma: ndb.data.value
+  overwrite: true
   required: false
   rowwise: true
   taxonid: ???
@@ -364,18 +378,21 @@ metadata:
   vocab: null
 - column: Thickness
   neotoma: ndb.analysisunits.thickness
+  overwrite: true
   required: true
   rowwise: true
   type: float
 - column: Thickness
   neotoma: ndb.chroncontrols.thickness
   notes: Use same column as ndb.analysisunits ?
+  overwrite: true
   required: true
   rowwise: true
   type: float
 - column: Total.210Pb.Alpha..synonym.Total.210Po.
   formatorrange: '> 0'
   neotoma: ndb.data.value
+  overwrite: true
   required: false
   rowwise: true
   taxonid: ???
@@ -395,6 +412,7 @@ metadata:
 - column: Total.210Pb.Gamma
   formatorrange: '> 0'
   neotoma: ndb.data.value
+  overwrite: true
   required: false
   rowwise: true
   taxonid: ???
@@ -413,9 +431,10 @@ metadata:
   vocab: null
 - column: Unsupported.210Pb
   neotoma: ndb.data.value
+  overwrite: true
   required: false
   rowwise: true
-  taxonid: 52472
+  taxonid: '52472'
   taxonname: Excess 210Pb
   type: float
   uncertainty:
@@ -432,6 +451,7 @@ metadata:
 - column: X137Cs
   formatorrange: '> 0'
   neotoma: ndb.data.value
+  overwrite: true
   required: false
   rowwise: true
   taxonid: ???
@@ -450,11 +470,13 @@ metadata:
   vocab: null
 - column: X210.Lead.Model.Notes
   neotoma: ndb.chronologies.notes
+  overwrite: true
   required: false
   rowwise: false
   type: string
 - column: X210.LeadModel
   neotoma: ndb.chronologies.agemodel
+  overwrite: true
   required: true
   rowwise: false
   type: string
@@ -462,6 +484,7 @@ metadata:
 - column: X210Pb.Date
   neotoma: ndb.chroncontrols.age
   notes: Use same column as sampleages
+  overwrite: true
   required: false
   rowwise: true
   type: float
@@ -472,6 +495,7 @@ metadata:
   unitcolumn: X210Pb.Date.Units
 - column: X210Pb.Date
   neotoma: ndb.sampleages.age
+  overwrite: true
   required: false
   rowwise: true
   type: string
@@ -494,12 +518,14 @@ metadata:
   vocab: null
 - column: X210Pb.dating.horizon
   neotoma: ndb.leadmodels.datinghorizon
+  overwrite: true
   required: false
   rowwise: false
   type: float
 - column: X214Bi
   formatorrange: '> 0'
   neotoma: ndb.data.value
+  overwrite: true
   required: false
   rowwise: true
   taxonid: ???
@@ -508,7 +534,7 @@ metadata:
   uncertainty:
     uncertaintybasis: null
     uncertaintycolumn: Error.214Bi
-    unitcolumn: Error..214Bi..Units
+    unitcolumn: Error.214Bi..Units
   unitcolumn: X214Bi.Units
 - column: X214Bi.Units
   neotoma: ndb.variableunits.variableunits
@@ -519,6 +545,7 @@ metadata:
 - column: X214Pb
   formatorrange: '> 0'
   neotoma: ndb.data.value
+  overwrite: true
   required: false
   rowwise: true
   taxonid: ???

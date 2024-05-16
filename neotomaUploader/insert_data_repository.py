@@ -1,5 +1,5 @@
 import logging
-from .pull_params import pull_params
+from neotomaHelpers.pull_params import pull_params
 import numpy as np
 
 def insert_data_repository(cur, yml_dict, csv_template, uploader):

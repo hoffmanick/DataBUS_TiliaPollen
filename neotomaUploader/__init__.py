@@ -6,8 +6,6 @@ import itertools
 import argparse
 import os
 
-from .. import neotomaHelpers
-
 #from .clean_column import clean_column
 from .yaml_values import yaml_values
 from .insert_site import insert_site

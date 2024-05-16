@@ -3,8 +3,11 @@ import os
 import psycopg2
 import glob
 from dotenv import load_dotenv
+import neotomaHelpers as nh
 import neotomaUploader as nu
-from neotomaUploader.logging_dict import logging_dict
+from neotomaValidator.csv_validator import csv_validator
+from neotomaValidator.check_file import check_file
+from neotomaHelpers.logging_dict import logging_dict
 """
 Use this command after having validated the files to 
 upload to Neotoma.
@@ -22,13 +25,13 @@ template file that has an .xlsx or .yml extension
 
 load_dotenv()
 
-data = json.loads(os.getenv('PGDB_TANK'))
+data = json.loads(os.getenv('PGDB_LOCAL2'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
 
 cur = conn.cursor()
 
-args = nu.parse_arguments()
+args = nh.parse_arguments()
 overwrite = args['overwrite']
 
 filenames = glob.glob(args['data'] + "*.csv")
@@ -42,31 +45,29 @@ for filename in filenames:
     test_dict = {}
     print(filename)
     logfile = []
-    hashcheck = nu.hash_file(filename)
-    filecheck = nu.check_file(filename)
+    hashcheck = nh.hash_file(filename)
+    filecheck = check_file(filename)
 
     if hashcheck['pass'] is False and filecheck['pass'] is False:
-        csv_template = nu.read_csv(filename)
+        csv_template = nh.read_csv(filename)
         logfile.append("File must be properly validated before it can be uploaded.")
     else:
-        csv_template = nu.read_csv(filename)
+        csv_template = nh.read_csv(filename)
         # This possibly needs to be fixed. How do we know that there is one or more header rows?
 
     uploader = {}
  
-    yml_dict = nu.template_to_dict(temp_file=args['template'])
+    yml_dict = nh.template_to_dict(temp_file=args['template'])
     yml_data = yml_dict['metadata']
 
     # Verify that the CSV columns and the YML keys match
-    csv_valid = nu.csv_validator(filename = filename,
+    csv_valid = csv_validator(filename = filename,
                                 yml_data = yml_data)
 
     logfile.append('=== Inserting New Site ===')
     uploader['sites'] = nu.insert_site(cur = cur,
                                     yml_dict = yml_dict,
-                                    csv_template = csv_template,
-                                    overwrite = overwrite)
-    #logfile.append(f"siteid: {uploader['siteid']}")
+                                    csv_template = csv_template)
     logfile = logging_dict(uploader['sites'], logfile, 'sitelist')
     print(uploader['sites'])
     # break
