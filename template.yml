@@ -32,7 +32,7 @@ metadata:
   rowwise: false
   type: string
   vocab: '["core-site","GPS","core-site approximate","lake center"]'
-- column: Core.number.or.code
+- column: Handle
   neotoma: ndb.collectionunits.handle
   overwrite: true
   required: true
@@ -87,7 +87,7 @@ metadata:
   rowwise: false
   type: date
 - column: Depositional.Env
-  neotoma: ndb.depenvttypes.depenvt
+  neotoma: ndb.collectionunits.depenvtid
   overwrite: true
   required: false
   rowwise: false

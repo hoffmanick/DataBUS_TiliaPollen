@@ -36,8 +36,7 @@ def insert_site(cur, yml_dict, csv_template):
     nh.process_site_inputs(inputs, response)
     inputs['coordlo'] = float(inputs['geog'][1])
     inputs['coordla'] = float(inputs['geog'][0])
-
-    if inputs['siteid'] is not None or inputs['siteid'] != "NA":
+    if inputs['siteid'] is not None and inputs['siteid'] != ["NA"]:
         response['s_id'] = True
         assert len(inputs['siteid']) == 1, "multiple siteIDs given"
         response['message'].append(f"Site ID has been given: {inputs['siteid'][0]}")
@@ -72,7 +71,7 @@ def insert_site(cur, yml_dict, csv_template):
                         response['message'].append(f"Updated {element} to: {inputs[element]}.")        
                     else:
                         updated_site[element] = None
-                        response['message'].append(f"✗ Current {element} in Neotoma will not be updated")                               
+                        response['message'].append(f"? Current {element} in Neotoma will not be updated")                               
                 else:
                     updated_site[element] = None
                     matched[element] = True
@@ -118,6 +117,8 @@ def insert_site(cur, yml_dict, csv_template):
             cur.execute(site_query,
                         inputs)
             response['siteid'] = cur.fetchone()[0]
+            inputs['siteid'] = response['siteid']
+            response['sitelist'].append(inputs)
             response['valid'].append(True)
 
         except Exception as e:
@@ -131,5 +132,6 @@ def insert_site(cur, yml_dict, csv_template):
             cur.execute(site_query, inputs)
             response['siteid'] = cur.fetchone()[0]
             response['valid'].append(False)
+            response['sitelist'].append(inputs)
     response['valid'] = all(response['valid'])
     return response

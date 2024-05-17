@@ -24,7 +24,6 @@ template file that has an .xlsx or .yml extension
 """
 
 load_dotenv()
-
 data = json.loads(os.getenv('PGDB_LOCAL2'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
@@ -64,13 +63,11 @@ for filename in filenames:
     csv_valid = csv_validator(filename = filename,
                                 yml_data = yml_data)
 
-    logfile.append('=== Inserting New Site ===')
+    logfile.append('\n=== Inserting New Site ===')
     uploader['sites'] = nu.insert_site(cur = cur,
                                     yml_dict = yml_dict,
                                     csv_template = csv_template)
     logfile = logging_dict(uploader['sites'], logfile, 'sitelist')
-    print(uploader['sites'])
-    # break
     
     #     # logfile.append('=== Inserting Site Geopol ===')
     #     # uploader['geopolid'] = nu.insert_geopol(cur = cur,
@@ -79,22 +76,22 @@ for filename in filenames:
     #     #                                        uploader = uploader)
     #     # logfile.append(f"Geopolitical Unit: {uploader['geopolid']}")
 
-    # logfile.append('=== Inserting Collection Units ===')
-    # # Placeholders are present
-    # uploader['collunitid'] = nu.insert_collunit(cur = cur,
-    #                                         yml_dict = yml_dict,
-    #                                         csv_template = csv_template,
-    #                                         uploader = uploader)
-    # logfile.append(f"collunitid: {uploader['collunitid']}")
- 
-    # logfile.append('=== Inserting Analysis Units ===')
+    logfile.append('\n === Inserting Collection Units ===')
+    # Placeholders are present
+    uploader['collunitid'] = nu.insert_collunit(cur = cur,
+                                            yml_dict = yml_dict,
+                                            csv_template = csv_template,
+                                            uploader = uploader)
+    logfile = logging_dict(uploader['collunitid'], logfile, "collunits['collunit']")
+  
+    # logfile.append('\n=== Inserting Analysis Units ===')
     # uploader['anunits'] = nu.insert_analysisunit(cur = cur,
     #                                             yml_dict = yml_dict,
     #                                             csv_template = csv_template,
     #                                             uploader = uploader)
     # logfile.append(f"anunits: {uploader['anunits']}")
 
-    # logfile.append('=== Inserting Chronology ===')
+    # logfile.append('\n=== Inserting Chronology ===')
     # # Placeholders exist
     # uploader['chronology'] = nu.insert_chronology(cur = cur,
     #                                             yml_dict = yml_dict,
@@ -102,14 +99,14 @@ for filename in filenames:
     #                                             uploader = uploader)
     # logfile.append(f"chronology: {uploader['chronology']}")
 
-    # logfile.append('=== Inserting Chroncontrol ===')
+    # logfile.append('\n=== Inserting Chroncontrol ===')
     # uploader['chroncontrol'] = nu.insert_chron_control(cur = cur,
     #                                                 yml_dict = yml_dict,
     #                                                 csv_template = csv_template,
     #                                                 uploader = uploader)
     # logfile.append(f"chroncontrol: {uploader['chroncontrol']}")
 
-    # logfile.append('=== Inserting Dataset ===')
+    # logfile.append('\n=== Inserting Dataset ===')
     # # Placeholders exist
     # uploader['datasetid'] = nu.insert_dataset(cur = cur,
     #                                         yml_dict = yml_dict,
@@ -117,14 +114,14 @@ for filename in filenames:
     #                                         uploader = uploader)
     # logfile.append(f"datasetid: {uploader['datasetid']}")
 
-    # logfile.append('=== Inserting Dataset PI ===')
+    # logfile.append('\n=== Inserting Dataset PI ===')
     # uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
     #                                             yml_dict = yml_dict,
     #                                             csv_template = csv_template,
     #                                             uploader = uploader)
     # logfile.append(f"datasetPI: {uploader['datasetpi']}")
  
-    # logfile.append('=== Inserting Data Processor ===')
+    # logfile.append('\n=== Inserting Data Processor ===')
     # uploader['processor'] = nu.insert_data_processor(cur = cur,
     #                                                 yml_dict = yml_dict,
     #                                                 csv_template = csv_template,
@@ -139,34 +136,34 @@ for filename in filenames:
     #     #                                                     uploader = uploader)
     #     # logfile.append(f"dataset Processor: {uploader['repository']}")
 
-    # logfile.append('=== Inserting Dataset Database ===')
+    # logfile.append('\n=== Inserting Dataset Database ===')
     # uploader['database'] = nu.insert_dataset_database(cur = cur,
     #                                                 yml_dict = yml_dict,
     #                                                 uploader = uploader)
     # logfile.append(f"Dataset Database: {uploader['database']}")
 
-    # logfile.append('=== Inserting Samples ===')
+    # logfile.append('\n=== Inserting Samples ===')
     # uploader['samples'] = nu.insert_sample(cur, 
     #                                     yml_dict = yml_dict,
     #                                     csv_template = csv_template,
     #                                     uploader = uploader)
     # logfile.append(f"Dataset Samples: {uploader['samples']}")
 
-    # logfile.append('=== Inserting Sample Analyst ===')
+    # logfile.append('\n=== Inserting Sample Analyst ===')
     # uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
     #                                     yml_dict = yml_dict,
     #                                     csv_template = csv_template,
     #                                     uploader = uploader)
     # logfile.append(f"Sample Analyst: {uploader['sampleAnalyst']}")
 
-    # logfile.append('=== Inserting Sample Age ===')
+    # logfile.append('\n === Inserting Sample Age ===')
     # uploader['sampleAge'] = nu.insert_sample_age(cur, 
     #                                     yml_dict = yml_dict,
     #                                     csv_template = csv_template,
     #                                     uploader = uploader)
     # logfile.append(f"Sample Age: {uploader['sampleAge']}")
 
-    # logfile.append('=== Inserting Data ===')
+    # logfile.append('\n === Inserting Data ===')
     # # TaxonID PlaceHolder
     # uploader['data'] = nu.insert_data(cur, 
     #                                 yml_dict = yml_dict,
@@ -190,6 +187,7 @@ for filename in filenames:
         #    os.makedirs(uploaded_files)
         #uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
         #os.replace(filename, uploaded_files)
+        
 
     else:
         print(f"filename {filename} could not be uploaded.")
