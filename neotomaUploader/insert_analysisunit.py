@@ -1,5 +1,7 @@
 import logging
-from neotomaHelpers.pull_params import pull_params
+import neotomaHelpers as nh
+with open('./sqlHelpers/aunit_query.sql', 'r') as sql_file:
+    aunit_query = sql_file.read()
 
 def insert_analysisunit(cur, yml_dict, csv_template, uploader):
     """_Inserting analysis units_
@@ -15,55 +17,47 @@ def insert_analysisunit(cur, yml_dict, csv_template, uploader):
     Returns:
         _int_: _The integer value of the newly created siteid from the Neotoma Database._
     """
-    results_dict = {'anunits': [], 'valid': []}
-
-    add_unit = """
-    SELECT ts.insertanalysisunit(_collectionunitid := %(collunitid)s,
-                                 _depth := %(depth)s,
-                                 _thickness := %(thickness)s,
-                                  _faciesid := %(faciesid)s,
-                                  _mixed := %(mixed)s,
-                                  _igsn := %(igsn)s,
-                                  _notes := %(notes)s)
-    """
+    response = {'anunits': [], 'valid': [], 'message': []}
 
     params = ["analysisunitname", "depth", "thickness", "faciesid", "mixed", "igsn", "notes"]
-    inputs = pull_params(params, yml_dict, csv_template, 'ndb.analysisunits')
-   
+    inputs = nh.pull_params(params, yml_dict, csv_template, 'ndb.analysisunits')
+    inputs = {k: (v if v else None) for k, v in inputs.items()}
+
+    kv = {'mixed': False, 'faciesid': None, 'igsn': None, 'notes': None}
+    for k in kv:
+        if isinstance(inputs[k] ,list):
+            inputs[k] = [kv[k] if x is None else x for x in inputs[k]]
+        elif inputs[k] == None:
+            inputs[k] = [kv[k]] * len(inputs['depth'])
+
     for i in range(0, len(inputs['depth'])):
-        if inputs['mixed'][i] == None:
-            mixed_input = False
-        else:
-            mixed_input = inputs['mixed'][i]
-        
         try:
             inputs_dict = {'collunitid': uploader['collunitid']['collunitid'],
-                                    'depth': inputs['depth'][i],
-                                    'thickness': inputs['thickness'][i],
-                                    'faciesid': inputs['faciesid'][i],
-                                    'mixed': mixed_input,
-                                    'igsn': inputs['igsn'][i],
-                                    'notes': inputs['notes'][i]}
-            cur.execute(add_unit, inputs_dict)
+                           'depth': inputs['depth'][i],
+                           'thickness': inputs['thickness'][i],
+                           'faciesid': inputs['faciesid'][i],
+                           'mixed': inputs['mixed'][i],
+                           'igsn': inputs['igsn'][i],
+                           'notes': inputs['notes'][i]}
+            cur.execute(aunit_query, inputs_dict)
             anunitid = cur.fetchone()[0]
-            #print('Review Analysis Unit')
-            #print(anunitid)
-            #print(inputs_dict)
-            results_dict['anunits'].append(anunitid)
-            results_dict['valid'].append(True)
+            response['anunits'].append(anunitid)
+            response['message'].append(f"✔ Adding Analysis Unit {anunitid}.")
+            response['valid'].append(True)
         
         except Exception as e:
             logging.error(f"Analysis Unit Data is not correct. Error message: {e}")
-            cur.execute(add_unit, {'collunitid': uploader['collunitid']['collunitid'],
-                                    'depth': None,
-                                    'thickness': None,
-                                    'faciesid': None,
-                                    'mixed': None,
-                                    'igsn': None,
-                                    'notes': 'None'})
+            cur.execute(aunit_query, {'collunitid': uploader['collunitid']['collunitid'],
+                                      'depth': None,
+                                      'thickness': None,
+                                      'faciesid': None,
+                                      'mixed': None,
+                                      'igsn': None,
+                                      'notes': 'None'})
             anunitid = cur.fetchone()[0]
-            results_dict['anunits'].append(anunitid)
-            results_dict['valid'].append(False)
+            response['anunits'].append(anunitid)
+            response['message'].append(f"✗ Adding temporary Analysis Unit {anunitid} to continue process. \nSite will be removed from upload.")
+            response['valid'].append(False)
     
-    results_dict['valid'] = all(results_dict['valid'])
-    return results_dict
+    response['valid'] = all(response['valid'])
+    return response

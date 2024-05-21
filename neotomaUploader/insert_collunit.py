@@ -134,7 +134,7 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
             cur.execute(up_query, up_inputs)
             response['collunitid'] = cur.fetchone()[0]
             response['valid'].append(True)
-            print(response['collunitid'])
+            #print(response['collunitid'])
 
     else:
         inputs = {'handle': handle[:10], # Must be smaller than 10 chars
@@ -167,5 +167,5 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
             response['valid'].append(False)
 
     response['valid'] = all(response['valid'])
-    print(response)
+    #print(response)
     return response
