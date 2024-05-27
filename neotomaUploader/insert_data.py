@@ -1,17 +1,17 @@
-import logging
-from neotomaHelpers.pull_params import pull_params
+import neotomaHelpers as nh
 
 def insert_data(cur, yml_dict, csv_template, uploader):
-    results_dict = {'data_points': [], 'valid': []}
+    response = {'data_points': list(), 'valid': list(), 'message': list()}
     data_query = """
                  SELECT ts.insertdata(_sampleid := %(sampleid)s,
                                       _variableid := %(variableid)s,
                                       _value := %(value)s)
                  """
     params = ['value']
-    inputs = pull_params(params, yml_dict, csv_template, 'ndb.data')
+    inputs = nh.pull_params(params, yml_dict, csv_template, 'ndb.data')
+    
     params2 = ['variableelementid', 'variablecontextid']
-    inputs2 = pull_params(params2, yml_dict, csv_template, 'ndb.data')
+    inputs2 = nh.pull_params(params2, yml_dict, csv_template, 'ndb.data')
     
     inputs2['variableelementid'] = inputs2['variableelementid'] \
         if len(inputs2['variableelementid']) != 0 \
@@ -35,46 +35,42 @@ def insert_data(cur, yml_dict, csv_template, uploader):
                                           _variableunitsid := %(variableunitsid)s,
                                           _variablecontextid := %(variablecontextid)s)
                 """
- 
-    #taxon_list = []
-    tb = """SELECT * FROM ndb.taxa where taxonid = 51086;"""
-    cur.execute(tb)
-    tb_tb = cur.fetchall()
-    print(tb_tb)
     for i in range(len(uploader['samples']['samples'])):
-
         counter = 0
         for val_dict in inputs:
-
             get_taxonid = """SELECT * FROM ndb.taxa WHERE LOWER(taxonname) = %(taxonname)s;"""
             cur.execute(get_taxonid, {'taxonname': val_dict['taxonname'].lower()})
             taxonid = cur.fetchone()
             
             if taxonid != None:
                 taxonid = int(taxonid[0])
+                response['message'].append(f"✔ Taxon ID {taxonid} found.")
                 #taxon_list.append((val_dict['taxonname'].lower(), taxonid))
             else:
                 counter +=1
-                taxonid = counter #placeholder
-                logging.error(f"TaxonID for {val_dict['taxonname']} not found. \
-                              Does it exist in Neotoma?")
-                results_dict['valid'].append(False)
+                taxonid = counter # To do temporary insert
+                response['message'].append(f"✗  TaxonID for {val_dict['taxonname']} not found. Does it exist in Neotoma?")
+                response['message'].append(f"Temporary TaxonID {taxonid} for insert.")
+                response['valid'].append(False)
             
             val_dict['value'] = [None if item == 'NA' else item for item in val_dict['value']]
-            inputs2['variableelementid'] = [None if item == 'NA' else item for item in inputs2['variableelementid']] # None
-            inputs2['variablecontextid'] = [None if item == 'NA' else item for item in inputs2['variablecontextid']] # None
+            inputs2['variableelementid'] = [None if item == 'NA' else item for item in inputs2['variableelementid']]
+            inputs2['variablecontextid'] = [None if item == 'NA' else item for item in inputs2['variablecontextid']]
+            
             # Get UnitsID
             get_unitsid = """SELECT * FROM ndb.variableunits WHERE LOWER(variableunits) = %(units)s;"""
             cur.execute(get_unitsid, {'units': val_dict['unitcolumn'][i].lower()})
             unitsid = cur.fetchone()[0] # This is just getting the varunitsid
             if unitsid != None:
                 unitsid = int(unitsid)
+                response['message'].append(f"✔ Units ID {unitsid} found.")
             else:
                 counter +=1
-                unitsid = counter #placeholder
-                logging.error(f"UnitsID for {val_dict['unitcolumn'][i]} not found. \
-                              Does it exist in Neotoma?")
-                results_dict['valid'].append(False)
+                unitsid = counter
+                response['message'].append(f"✗  UnitsID for {val_dict['unitcolumn'][i].lower()} not found. \nDoes it exist in Neotoma?")
+                response['message'].append(f"Temporary UnitsID {unitsid} for insert.")
+                response['valid'].append(False)
+                response['valid'].append(False)
             var_dict = {'variableunitsid':unitsid, 
                          'taxonid': taxonid, 
                          'variableelementid': inputs2['variableelementid'][i], 
@@ -84,17 +80,14 @@ def insert_data(cur, yml_dict, csv_template, uploader):
             
             if varid != None:
                 varid = int(varid[0])
+                response['message'].append(f"✔ Var ID {varid} found.")
             else:
+                response['message'].append("? Var ID not found. Executing ts.insertvariable")
                 cur.execute(var_query, {'taxonid': taxonid,
                                         'variableelementid': inputs2['variableelementid'][i],
                                         'variableunitsid': unitsid,
                                         'variablecontextid': inputs2['variablecontextid'][i]}) # inputs[i]['variablecontextid']})
                 varid = cur.fetchone()[0]
-
-                cur.execute(get_varid, {'taxonid': taxonid,
-                                        'variableelementid': inputs2['variableelementid'][i],
-                                        'variableunitsid': unitsid,
-                                        'variablecontextid': inputs2['variablecontextid'][i]})
 
             try:
                 input_dict = {'sampleid': int(uploader['samples']['samples'][i]),
@@ -102,31 +95,19 @@ def insert_data(cur, yml_dict, csv_template, uploader):
                               'value': val_dict['value'][i]}
                 cur.execute(data_query, input_dict)
                 result = cur.fetchone()[0]
-                results_dict['data_points'].append(result)
-                results_dict['valid'].append(True)
+                response['data_points'].append(result)
+                response['valid'].append(True)
 
             except Exception as e:
-                logging.error(f"Samples Data is not correct. {e}")
+                response['message'].append(f"✗  Samples Data is not correct. {e}")
                 input_dict = {'sampleid': int(uploader['samples']['samples'][i]),
-                              'variableid': None, 'value': None}
+                              'variableid': None, 
+                              'value': None}
                 cur.execute(data_query, input_dict)
                 result = cur.fetchone()[0]
-                results_dict['data_points'].append(result)
-                results_dict['valid'].append(False)
-    
-    # print("Variable Units Table I have access to:")
-    # test_query = """SELECT * FROM ndb.taxa"""
-    # cur.execute(test_query)
-    # test_data = cur.fetchall()
-    # df = pd.DataFrame(test_data)
-    # column_names = [desc[0] for desc in cur.description]
-    # df.columns = column_names
-    # print(df)
-    # df.to_csv('file.csv')
-    # results_dict['valid'].append(False)
-    # print(taxon_list)
-
-    results_dict['valid'] = all(results_dict['valid'])
-    # Return to the default isolation level
-    #cur.execute("SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL DEFAULT")
-    return results_dict
+                response['data_points'].append(result)
+                response['valid'].append(False)
+    # Keep only error messages for taxonID, varID, UnitsID once
+    response['message'] = list(dict.fromkeys(response['message'])) 
+    response['valid'] = all(response['valid'])
+    return response

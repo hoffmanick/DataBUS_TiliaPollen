@@ -32,7 +32,7 @@ def insert_dataset_pi(cur, yml_dict, csv_template, uploader):
                                    'contid': int(contact['id']),
                                    'piorder': int(contact['order'])})
             response['valid'].append(True)
-            response['message'].append(f"✔ PI inserted")
+            response['message'].append(f"✔ Added PI {contact['id']}.")
         except Exception as e:
             logging.error(f"✗ DatasetPI is not correct. {e}")
             response['message'].append(f"✗ DatasetPI is not correct. {e}")
