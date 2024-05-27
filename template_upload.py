@@ -141,34 +141,34 @@ for filename in filenames:
                                                     uploader = uploader)
     logfile = logging_dict(uploader['database'], logfile)
 
-    # logfile.append('\n=== Inserting Samples ===')
-    # uploader['samples'] = nu.insert_sample(cur, 
-    #                                     yml_dict = yml_dict,
-    #                                     csv_template = csv_template,
-    #                                     uploader = uploader)
-    # logfile.append(f"Dataset Samples: {uploader['samples']}")
+    logfile.append('\n=== Inserting Samples ===')
+    uploader['samples'] = nu.insert_sample(cur, 
+                                        yml_dict = yml_dict,
+                                        csv_template = csv_template,
+                                        uploader = uploader)
+    logfile = logging_dict(uploader['samples'], logfile)
 
-    # logfile.append('\n=== Inserting Sample Analyst ===')
-    # uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
-    #                                     yml_dict = yml_dict,
-    #                                     csv_template = csv_template,
-    #                                     uploader = uploader)
-    # logfile.append(f"Sample Analyst: {uploader['sampleAnalyst']}")
+    logfile.append('\n=== Inserting Sample Analyst ===')
+    uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
+                                        yml_dict = yml_dict,
+                                        csv_template = csv_template,
+                                        uploader = uploader)
+    logfile = logging_dict(uploader['sampleAnalyst'], logfile)
 
-    # logfile.append('\n === Inserting Sample Age ===')
-    # uploader['sampleAge'] = nu.insert_sample_age(cur, 
-    #                                     yml_dict = yml_dict,
-    #                                     csv_template = csv_template,
-    #                                     uploader = uploader)
-    # logfile.append(f"Sample Age: {uploader['sampleAge']}")
+    logfile.append('\n === Inserting Sample Age ===')
+    uploader['sampleAge'] = nu.insert_sample_age(cur, 
+                                        yml_dict = yml_dict,
+                                        csv_template = csv_template,
+                                        uploader = uploader)
+    logfile = logging_dict(uploader['sampleAge'], logfile)
 
-    # logfile.append('\n === Inserting Data ===')
-    # # TaxonID PlaceHolder
-    # uploader['data'] = nu.insert_data(cur, 
-    #                                 yml_dict = yml_dict,
-    #                                 csv_template = csv_template,
-    #                                 uploader = uploader)
-    # logfile.append(f"Data: {uploader['data']}")
+    logfile.append('\n === Inserting Data ===')
+    # TaxonID PlaceHolder
+    uploader['data'] = nu.insert_data(cur, 
+                                    yml_dict = yml_dict,
+                                    csv_template = csv_template,
+                                    uploader = uploader)
+    logfile = logging_dict(uploader['data'], logfile)
 
     modified_filename = filename.replace('data/', 'data/upload_logs/')
     with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
@@ -181,11 +181,10 @@ for filename in filenames:
         print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
         #conn.commit()
         conn.rollback()
-        #if not os.path.exists(uploaded_files):
-        #    os.makedirs(uploaded_files)
-        #uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
-        #os.replace(filename, uploaded_files)
-        
+        if not os.path.exists(uploaded_files):
+           os.makedirs(uploaded_files)
+        uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))
+        os.replace(filename, uploaded_path)
 
     else:
         print(f"filename {filename} could not be uploaded.")
