@@ -84,27 +84,28 @@ for filename in filenames:
                                             uploader = uploader)
     logfile = logging_dict(uploader['collunitid'], logfile, "collunits['collunit']")
   
-    # logfile.append('\n=== Inserting Analysis Units ===')
-    # uploader['anunits'] = nu.insert_analysisunit(cur = cur,
-    #                                             yml_dict = yml_dict,
-    #                                             csv_template = csv_template,
-    #                                             uploader = uploader)
-    # logfile.append(f"anunits: {uploader['anunits']}")
+    logfile.append('\n=== Inserting Analysis Units ===')
+    uploader['anunits'] = nu.insert_analysisunit(cur = cur,
+                                                yml_dict = yml_dict,
+                                                csv_template = csv_template,
+                                                uploader = uploader)
+    logfile = logging_dict(uploader['anunits'], logfile)
 
-    # logfile.append('\n=== Inserting Chronology ===')
-    # # Placeholders exist
-    # uploader['chronology'] = nu.insert_chronology(cur = cur,
-    #                                             yml_dict = yml_dict,
-    #                                             csv_template = csv_template,
-    #                                             uploader = uploader)
-    # logfile.append(f"chronology: {uploader['chronology']}")
-
-    # logfile.append('\n=== Inserting Chroncontrol ===')
-    # uploader['chroncontrol'] = nu.insert_chron_control(cur = cur,
-    #                                                 yml_dict = yml_dict,
-    #                                                 csv_template = csv_template,
-    #                                                 uploader = uploader)
-    # logfile.append(f"chroncontrol: {uploader['chroncontrol']}")
+    logfile.append('\n=== Inserting Chronology ===')
+    # Placeholders exist
+    uploader['chronology'] = nu.insert_chronology(cur = cur,
+                                                yml_dict = yml_dict,
+                                                csv_template = csv_template,
+                                                uploader = uploader)
+    logfile = logging_dict(uploader['chronology'], logfile)
+    
+    logfile.append('\n=== Inserting Chroncontrol ===')
+    uploader['chroncontrol'] = nu.insert_chron_control(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    csv_template = csv_template,
+                                                    uploader = uploader)
+    logfile = logging_dict(uploader['chroncontrol'], logfile)
+    #logfile.append(f"chroncontrol: {uploader['chroncontrol']}")
 
     # logfile.append('\n=== Inserting Dataset ===')
     # # Placeholders exist

@@ -64,8 +64,7 @@ def insert_site(cur, yml_dict, csv_template):
                     updated_site[element] = site[element]
                 elif site[element] != inputs[element]:
                     matched[element] = False
-                    response['message'].append(f"✗ The {element}s do not match.\
-                                               Overwrite for {element} is set to {overwrite[element]}")
+                    response['message'].append(f"✗ The {element}s do not match.\nOverwrite for {element} is set to {overwrite[element]}")
                     if overwrite[element] == True:
                         updated_site[element] = inputs[element]
                         response['message'].append(f"Updated {element} to: {inputs[element]}.")        
@@ -110,8 +109,7 @@ def insert_site(cur, yml_dict, csv_template):
             response['siteid'] = cur.fetchone()[0]
             site = {'id': response['siteid'], 'name': inputs['sitename'], 'coordlo': inputs['coordlo'], 'coordla': inputs['coordla']}
             response['sitelist'].append({'temporary site': site})
-            response['message'].append(f"Continuing process with temporary Site ID {response['siteid']}.\
-                                         Revise information or create new site (remove siteIDs from CSV)")
+            response['message'].append(f"Continuing process with temporary Site ID {response['siteid']}.\nRevise information or create new site (remove siteIDs from CSV)")
     else:
         try:
             cur.execute(site_query,

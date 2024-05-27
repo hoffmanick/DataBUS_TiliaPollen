@@ -29,7 +29,7 @@ def insert_dataset (cur, yml_dict, csv_template, uploader):
                       inputs.items()))
     try:
         inputs_dict = {'collunitid': int(uploader['collunitid']['collunitid']),
-                       'datasettypeid': int(3), # inputs['datasettypeid'],
+                       'datasettypeid': int(1), # inputs['datasettypeid'],
                        'datasetname': inputs['datasetname']}
         cur.execute(dataset_query, inputs_dict)
         results_dict['datasetid'] = cur.fetchone()[0]
