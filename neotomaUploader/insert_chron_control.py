@@ -60,7 +60,7 @@ def insert_chron_control(cur, yml_dict, csv_template, uploader):
             ageold = None
 
         try:
-            cur.execute(addcontrol, {'chronid': int(uploader['chronology']['chronology'][0]), #There is only one chronology
+            cur.execute(addcontrol, {'chronid': int(uploader['chronology']['chronology']), #There is only one chronology
                                     'annuid': int(uploader['anunits']['anunits'][i]),
                                     'depth': inputs['depth'][i],
                                     'thickness': inputs['thickness'][i],
@@ -76,7 +76,7 @@ def insert_chron_control(cur, yml_dict, csv_template, uploader):
 
         except Exception as e:
             logging.error(f"Chron Control Data is not correct. Error message: {e}")
-            cur.execute(addcontrol, {'chronid': int(uploader['chronology']['chronology'][0]),
+            cur.execute(addcontrol, {'chronid': int(uploader['chronology']['chronology']),
                                     'annuid': int(uploader['anunits']['anunits'][i]),
                                     'depth': None,
                                     'thickness': None,

@@ -21,7 +21,7 @@ def insert_chronology(cur, yml_dict, csv_template, uploader):
             'chronology': ID of the inserted chronology.
             'valid': Boolean indicating if the insertion was successful.
     """
-    response = {'chronology': list(), 'valid': list(), 'message': list()}
+    response = {'chronology': None, 'valid': list(), 'message': list()}
     
     get_cont = """SELECT contactid FROM ndb.contacts WHERE %(contactname)s = contactname;"""    
     
@@ -64,7 +64,7 @@ def insert_chronology(cur, yml_dict, csv_template, uploader):
                                'maxage': maxage, 
                                'minage': minage})
         chron = cur.fetchone()[0]
-        response['chronology'].append(chron)
+        response['chronology'] = chron
         response['valid'].append(True)
         response['message'].append(f"✔ Adding Chronology {chron}.")
 
@@ -81,5 +81,6 @@ def insert_chronology(cur, yml_dict, csv_template, uploader):
         chron = cur.fetchone()[0]
         response['valid'].append(False)
         response['message'].append(f"✗ Adding temporary Chronology {chron}.")
+        response['chronology'] = chron
     response['valid'] = all(response['valid'])
     return response
