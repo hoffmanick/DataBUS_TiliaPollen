@@ -59,12 +59,13 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
             coll_info = coll_info[0]
             response['message'].append(f"✔  Handle {response['handle']} found in Neotoma.")
             collunit = {'collectionunitid': int(coll_info[0]), "handle": str(coll_info[1]), 
-                        'siteid': int(coll_info[2]),"colltypeid": int(coll_info[3]), 
-                        "depenvtid": int(coll_info[4]), "collunitname": str(coll_info[5]),
+                        'siteid': nh.clean_numbers(coll_info[2]),"colltypeid": nh.clean_numbers(coll_info[3]), 
+                        "depenvtid": nh.clean_numbers(coll_info[4]), "collunitname": str(coll_info[5]),
                         "colldate": (coll_info[6]), "colldevice": str(coll_info[7]), 
-                        "gpslatitude": float(coll_info[8]), "gpslongitude": float(coll_info[9]), 
-                        "gpsaltitude": int(coll_info[10]), "gpserror": coll_info[11], 
-                        "waterdepth": float(coll_info[12]), "substrateid": coll_info[13], 
+                        "gpslatitude": nh.clean_numbers(coll_info[8]),
+                        "gpslongitude": nh.clean_numbers(coll_info[9]),
+                        "gpsaltitude": nh.clean_numbers(coll_info[10]), "gpserror": coll_info[11], 
+                        "waterdepth": nh.clean_numbers(coll_info[12]), "substrateid": coll_info[13], 
                         "slopeaspect": coll_info[14], "slopeangle": coll_info[15], 
                         "location": str(coll_info[16]), "notes": str(coll_info[17])}
   #         #response['sitelist'].append(site)
@@ -115,21 +116,21 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
             up_inputs = {'collectionunitid': int(updated_collunit['collectionunitid']),
                          'handle': str(updated_collunit['handle']),
                          'siteid': int(updated_collunit['siteid']),
-                         'colltypeid': None if updated_collunit['colltypeid'] is None else int(updated_collunit['colltypeid']),
-                         'depenvtid': None if updated_collunit['depenvtid'] is None else int(updated_collunit['depenvtid']),
+                         'colltypeid': nh.clean_numbers(updated_collunit['colltypeid']),
+                         'depenvtid': nh.clean_numbers(updated_collunit['depenvtid']),
                          'collunitname': None if updated_collunit['collunitname'] is None else str(updated_collunit['collunitname']),
                          'colldate': None if updated_collunit['colldate'] is None else updated_collunit['colldate'],
-                         'colldevice': None if updated_collunit['colldevice'] is None else int(updated_collunit['colldevice']),
-                         'gpslatitude': None if updated_collunit['gpslatitude'] is None else float(updated_collunit['gpslatitude']),
-                         'gpslongitude': None if updated_collunit['gpslongitude'] is None else float(updated_collunit['gpslongitude']),
-                         'gpsaltitude': None if updated_collunit['gpsaltitude'] is None else float(updated_collunit['gpsaltitude']),
-                         'gpserror': None if updated_collunit['gpserror'] is None else float(updated_collunit['gpserror']),
-                         'waterdepth': None if updated_collunit['waterdepth'] is None else float(updated_collunit['waterdepth']),
-                         'substrateid': None if updated_collunit['substrateid'] is None else int(updated_collunit['substrateid']),
-                         'slopeaspect' : None if updated_collunit['slopeaspect'] is None else int(updated_collunit['slopeaspect']),
-                         'slopeangle': None if updated_collunit['slopeangle'] is None else int(updated_collunit['slopeangle']),
-                         'location': None if updated_collunit['location'] is None else int(updated_collunit['location']), 
-                         'notes': None if updated_collunit['notes'] is None else int(updated_collunit['notes'])}
+                         'colldevice': nh.clean_numbers(['colldevice']),
+                         'gpslatitude': nh.clean_numbers(updated_collunit['gpslatitude']),
+                         'gpslongitude': nh.clean_numbers(updated_collunit['gpslongitude']),
+                         'gpsaltitude': nh.clean_numbers(updated_collunit['gpsaltitude']),
+                         'gpserror': nh.clean_numbers(updated_collunit['gpserror']),
+                         'waterdepth': nh.clean_numbers(updated_collunit['waterdepth']),
+                         'substrateid': nh.clean_numbers(updated_collunit['substrateid']),
+                         'slopeaspect' : nh.clean_numbers(updated_collunit['slopeaspect']),
+                         'slopeangle': nh.clean_numbers(updated_collunit['slopeangle']),
+                         'location': nh.clean_numbers(updated_collunit['location']), 
+                         'notes': None if updated_collunit['notes'] is None else str(updated_collunit['notes'])}
 
             cur.execute(up_query, up_inputs)
             response['collunitid'] = cur.fetchone()[0]
