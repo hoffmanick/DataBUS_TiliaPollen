@@ -105,43 +105,41 @@ for filename in filenames:
                                                     csv_template = csv_template,
                                                     uploader = uploader)
     logfile = logging_dict(uploader['chroncontrol'], logfile)
-    #logfile.append(f"chroncontrol: {uploader['chroncontrol']}")
 
-    # logfile.append('\n=== Inserting Dataset ===')
-    # # Placeholders exist
-    # uploader['datasetid'] = nu.insert_dataset(cur = cur,
-    #                                         yml_dict = yml_dict,
-    #                                         csv_template = csv_template,
-    #                                         uploader = uploader)
-    # logfile.append(f"datasetid: {uploader['datasetid']}")
+    logfile.append('\n=== Inserting Dataset ===')
+    # Placeholders exist
+    uploader['datasetid'] = nu.insert_dataset(cur = cur,
+                                            yml_dict = yml_dict,
+                                            csv_template = csv_template,
+                                            uploader = uploader)
+    logfile = logging_dict(uploader['datasetid'], logfile)
 
-    # logfile.append('\n=== Inserting Dataset PI ===')
-    # uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
-    #                                             yml_dict = yml_dict,
-    #                                             csv_template = csv_template,
-    #                                             uploader = uploader)
-    # logfile.append(f"datasetPI: {uploader['datasetpi']}")
+    logfile.append('\n=== Inserting Dataset PI ===')
+    uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
+                                                yml_dict = yml_dict,
+                                                csv_template = csv_template,
+                                                uploader = uploader)
+    logfile = logging_dict(uploader['datasetpi'], logfile)
  
-    # logfile.append('\n=== Inserting Data Processor ===')
-    # uploader['processor'] = nu.insert_data_processor(cur = cur,
-    #                                                 yml_dict = yml_dict,
-    #                                                 csv_template = csv_template,
-    #                                                 uploader = uploader)
-    # logfile.append(f"dataset Processor: {uploader['processor']}")
+    logfile.append('\n=== Inserting Data Processor ===')
+    uploader['processor'] = nu.insert_data_processor(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    csv_template = csv_template,
+                                                    uploader = uploader)
+    logfile = logging_dict(uploader['processor'], logfile)
  
-    #     # Not sure where to get this information from
-    #     # logfile.append('=== Inserting Repository ===')
-    #     # uploader['repository'] = nu.insert_dataset_repository(cur = cur,
-    #     #                                                     yml_dict = yml_dict,
-    #     #                                                     csv_template = csv_template,
-    #     #                                                     uploader = uploader)
-    #     # logfile.append(f"dataset Processor: {uploader['repository']}")
+    logfile.append('\n=== Inserting Repository ===')
+    uploader['repository'] = nu.insert_dataset_repository(cur = cur,
+                                                        yml_dict = yml_dict,
+                                                        csv_template = csv_template,
+                                                        uploader = uploader)
+    logfile = logging_dict(uploader['repository'], logfile)
 
-    # logfile.append('\n=== Inserting Dataset Database ===')
-    # uploader['database'] = nu.insert_dataset_database(cur = cur,
-    #                                                 yml_dict = yml_dict,
-    #                                                 uploader = uploader)
-    # logfile.append(f"Dataset Database: {uploader['database']}")
+    logfile.append('\n=== Inserting Dataset Database ===')
+    uploader['database'] = nu.insert_dataset_database(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    uploader = uploader)
+    logfile = logging_dict(uploader['database'], logfile)
 
     # logfile.append('\n=== Inserting Samples ===')
     # uploader['samples'] = nu.insert_sample(cur, 
@@ -177,7 +175,6 @@ for filename in filenames:
         for i in logfile:
             writer.write(i)
             writer.write('\n')
-    
     all_true = all([uploader[key]['valid'] for key in uploader if 'valid' in uploader[key]])
 
     if all_true:
