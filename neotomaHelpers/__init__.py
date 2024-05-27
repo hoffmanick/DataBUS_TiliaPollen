@@ -15,3 +15,4 @@ from .template_to_dict import template_to_dict
 from .parse_arguments import parse_arguments
 from .csv_to_yaml import csv_to_yaml
 from .process_site_inputs import process_site_inputs
+from .get_contacts import get_contacts
