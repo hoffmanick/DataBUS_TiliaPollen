@@ -1,6 +1,8 @@
 import logging
-from neotomaHelpers.pull_params import pull_params
+import neotomaHelpers as nh
 import datetime
+with open('./sqlHelpers/sample_query.sql', 'r') as sql_file:
+    sample_query = sql_file.read()
 
 def insert_sample(cur, yml_dict, csv_template, uploader):
     """
@@ -13,32 +15,17 @@ def insert_sample(cur, yml_dict, csv_template, uploader):
         uploader (dict): Dictionary containing uploader details.
 
     Returns:
-        results_dict (dict): A dictionary containing information about the inserted samples.
+        response (dict): A dictionary containing information about the inserted samples.
             - 'samples' (list): List of sample IDs inserted into the database.
             - 'valid' (bool): Indicates if all insertions were successful.
     """
-    results_dict = {'samples': [], 'valid': []}
-
-    sample_query = """
-                   SELECT ts.insertsample(_analysisunitid := %(analysisunitid)s,
-                                          _datasetid := %(datasetid)s,
-                                          _samplename := %(samplename)s,
-                                          _sampledate := %(sampledate)s,
-                                          _analysisdate := %(analysisdate)s,
-                                          _taxonid := %(taxonid)s,
-                                          _labnumber := %(labnumber)s,
-                                          _prepmethod := %(prepmethod)s,
-                                          _notes := %(notes)s)
-                    """
-    
+    response = {'samples': list(), 'valid': list(), 'message': list()}
     params = ['labnumber', 'sampledate', 'analysisdate', 'prepmethod', 
               'notes', 'taxonname', 'samplename']       
-    inputs = pull_params(params, yml_dict, csv_template, 'ndb.samples')
-
+    inputs = nh.pull_params(params, yml_dict, csv_template, 'ndb.samples')
     inputs = dict(map(lambda item: (item[0], None if all([i is None for i in item[1]]) else item[1]),
                       inputs.items()))
-    #inputs['labnumber'] = yml_dict['lab_number']
-  
+ 
     for j in range(len(uploader['anunits']['anunits'])):
         get_taxonid = """SELECT * FROM ndb.taxa WHERE taxonname %% %(taxonname)s;"""
         cur.execute(get_taxonid, {'taxonname': inputs['taxonname']})
@@ -60,10 +47,13 @@ def insert_sample(cur, yml_dict, csv_template, uploader):
                            'notes': inputs['notes']}
             cur.execute(sample_query, inputs_dict)
             sampleid = cur.fetchone()[0]
-            results_dict['samples'].append(sampleid)
-            results_dict['valid'].append(True)
+            response['samples'].append(sampleid)
+            response['valid'].append(True)
+            response['message'].append(f"✔  Adding Sample {sampleid}.")
+
         except Exception as e:
-            logging.error(f"Samples data is not correct. {e}")
+            logging.error(f"✗ Samples data is not correct. {e}")
+            response['message'].append(f"✗ Samples data is not correct. {e}")
             cur.execute(sample_query, {'analysisunitid': int(uploader['anunits']['anunits'][j]),
                                     'datasetid': int(uploader['datasetid']['datasetid']),
                                     'samplename': None,
@@ -74,10 +64,10 @@ def insert_sample(cur, yml_dict, csv_template, uploader):
                                     'prepmethod': None,
                                     'notes': None})
             sampleid = cur.fetchone()[0]
-            results_dict['samples'].append(sampleid)
-            results_dict['valid'].append(False)
+            response['samples'].append(sampleid)
+            response['valid'].append(False)
+            response['message'].append(f"Temporary sample ID {sampleid} created.")
 
-    assert len(uploader['anunits']['anunits']) == len(results_dict['samples']), "Analysis Units and Samples do not have same length"
-    
-    results_dict['valid'] = all(results_dict['valid'])
-    return results_dict
+    assert len(uploader['anunits']['anunits']) == len(response['samples']), "Analysis Units and Samples do not have same length."
+    response['valid'] = all(response['valid'])
+    return response

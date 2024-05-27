@@ -1,5 +1,4 @@
-import logging
-from neotomaHelpers.pull_params import pull_params
+import neotomaHelpers as nh
 
 def insert_sample_analyst(cur, yml_dict, csv_template, uploader):
     """
@@ -12,24 +11,17 @@ def insert_sample_analyst(cur, yml_dict, csv_template, uploader):
         uploader (dict): Dictionary containing uploader details.
 
     Returns:
-        results_dict (dict): A dictionary containing information about the inserted sample analysts.
+        response (dict): A dictionary containing information about the inserted sample analysts.
             - 'contids' (list): List of dictionaries containing details of the analysts' IDs.
             - 'valid' (bool): Indicates if all insertions were successful.
     """
-    results_dict = {'contids': [], 'valid': []}
+    response = {'contids': list(), 'valid': list(), 'message': list()}
     params = ['contactid']
-    inputs = pull_params(params, yml_dict, csv_template, 'ndb.sampleanalysts')
-    get_contact = """SELECT * FROM ndb.contacts WHERE contactname %% %(contactname)s;"""
-    
-    contids = []
-    baseid = 1
+    inputs = nh.pull_params(params, yml_dict, csv_template, 'ndb.sampleanalysts')
+
     inputs['contactid'] = list(dict.fromkeys(inputs['contactid']))
- 
-    for i in inputs['contactid']:
-        cur.execute(get_contact, {'contactname': i})
-        contids.append({'contactname': i, 'id': cur.fetchone()[0], 'order': baseid})
-        baseid = baseid + 1
-    results_dict['contids'] = contids
+    contids = nh.get_contacts(cur, inputs['contactid'])
+    response['contids'] = contids
 
     inserter = """
                 SELECT ts.insertsampleanalyst(_sampleid := %(sampleid)s,
@@ -43,13 +35,16 @@ def insert_sample_analyst(cur, yml_dict, csv_template, uploader):
                 cur.execute(inserter, {'sampleid': int(uploader['samples']['samples'][i]), 
                                        'contactid': int(contact['id']),
                                        'analystorder': int(contact['order'])})
-                results_dict['valid'].append(True)
+                response['valid'].append(True)
+                response['message'].append(f"✔  Added Sample Analyst {contact['id']} for sample {uploader['samples']['samples'][i]}.")
+
             except Exception as e:
-                logging.error(f"Sample Analyst data is not correct. {e}")
+                response['message'].append(f"✗ Sample Analyst data is not correct. {e}")
+                response['message'].append(f"Executed temporary query.")
                 cur.execute(inserter, {'sampleid': int(uploader['samples']['samples'][i]), 
                                        'contactid': None,
                                        'analystorder': None})
-                results_dict['valid'].append(False)
-    results_dict['valid'] = all(results_dict['valid'])
-    
-    return results_dict
+                response['valid'].append(False)
+
+    response['valid'] = all(response['valid'])
+    return response
