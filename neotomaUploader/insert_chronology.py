@@ -43,14 +43,14 @@ def insert_chronology(cur, yml_dict, csv_template, uploader):
     elif agetype == 'CE/BCE':
         agetypeid = 1
     else:
-        logging.error("The provided age type is incorrect..")
-        response['message'].append("The provided age type is incorrect..")
+        logging.error("✗ The provided age type is incorrect..")
+        response['message'].append("✗ The provided age type is incorrect..")
     
     if isinstance(inputs_age['age'], (int, float)):
         maxage = int(max(inputs_age['age']))
         minage = int(min(inputs_age['age']))
     else:
-        response['message'].append("Age is set to None. Minage/maxage will be None.")
+        response['message'].append("? Age is set to None. Minage/maxage will be None.")
         maxage = None
         minage = None
 

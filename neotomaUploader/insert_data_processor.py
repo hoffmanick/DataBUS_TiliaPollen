@@ -1,5 +1,5 @@
 import logging
-from neotomaHelpers.pull_params import pull_params
+import neotomaHelpers as nh
 
 def insert_data_processor(cur, yml_dict, csv_template, uploader):
     """
@@ -12,23 +12,16 @@ def insert_data_processor(cur, yml_dict, csv_template, uploader):
         uploader (dict): Dictionary containing uploader details.
 
     Returns:
-        results_dict (dict): A dictionary containing information about the inserted data processors.
+        response (dict): A dictionary containing information about the inserted data processors.
             - 'processorid' (list): List of processors' IDs.
             - 'valid' (bool): Indicates if all insertions were successful.
     """
-    results_dict = {'processorid': [], 'valid': []}
+    response = {'processorid': list(), 'valid': list(), 'message': list()}
     params = ['contactid']
-    inputs = pull_params(params, yml_dict, csv_template, 'ndb.sampleanalysts')
+    inputs = nh.pull_params(params, yml_dict, csv_template, 'ndb.sampleanalysts')
+    
     inputs['contactid'] = list(set(inputs['contactid']))
-
-    get_contact = """SELECT * FROM ndb.contacts WHERE contactname %% %(name)s;"""
-
-    contids = list()
-    for i in inputs['contactid']:
-        cur.execute(get_contact, {'name': i})
-        contids.append({'name': i, 'id': cur.fetchone()[0]})
-    results_dict['processorid'] = contids
-
+    contids = nh.get_contacts(cur, inputs['contactid'])
     processor = """SELECT ts.insertdataprocessor(_datasetid := %(datasetid)s, 
                                                  _contactid := %(contactid)s)"""
     
@@ -36,12 +29,16 @@ def insert_data_processor(cur, yml_dict, csv_template, uploader):
         try:
             cur.execute(processor, {'datasetid': int(uploader['datasetid']['datasetid']), 
                                     'contactid': int(contact['id'])})
-            results_dict['valid'].append(True)
+            response['valid'].append(True)
+            response['message'].append(f"✔ Processor {contact['id']} inserted.")
+
         except Exception as e:
-            logging.error(f"Data processor is not correct. {e}")
+            logging.error(f"✗ Data processor information is not correct. {e}")
+            response['message'].append("✗ Data processor information is not correct. {e}")
             cur.execute(processor, {'datasetid': int(uploader['datasetid']['datasetid']), 
                                     'contactid': None})
-            results_dict['valid'].append(True)
-
-    results_dict['valid'] = all(results_dict['valid'])
-    return results_dict
+            response['valid'].append(False)
+            response['message'].append("✗ Temporary insertion")
+    response['dataset_pi_ids'] = contids
+    response['valid'] = all(response['valid'])
+    return response

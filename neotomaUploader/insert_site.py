@@ -118,9 +118,10 @@ def insert_site(cur, yml_dict, csv_template):
             inputs['siteid'] = response['siteid']
             response['sitelist'].append(inputs)
             response['valid'].append(True)
+            response['message'].append(f"✔ Site inserted {response['siteid']}")
 
         except Exception as e:
-            response['message'].append(f"Site Data is not correct. Error message: {e}")
+            response['message'].append(f"✗ Site Data is not correct. Error message: {e}")
             inputs = {"sitename": 'Placeholder', 
                       "altitude": None,
                       "area": None,
@@ -129,6 +130,7 @@ def insert_site(cur, yml_dict, csv_template):
                       "geog": None}
             cur.execute(site_query, inputs)
             response['siteid'] = cur.fetchone()[0]
+            response['message'].append(f"Temporary SiteID {response['siteid']} used.")
             response['valid'].append(False)
             response['sitelist'].append(inputs)
     response['valid'] = all(response['valid'])

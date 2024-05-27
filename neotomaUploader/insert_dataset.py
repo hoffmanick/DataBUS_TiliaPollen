@@ -1,7 +1,9 @@
 import logging
-from neotomaHelpers.pull_params import pull_params
+import neotomaHelpers as nh
+with open('./sqlHelpers/dataset_query.sql', 'r') as sql_file:
+    dataset_query = sql_file.read()
 
-def insert_dataset (cur, yml_dict, csv_template, uploader):
+def insert_dataset(cur, yml_dict, csv_template, uploader):
     """
     Inserts a dataset associated with a collection unit into a database.
 
@@ -12,35 +14,48 @@ def insert_dataset (cur, yml_dict, csv_template, uploader):
         uploader (dict): Dictionary containing uploader details.
 
     Returns:
-        results_dict (dict): A dictionary containing information about the inserted dataset.
+        response (dict): A dictionary containing information about the inserted dataset.
             'datasetid' (int): IDs for the inserted dataset.
             'valid' (bool): Indicates if insertions were successful.
-       
     """
-    results_dict = {'datasetid': None, 'valid': False}
-    dataset_query = """SELECT ts.insertdataset(_collectionunitid:= %(collunitid)s,
-                                               _datasettypeid := %(datasettypeid)s,
-                                               _datasetname := %(datasetname)s);"""
+    response = {'datasetid': None, 'valid': list(), 'message': list()}
 
     params = ['datasetname', 'datasettypeid']
-    inputs = pull_params(params, yml_dict, csv_template, 'ndb.datasets')
-    
+    inputs = nh.pull_params(params, yml_dict, csv_template, 'ndb.datasets')
     inputs = dict(map(lambda item: (item[0], None if all([i is None for i in item[1]]) else item[1]),
                       inputs.items()))
+    inputs['datasettypeid'] = int(1) # Placeholder! Where in the template should this go?
+
+    if inputs['datasettypeid'] == None:
+        response['valid'].append(False)
+        response['message'].append("✗ Dataset Type ID is required.")
+    else:
+        id_q = """SELECT datasettype from ndb.datasettypes
+                  WHERE datasettypeid = %(datasettypeid)s"""
+        cur.execute(id_q, {'datasettypeid': int(inputs['datasettypeid'])})
+        datasettype = cur.fetchone()
+        if len(datasettype) == 0:
+            response['message'].append(f"✗ No datasettype found for {inputs['datasettypeid']}.")
+            response['valid'].append(False)
+        else:
+            response['message'].append(f"✔ Datasettype is: {datasettype[0]}.")
+
     try:
         inputs_dict = {'collunitid': int(uploader['collunitid']['collunitid']),
-                       'datasettypeid': int(1), # inputs['datasettypeid'],
+                       'datasettypeid': inputs['datasettypeid'],
                        'datasetname': inputs['datasetname']}
         cur.execute(dataset_query, inputs_dict)
-        results_dict['datasetid'] = cur.fetchone()[0]
-        results_dict['valid'] = True
+        response['datasetid'] = cur.fetchone()[0]
+        response['valid'].append(True)
+        response['message'].append(f"✔ Dataset {response['datasetid']} added to Neotoma.")
     
     except Exception as e:
-        logging.error(f"Dataset Info is not correct. {e}")
+        logging.error(f"✗ Dataset Info is not correct. {e}")
         cur.execute(dataset_query, {'collunitid': int(uploader['collunitid']['collunitid']),
                                     'datasettypeid': None,
                                     'datasetname': None})
-        results_dict['datasetid'] = cur.fetchone()[0]
-        results_dict['valid'] = False
-    
-    return results_dict
+        response['datasetid'] = cur.fetchone()[0]
+        response['valid'].append(False)
+        response['message'].append("✗ Dataset Info is not correct. Creating temporary Dataset info.")
+    response['valid'] = all(response['valid'])
+    return response
