@@ -1,4 +1,6 @@
-def validGeoPol(cur, geopolitical, coords):
+from neotomaHelpers.pull_params import pull_params
+
+def validGeoPol(cur, yml_dict, csv_file, geopolitical):
     """_Is the listed geopolitical unit valid?_
 
     Args:
@@ -9,11 +11,15 @@ def validGeoPol(cur, geopolitical, coords):
     Returns:
         _dict_: _A dict with properties pass, fid (the unique geoplacename identifier) and the valid `placename`._
     """
-    
-    response = {'pass': False,
+     
+    response = {'pass': [],
                 'locations': [],
                 'message': []}
-    
+    params = ["geog", "geopoliticalunit"]
+    inputs = pull_params(params, yml_dict, csv_file, 'ndb.sites')
+    coords = inputs['geog']
+    location = inputs['geopoliticalunit']
+
     if len(coords) != 1:
         # Finish the function:
         response['message'].append('✗  Site coordinates are improperly formatted.')

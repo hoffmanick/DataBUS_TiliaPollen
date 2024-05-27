@@ -1,5 +1,4 @@
-from .yaml_values import yaml_values
-from .valid_column import valid_column
+from neotomaHelpers.pull_params import pull_params
 
 def valid_horizon(yml_dict, csv_template):
     """_Is the dated horizon one of the accepted dates?_
@@ -11,36 +10,28 @@ def valid_horizon(yml_dict, csv_template):
     Returns:
         _dict_: _A dict with the validity and an index of the matched depth._
     """
-    response = {'pass': False,
+    response = {'valid': False,
                 'index': [],
                 'message': []}
-                           
-    depthD = yaml_values(yml_dict, csv_template, 'ndb.analysisunits.depth')
-    depths =  depthD[0]['values']
-    depth_message = valid_column(depthD[0])
+    
+    params = ['depth']
+    depths = pull_params(params, yml_dict, csv_template, 'ndb.analysisunits')
 
-    if len(depth_message) >0:
-        response['message'].append(depth_message)
-
-    horizonD = yaml_values(yml_dict, csv_template, 'ndb.leadmodels.datinghorizon')
-    horizon = horizonD[0]['values']
-
-    horizon_message = valid_column(horizonD[0])
-    if len(horizon_message) >0:
-        response['message'].append(horizon_message)
-
-    if len(horizon) == 1:
-        matchingdepth = [i == horizon[0] for i in depths]
+    params2 = ['datinghorizon']
+    horizon = pull_params(params2, yml_dict, csv_template, 'ndb.leadmodels')
+    
+    if len(horizon['datinghorizon']) == 1:
+        matchingdepth = [i == horizon['datinghorizon'][0] for i in depths['depth']]
         if any(matchingdepth):
-            response['pass'] = True
+            response['valid'] = True
             response['index'] = next(i for i,v in enumerate(matchingdepth) if v)
             response['message'].append("✔  The dating horizon is in the reported depths.")
         else:
-            response['pass'] = False
+            response['valid'] = False
             response['index'] = -1
             response['message'].append("✗  There is no depth entry for the dating horizon in the 'depths' column.")
     else:
-        response['pass'] = False
+        response['valid'] = False
         response['index'] = None
         if len(horizon) > 1:
             response['message'].append("✗  Multiple dating horizons are reported.")
