@@ -110,4 +110,4 @@ def insert_data(cur, yml_dict, csv_template, uploader):
     # Keep only error messages for taxonID, varID, UnitsID once
     response['message'] = list(dict.fromkeys(response['message'])) 
     response['valid'] = all(response['valid'])
-    return response
+    return response 
