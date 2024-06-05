@@ -18,7 +18,7 @@ from neotomaHelpers.logging_dict import logging_dict
 # Obtain arguments and parse them to handle command line arguments
 args = nh.parse_arguments()
 load_dotenv()
-data = json.loads(os.getenv('PGDB_LOCAL2'))
+data = json.loads(os.getenv('PGDB_TANK'))
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 

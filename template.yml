@@ -38,6 +38,12 @@ metadata:
   required: true
   rowwise: false
   type: string
+- column: Core.number.or.code
+  neotoma: ndb.collectionunits.corecode
+  overwrite: true
+  required: true
+  rowwise: false
+  type: string
 - column: Cumulative.210Pb.Inventory
   neotoma: ndb.leadmodels.cumulativeinventory
   overwrite: true

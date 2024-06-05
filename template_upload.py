@@ -24,7 +24,7 @@ template file that has an .xlsx or .yml extension
 """
 
 load_dotenv()
-data = json.loads(os.getenv('PGDB_LOCAL2'))
+data = json.loads(os.getenv('PGDB_TANK'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
@@ -162,12 +162,18 @@ for filename in filenames:
     logfile = logging_dict(uploader['sampleAge'], logfile)
 
     logfile.append('\n === Inserting Data ===')
-    # TaxonID PlaceHolder
     uploader['data'] = nu.insert_data(cur, 
                                     yml_dict = yml_dict,
                                     csv_template = csv_template,
                                     uploader = uploader)
     logfile = logging_dict(uploader['data'], logfile)
+
+    # logfile.append('\n === Inserting Uncertainties ===')
+    # uploader['uncertainties'] = nu.insert_data_uncertainties(cur, 
+    #                                 yml_dict = yml_dict,
+    #                                 csv_template = csv_template,
+    #                                 uploader = uploader)
+    # logfile = logging_dict(uploader['uncertainties'], logfile)
 
     modified_filename = filename.replace('data/', 'data/upload_logs/')
     with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
