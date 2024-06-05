@@ -26,6 +26,8 @@ def pull_overwrite(params, yml_dict, table=None):
         if 'geog' in params:
             result['coordlo'] =  result['geog']
             result['coordla'] = result['geog']
+            result['ns'] = result['geog']
+            result['ew'] = result['geog']
         return result
         
     elif isinstance(table, list):

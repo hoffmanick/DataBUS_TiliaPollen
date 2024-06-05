@@ -32,8 +32,9 @@ def insert_site(cur, yml_dict, csv_template):
                    for key in ['sitename', 'geog'])
     except AssertionError:
         response['message'].append("✗ The template must contain a sitename and coordinates.", exc_info=True)
-        response['valid'].append(False)    
-    nh.process_site_inputs(inputs, response)
+        response['valid'].append(False)  
+    nh.process_inputs(inputs, response, 'sitename', ['altitude','area','description','notes'])  
+
     inputs['coordlo'] = float(inputs['geog'][1])
     inputs['coordla'] = float(inputs['geog'][0])
     if inputs['siteid'] is not None and inputs['siteid'] != ["NA"]:
