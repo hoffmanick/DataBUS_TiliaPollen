@@ -26,10 +26,12 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
     except AssertionError:
         logging.error("The template must contain a collectionunit handle.", exc_info = True)
     
-    params = ["handle", "colltypeid", "depenvtid", "collunitname", "colldate", "colldevice",
+    params = ["handle", "corecode", "colltypeid", "depenvtid", "collunitname", "colldate", "colldevice",
               "gpslatitude", "gpslongitude", "gpsaltitude", "gpserror", "waterdepth", 
               "substrateid", "slopeaspect", "slopeangle", "location", "notes", "geog"]
     inputs = nh.pull_params(params, yml_dict, csv_template, 'ndb.collectionunits')
+    inputs = dict(map(lambda item: (item[0], None if all([i is None for i in item[1]]) else item[1]),
+                      inputs.items()))
     overwrite = nh.pull_overwrite(params, yml_dict, 'ndb.sites')
     
     try:
@@ -43,32 +45,33 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
     if inputs['handle'] is not None and inputs['handle'] != ["NA"]:
         response['given_handle'] = True
         assert len(inputs['handle']) == 1, "multiple handles given"
-        response['message'].append(f"Handle has been given: {inputs['handle'][0]}")
+        inputs['handle'] = str(inputs['handle'][0])
+        response['message'].append(f"Handle has been given: {inputs['handle']}")
     else:
         response['given_handle'] = False
         response['message'].append(f"A new Handle will be generated")
+        inputs['handle'] = str(inputs['corecode'][0])[:10]
     
-    handle =  inputs['handle'][0]
     if response['given_handle']:
-        inputs['handle'] = str(inputs['handle'][0])
+        print("Handle given")
         response['handle'] = str(inputs['handle'])
         cur.execute("""SELECT * FROM ndb.collectionunits WHERE handle = %(handle)s""", 
                     {'handle': response['handle']})
         coll_info = cur.fetchall()
         if len(coll_info) == 1:
+            print("Collunit found")
             coll_info = coll_info[0]
             response['message'].append(f"✔  Handle {response['handle']} found in Neotoma.")
             collunit = {'collectionunitid': int(coll_info[0]), "handle": str(coll_info[1]), 
                         'siteid': nh.clean_numbers(coll_info[2]),"colltypeid": nh.clean_numbers(coll_info[3]), 
                         "depenvtid": nh.clean_numbers(coll_info[4]), "collunitname": str(coll_info[5]),
                         "colldate": (coll_info[6]), "colldevice": str(coll_info[7]), 
-                        "gpslatitude": nh.clean_numbers(coll_info[8]),
-                        "gpslongitude": nh.clean_numbers(coll_info[9]),
+                        "ns": nh.clean_numbers(coll_info[8]),
+                        "ew": nh.clean_numbers(coll_info[9]),
                         "gpsaltitude": nh.clean_numbers(coll_info[10]), "gpserror": coll_info[11], 
                         "waterdepth": nh.clean_numbers(coll_info[12]), "substrateid": coll_info[13], 
                         "slopeaspect": coll_info[14], "slopeangle": coll_info[15], 
                         "location": str(coll_info[16]), "notes": str(coll_info[17])}
-  #         #response['sitelist'].append(site)
             matched = dict()
             updated_collunit = dict()
             for element in collunit:
@@ -91,8 +94,7 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
                     matched[element] = True
                     response['valid'].append(True)
                     response['message'].append(f"✔  {element}s match.")
-            matched = all(value for value in matched.values())
-            response['collunits'].append({'collunit': collunit, 'updated_params': updated_collunit})            
+            matched = all(value for value in matched.values())           
             cur.execute(upsert_query) 
             up_query =  """SELECT upsert_collunit(_collectionunitid := %(collectionunitid)s,
                                                   _handle := %(handle)s,
@@ -102,8 +104,8 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
                                                   _collunitname := %(collunitname)s, 
                                                   _colldate := %(colldate)s,
                                                   _colldevice := %(colldevice)s,
-                                                  _gpslatitude := %(gpslatitude)s,
-                                                  _gpslongitude := %(gpslongitude)s, 
+                                                  _ns := %(ns)s,
+                                                  _ew := %(gpslongitude)s, 
                                                   _gpsaltitude := %(gpsaltitude)s,
                                                   _gpserror := %(gpserror)s,
                                                   _waterdepth := %(waterdepth)s,
@@ -121,52 +123,69 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
                          'collunitname': None if updated_collunit['collunitname'] is None else str(updated_collunit['collunitname']),
                          'colldate': None if updated_collunit['colldate'] is None else updated_collunit['colldate'],
                          'colldevice': nh.clean_numbers(['colldevice']),
-                         'gpslatitude': nh.clean_numbers(updated_collunit['gpslatitude']),
-                         'gpslongitude': nh.clean_numbers(updated_collunit['gpslongitude']),
+                         'ns': nh.clean_numbers(updated_collunit['ns']),
+                         'ew': nh.clean_numbers(updated_collunit['ew']),
                          'gpsaltitude': nh.clean_numbers(updated_collunit['gpsaltitude']),
                          'gpserror': nh.clean_numbers(updated_collunit['gpserror']),
                          'waterdepth': nh.clean_numbers(updated_collunit['waterdepth']),
                          'substrateid': nh.clean_numbers(updated_collunit['substrateid']),
                          'slopeaspect' : nh.clean_numbers(updated_collunit['slopeaspect']),
                          'slopeangle': nh.clean_numbers(updated_collunit['slopeangle']),
-                         'location': nh.clean_numbers(updated_collunit['location']), 
+                         'location': None if updated_collunit['location'] is None else str(updated_collunit['location']), 
                          'notes': None if updated_collunit['notes'] is None else str(updated_collunit['notes'])}
-
             cur.execute(up_query, up_inputs)
             response['collunitid'] = cur.fetchone()[0]
             response['valid'].append(True)
-            #print(response['collunitid'])
-
-    else:
-        inputs = {'handle': handle[:10], # Must be smaller than 10 chars
-                'collname': inputs['collunitname'],
-                'siteid' : uploader['sites']['siteid'], 
-                'colltypeid': 3, # inputs['colltypeid'][0],
-                'depenvtid': 19, # inputs['depenvtid'][0],
-                'newdate': inputs['colldate'][0],
-                'location': inputs['location'][0],
-                'ew': coords[1],  
-                'ns': coords[0]}
-        try:
-            cur.execute(collunit_query, inputs)
-            response['collunitid'] = cur.fetchone()[0]
-            response['valid'].append(True)
-
-        except Exception as e:
-            logging.error(f"Collection Unit Data is not correct. Error message: {e}")
-            inputs = {'handle': 'Placeholder',
-                    'collname': None,
-                    'siteid' : uploader['siteid']['siteid'], 
-                    'colltypeid': None,
-                    'depenvtid': None,
-                    'newdate': None,
-                    'location': None,
-                    'ew': None,  
-                    'ns': None}
-            cur.execute(collunit_query, inputs)
-            response['collunitid'] = cur.fetchone()[0]
+            response['collunits'].append({'collunit': collunit, 'updated_params': updated_collunit}) 
+        elif len(coll_info) == 0:
+            response['message'].append(f"Collunit not found")
+            inputs = {'handle': inputs['handle'], # Must be smaller than 10 chars
+                      'collunitname': inputs['collunitname'],
+                      'siteid' : uploader['sites']['siteid'], 
+                      'colltypeid': nh.clean_numbers(inputs['colltypeid']),
+                      'depenvtid': nh.clean_numbers(inputs['depenvtid']),
+                      'colldate': inputs['colldate'][0] if inputs['colldate'] else None,
+                      'location': inputs['location'][0] if inputs['location'] else None,
+                      'ns': coords[0],
+                      'ew': coords[1]}
             response['valid'].append(False)
-
+            response['message'].append(f"✗ Collection Unit ID {response['collunitid']} is not currently associated to a Collection Unit in Neotoma.")
+            cur.execute(collunit_query, inputs)
+            response['collunits'].append(inputs)
+            response['collunitid'] = cur.fetchone()[0]
+            response['message'].append(f"Continuing process with temporary CollUnit ID {response['collunitid']}.\nRevise information or create new collection unit (remove handle from CSV)")
+    else:
+        response['message'].append("Handle not given")
+        inputs = {'handle': inputs['handle'], # Must be smaller than 10 chars
+                  'collunitname': inputs['collunitname'],
+                  'siteid' : uploader['sites']['siteid'], 
+                  'colltypeid': nh.clean_numbers(inputs['colltypeid']),
+                  'depenvtid': nh.clean_numbers(inputs['depenvtid']),
+                  'colldate': inputs['colldate'][0] if inputs['colldate'] else None,
+                  'location': inputs['location'][0] if inputs['location'] else None,
+                  'ns': coords[0],
+                  'ew': coords[1]}
+        try:
+            cur.execute("SAVEPOINT before_try")
+            cur.execute(collunit_query, inputs)
+            response['collunitid'] = cur.fetchone()[0]
+            response['collunits'].append(inputs)
+            response['valid'].append(True)
+        except Exception as e:
+            cur.execute("ROLLBACK TO SAVEPOINT before_try")
+            response['message'].append(f"✗ Collection Unit Data is not correct. Error message: {e}")
+            inputs = {'handle': str('Placehold'),
+                      'collunitname': None,
+                      'siteid' : int(uploader['sites']['siteid']),
+                      'colltypeid': None,
+                      'depenvtid': None,
+                      'colldate': None,
+                      'location': None, 
+                      'ns': None,
+                      'ew': None}
+            cur.execute(collunit_query, inputs)
+            response['collunitid'] = cur.fetchone()[0]
+            response['collunits'].append(inputs)
+            response['valid'].append(False)
     response['valid'] = all(response['valid'])
-    #print(response)
     return response

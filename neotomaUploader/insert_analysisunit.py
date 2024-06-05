@@ -29,7 +29,7 @@ def insert_analysisunit(cur, yml_dict, csv_template, uploader):
             inputs[k] = [kv[k] if x is None else x for x in inputs[k]]
         elif inputs[k] == None:
             inputs[k] = [kv[k]] * len(inputs['depth'])
-
+    #print(uploader)
     for i in range(0, len(inputs['depth'])):
         try:
             inputs_dict = {'collunitid': uploader['collunitid']['collunitid'],
