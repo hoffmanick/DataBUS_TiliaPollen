@@ -19,33 +19,30 @@ def valid_taxa(cur, csv_template, yml_dict):
     for element in taxa_dict:
         response['message'].append(f"  === Checking Against Taxa {element['taxonname']} ===")
         #taxa_message = valid_column(element)
-        taxonname = element['taxonname']
-        taxamatch = []
-        #if len(taxa_message) > 0:
-        #    response['message'].append(taxa_message)
+        taxonname = element['taxonname'].lower()
+        #taxamatch = []
  
         response['message'].append(f"  *** Named Taxa: {taxonname} ***")
         nameQuery = """
-                SELECT taxonid, taxonname
+                SELECT taxonid, LOWER(taxonname)
                 FROM ndb.taxa AS tx
-                WHERE to_tsvector(tx.taxonname) @@ plainto_tsquery(%(taxonname)s);"""
-        cur.execute(nameQuery, {'taxonname': taxonname})
+                WHERE to_tsvector(lower(tx.taxonname)) @@ plainto_tsquery(lower(%(taxonname)s));"""
+        cur.execute(nameQuery, {'taxonname': taxonname.lower()})
         result = {'name': taxonname, 'match':  cur.fetchall() or []}
-        taxamatch.append(result)
- 
+        #taxamatch.append(result)
         matches = []
-        for taxon in taxamatch:
-            if len(taxon['match']) ==0:
-                response['message'].append(f"  ✗ No approximate matches found for {taxon['name']}. Have they been added to Neotoma?")
-                matches.append(False)
-            elif any([taxon['name'] == i[1] for i in taxon['match']]):
-                response['message'].append(f"  ✔ Exact match found for {taxon['name']}.")
-                matches.append(True)
-            else:
-                response['message'].append(f"  ? No exact match found for {taxon['name']}, several potential matches follow:")
-                matches.append(False)
-                for i in taxon['match']:
-                    response['message'].append(f"   * {i[1]}")
+
+        if len(result['match']) == 0:
+            response['message'].append(f"  ✗ No approximate matches found for {result['name']}. Have they been added to Neotoma?")
+            matches.append(False)
+        elif any([result['name'] == i[1] for i in result['match']]):
+            response['message'].append(f"  ✔ Exact match found for {result['name']}.")
+            matches.append(True)
+        else:
+            response['message'].append(f"  ? No exact match found for {result['name']}, several potential matches follow:")
+            matches.append(False)
+            for i in result['match']:
+                response['message'].append(f"   * {i[1]}")
         if all(matches):
             response['valid'] = True
         
