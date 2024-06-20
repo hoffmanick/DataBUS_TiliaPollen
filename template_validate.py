@@ -4,7 +4,7 @@
    each of them, validating each field to ensure they are acceptable for
    valid upload.
 """
-
+from datetime import datetime
 import glob
 import json
 import os
@@ -34,29 +34,31 @@ for filename in filenames:
     hashcheck = nh.hash_file(filename)
     filecheck = nv.check_file(filename)
     logfile = logfile + hashcheck['message'] + filecheck['message']
-
+    logfile.append(f"\nNew validation started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     if hashcheck['pass'] and filecheck['pass']:
         print("  - File is correct and hasn't changed since last validation.")
     else:
         # Load the yml template as a dictionary
         yml_dict = nh.template_to_dict(temp_file=args['template'])
         yml_data = yml_dict['metadata']
-        validator = {}
+        validator = dict()
         csv_file = nh.read_csv(filename)
         
         # Get the unitcols and units to be used
         # Check that the vocab in the template matches the csv vcocab
         #vocab_ = nv.vocabDict(yml_data)
 
-        logfile.append('=== File Validation ===')
+        logfile.append('\n=== File Validation ===')
         validator['csvValid'] = nv.csv_validator(filename = filename,
                                    yml_data = yml_data)
         logfile = logging_dict(validator['csvValid'], logfile)
 
         logfile.append('\n === Validating Template Unit Definitions ===')
         df = pd.read_csv(filename)
-        #validator['units'] = nv.validUnits(df, vocab_)
-        #logfile = logging_dict(validator['units'], logfile)
+        validator['units'] = nv.validUnits(cur = cur,
+                                 yml_dict = yml_dict,
+                                 df = df)
+        logfile = logging_dict(validator['units'], logfile)
 
         logfile.append('\n === Validating Sites ===')
         validator['sites'] = nv.valid_site(cur = cur,

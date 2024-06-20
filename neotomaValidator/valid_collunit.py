@@ -2,57 +2,57 @@ import itertools
 from neotomaHelpers.pull_params import pull_params
 
 def valid_collunit(cur, yml_dict, csv_file):
-    """Is the collection unit valid as a new unit?
+    """
+    Validates whether the specified collection unit can be registered as a new unit in the Neotoma database.
 
     Args:
-        cur (_psycopg2.extensions.connection_): _A connection to a valid Neotoma database (either local or remote)_
-        coords (_list_): _A list containing the coordinates for the site. We expect only a single element, a string lat/long pair._
-        collunits (_list_): _A list containing unique collection unit names._
+        cur (_psycopg2.extensions.connection_): A database connection object to interact with a Neotoma database, which can be either local or remote.  
+        coords (list): A list containing the geographical coordinates of the site. This should include only one element formatted as a string in the 'latitude, longitude' format.
+        collunits (list): A list of unique identifiers or names for the collection units to be validated.
 
     Returns:
-        _dict_: _A dict object with properties `pass` (boolean) and `collunits` (a list of valid collection units at the site). _
+        dict: A dictionary containing the following key-value pairs:
+            - 'valid' (bool): Indicates whether the collection unit passed the validation checks.
+            - 'collunits' (list): A list of collection unit names that are valid within the specified site context.
     """
 
-    response = {'valid': [],
-                'sitelist': [],
-                'message': []}
+    response = {'valid': list(),
+                'sitelist': list(),
+                'message': list()}
     params = ["handle", "core", "colldate", "geog", "location"]
     inputs = pull_params(params, yml_dict, csv_file, 'ndb.collectionunits')
+
+    # Validate handle uniqueness
+    if isinstance(inputs['handle'], list) and len(inputs['handle']) > 1:
+        response['message'].append('✗ There can only be a single collection unit handle defined.')
+        response['valid'].append(False)
+    inputs['handle'] = None if inputs['handle'][0] == 'NA' else str(inputs['handle'][0])
+    inputs['core'] = None if inputs['core'][0] == 'NA' else str(inputs['core'][0])
     coords = inputs['geog']
-    try:
-        assert len(coords) == 2
-        assert coords[0] >= -90 and coords[0] <= 90
-        assert coords[1] >= -180 and coords[1] <= 180
+    if len(coords) == 2 and -90 <= coords[0] <= 90 and -180 <= coords[1] <= 180:
         response['valid'].append(True)
-    except AssertionError:
-        if len(coords) > 2:
-            response['message'].append('✗ There are multiple columns mapped to coordinates in your template.')
-            response['valid'].append(False)
-        else:
-            response['message'].append('✗ There are no columns mapped to coordinates in your template.')
-            response['valid'].append(False)
+    else:
+        response['message'].append('✗ Invalid or improperly formatted coordinates.')
+        response['valid'].append(False)
 
     handlename = inputs['handle']
-    try:
-        assert len(handlename) == 1
-        # Find if it is an existing Handlename
-        if handlename == 'NA':
-            response['message'].append('✗ Handlename must not be called NA')
-            response['valid'].append(False)
-        handle_query = """SELECT count(*) from ndb.collectionunits where handle = %(_handle)s;"""
-        cur.execute(handle_query, {'_handle': handlename[0]})
-        rows = cur.fetchall()
-        # Retrieve site name information; compare against sitename in the case of an exisiting handle
-        if rows == [(0,)]:
+    if not handlename:
+        response['message'].append('? Handlename not given. Will create new handle from core code.')
+        cur.execute("SELECT handle FROM ndb.collectionunits WHERE handle = %(handle)s;", ({'handle': inputs['core'][:10],}))
+        if not cur.fetchall():
             response['message'].append('✔  There are no same handles, a new collection unit will be created')
             response['valid'].append(True)
         else:
-            response['message'].append('? This is an exisiting handlename. Data will be inserted in this collection unit.')
-    
-    except AssertionError:
-        response['message'].append('✗ There can only be a single collection unit handle defined.')
-        response['valid'].append(False)
-    
+            response['message'].append('? There are already handles similar to this core code.')
+            response['valid'].append(False)
+    else:
+        cur.execute("SELECT count(*) FROM ndb.collectionunits WHERE handle = %s;", (handlename,))
+        if not cur.fetchone()[0]:
+            response['message'].append('✔  There are no same handles, a new collection unit will be created')
+            response['valid'].append(True)
+        else:
+            response['message'].append('? This is an existing handlename. Data will be inserted in this collection unit.')
+
     # Site checks for collection units
     if len(coords) == 2:
         coord_dict = {'lat': coords[0],
@@ -68,7 +68,7 @@ def valid_collunit(cur, yml_dict, csv_file):
         close_handles = cur.fetchall()
         if len(close_handles) > 0:
             goodcols = [i[-2] for i in close_handles]
-            if any([j == handlename[0] for j in goodcols]):
+            if any([j == handlename for j in goodcols]):
                 response['message'].append('?  A collection unit with this name already exists nearby.')
 
             else:

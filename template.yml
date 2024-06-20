@@ -329,7 +329,7 @@ metadata:
   neotoma: ndb.collectionunits.handle
   overwrite: true
   required: true
-  rowwise: true
+  rowwise: false
   type: string
 - column: Location
   neotoma: ndb.geopoliticalunits.geopoliticalunit
