@@ -122,6 +122,7 @@ def insert_collunit(cur, yml_dict, csv_template, uploader):
             inputs['siteid'] = uploader['sites']['siteid']
             response['valid'].append(False)
             response['message'].append(f"✗ Collection Unit ID {response['collunitid']} is not currently associated to a Collection Unit in Neotoma.")
+            inputs['handle'] = inputs['handle'][:10]
             cur.execute(collunit_query, inputs)
             response['collunits'].append(inputs)
             response['collunitid'] = cur.fetchone()[0]

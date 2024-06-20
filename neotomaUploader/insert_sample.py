@@ -20,12 +20,13 @@ def insert_sample(cur, yml_dict, csv_template, uploader):
             - 'valid' (bool): Indicates if all insertions were successful.
     """
     response = {'samples': list(), 'valid': list(), 'message': list()}
-    params = ['labnumber', 'sampledate', 'analysisdate', 'prepmethod', 
+    params = ['sampledate', 'analysisdate', 'prepmethod', 
               'notes', 'taxonname', 'samplename']       
     inputs = nh.pull_params(params, yml_dict, csv_template, 'ndb.samples')
     inputs = dict(map(lambda item: (item[0], None if all([i is None for i in item[1]]) else item[1]),
                       inputs.items()))
- 
+    inputs['labnumber'] = nh.retrieve_dict(yml_dict, 'ndb.samples.labnumber')
+    inputs['labnumber'] = inputs['labnumber'][0]['value']
     for j in range(len(uploader['anunits']['anunits'])):
         get_taxonid = """SELECT * FROM ndb.taxa WHERE taxonname %% %(taxonname)s;"""
         cur.execute(get_taxonid, {'taxonname': inputs['taxonname']})

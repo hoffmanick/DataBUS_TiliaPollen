@@ -1,4 +1,5 @@
 import logging
+import neotomaHelpers as nh
 
 def insert_dataset_database(cur, yml_dict, uploader):
     """
@@ -19,13 +20,15 @@ def insert_dataset_database(cur, yml_dict, uploader):
                SELECT ts.insertdatasetdatabase(_datasetid := %(datasetid)s, 
                                                _databaseid := %(databaseid)s)
                """
-    databaseid = yml_dict['databaseid']
+    inputs = dict()
+    db_name = nh.retrieve_dict(yml_dict, 'ndb.datasetdatabases.databaseid')
+    inputs['databaseid'] = db_name[0]['value']
 
     try:
         cur.execute(db_query, {'datasetid': int(uploader['datasetid']['datasetid']), 
-                               'databaseid': int(databaseid)})
+                               'databaseid': int(inputs['databaseid'])})
         response['valid'].append(True)
-        response['message'].append(f"✔ Database ID {databaseid} information added.")
+        response['message'].append(f"✔ Database ID {inputs['databaseid']} information added.")
 
     except Exception as e:
         logging.error(f"✗ Database information is not correct. {e}")
@@ -34,6 +37,6 @@ def insert_dataset_database(cur, yml_dict, uploader):
                             'databaseid': None})
         response['message'].append(f"✗ Using temporary query.")
         response['valid'] = False
-    response['databaseid'] = databaseid
+    response['databaseid'] = inputs['databaseid']
     response['valid'] = all(response['valid'])
     return response
