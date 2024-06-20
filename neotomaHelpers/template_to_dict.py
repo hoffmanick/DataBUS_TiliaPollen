@@ -25,8 +25,8 @@ def template_to_dict(temp_file):
     
     elif file_extension.lower() == '.xls' or file_extension.lower() == '.xlsx':
         # Use pandas to read the Excel file and convert it to a dictionary
-        data = pd.read_excel(temp_file)
-        excel_to_yaml(data, file_name)
+        #data = pd.read_excel(temp_file)
+        excel_to_yaml(temp_file, file_name)
         file_name = file_name + '.yml'
 
         with open(file_name, encoding="UTF-8") as file:

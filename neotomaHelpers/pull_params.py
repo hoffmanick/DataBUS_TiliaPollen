@@ -66,20 +66,6 @@ def pull_params(params, yml_dict, csv_template, table=None):
             else:
                 add_unit_inputs[i] = []
 
-        maxlen = 0
-
-        # for i in params:
-        #     if len(add_unit_inputs.get(i)) > maxlen:
-        #         maxlen = len(add_unit_inputs.get(i))
-
-        # for i in params:
-        #     if len(add_unit_inputs.get(i)) == 0:
-        #         add_unit_inputs[i] = [None for j in range(maxlen)]
-        #     elif len(add_unit_inputs.get(i)) == 1:
-        #         add_unit_inputs[i] = [add_unit_inputs[i][0] for j in range(maxlen)] # do i need this? This is duplicating values
-        #         print('ii', add_unit_inputs[i])
-        #print(add_unit_inputs)
-
         if params == ['value']:
             return add_units_inputs_list
         else:

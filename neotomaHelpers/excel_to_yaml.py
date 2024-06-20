@@ -1,24 +1,41 @@
 import pandas as pd
 import numpy as np
+import ast
 import yaml
 
 #df = pd.read_excel('GOOD_template_spreadsheet.xlsx')
+# Add InLineList to create vocab as a list in yml file
+class InlineList:
+    def __init__(self, data):
+        self.data = data
 
-def excel_to_yaml(df, file_name):
-    df = df[df['Column']!="—NA—"]
-    df = df.replace({np.nan: None})
+def represent_inline_list(dumper, data):
+    return dumper.represent_sequence(u'tag:yaml.org,2002:seq', data.data, flow_style=True)
 
-    df.columns = map(str.lower, df.columns)
+yaml.add_representer(InlineList, represent_inline_list)
 
-    df['vocab'] = df['vocab'].str.replace("'", '"')
-    df['vocab'] = df['vocab'].str.replace("‘", '"')
-    df['vocab'] = df['vocab'].str.replace("’", '"')
-    #df['vocab'] = df['vocab'].apply(lambda x: ast.literal_eval(x) if x is not None else None)
 
-    data = df.groupby(['column', 'neotoma']).apply(lambda x: x.to_dict(orient='index')).to_dict()
+def excel_to_yaml(temp_file, file_name):
+    # Template info
+    df1 = pd.read_excel(temp_file, sheet_name= 'Data Mapping')
+    df1 = df1[df1['Column']!="—NA—"]
+    df1 = df1.replace({np.nan: None})
+    df1.columns = map(str.lower, df1.columns)
+    df1['vocab'] = df1['vocab'].str.replace("'", '"')
+    df1['vocab'] = df1['vocab'].str.replace("‘", '"')
+    df1['vocab'] = df1['vocab'].str.replace("’", '"')
+ 
+    # Metadata
+    df2 = pd.read_excel(temp_file, sheet_name= 'Metadata')
+    df2 = df2[df2['Column']!="—NA—"]
+    df2 = df2.replace({np.nan: None})
+    df2.columns = map(str.lower, df2.columns)
+
+    # Setting the dictionary
+    data = df1.groupby(['column', 'neotoma']).apply(lambda x: x.to_dict(orient='index')).to_dict() 
+    metadata = df2.to_dict(orient='records')
 
     data_list = []
-
     for key, value in data.items():
         data_list.append(list(value.values())[0])
 
@@ -43,8 +60,7 @@ def excel_to_yaml(df, file_name):
         else:
             entry['uncertainty'] = {'uncertaintycolumn': entry['uncertaintycolumn'], 
                                     'uncertaintybasis': entry['uncertaintybasis'], 
-                                    'unitcolumn': entry['uncertaintyunitcolumn']}
-            
+                                    'unitcolumn': entry['uncertaintyunitcolumn']}     
             uncertainty_dict = {'column': entry['uncertaintycolumn'],
                                 'formatorrange': entry['formatorrange'],
                                 'neotoma': 'ndb.values',
@@ -68,6 +84,15 @@ def excel_to_yaml(df, file_name):
             del entry['uncertaintyunitcolumn']       
         if entry['vocab'] is None:
             del entry['vocab']
+        else:
+            if isinstance(entry['vocab'], str) and entry['vocab'].startswith('[') and entry['vocab'].endswith(']'):
+                # Handling strings of lists for the YML
+                try:
+                    entry['vocab'] = ast.literal_eval(entry['vocab'])
+                    entry['vocab'] = InlineList(entry['vocab'])
+                except (ValueError, SyntaxError):
+                    # Leave it as is
+                    pass
         if entry['formatorrange'] is None:
             del entry['formatorrange']
         if entry['constant'] is None:
@@ -79,21 +104,18 @@ def excel_to_yaml(df, file_name):
         if entry['notes'] is None:
             del entry['notes']
 
-
-
+    # Joining it all
     data_list = data_list + units_entries + uncertainty_entries + uncertainty_units_entries
-
     data_list = sorted(data_list, key=lambda x: x['column'])
+    data_list = metadata + data_list
 
     final_dict = {'apiVersion': 'neotoma v2.0',
                 'headers': 2,
                 'kind': 'Development',
-                'databaseid': 37,
-                'lab_number': 5,
                 'metadata': data_list}
 
     file_name = file_name + '.yml'
     with open(file_name, "w") as f:
         yaml.dump(final_dict, f)
-    
+        
     return None
