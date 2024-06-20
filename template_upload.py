@@ -24,7 +24,7 @@ template file that has an .xlsx or .yml extension
 """
 
 load_dotenv()
-data = json.loads(os.getenv('PGDB_LOCAL2H'))
+data = json.loads(os.getenv('PGDB_TANK'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()

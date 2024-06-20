@@ -1,16 +1,38 @@
 apiVersion: neotoma v2.0
-databaseid: 37
 headers: 2
 kind: Development
-lab_number: 5
 metadata:
+- column: datasetname
+  neotoma: ndb.datasets.datasetname
+  notes: null
+  overwrite: false
+  required: true
+  value: 210Pb
+- column: datasettypeid
+  neotoma: ndb.datasettypes.datasettypeid
+  notes: null
+  overwrite: false
+  required: true
+  value: Geochronologic
+- column: databaseid
+  neotoma: ndb.datasetdatabases.databaseid
+  notes: Placeholder
+  overwrite: false
+  required: true
+  value: 37
+- column: labnumber
+  neotoma: ndb.samples.labnumber
+  notes: null
+  overwrite: false
+  required: false
+  value: null
 - column: Analyst
   neotoma: ndb.sampleanalysts.contactid
   overwrite: true
   required: false
   rowwise: true
   type: string
-  vocab: '["fixed"]'
+  vocab: [fixed]
 - column: Assigned.137Cs.Date
   neotoma: ndb.geochroncontrols.age
   overwrite: true
@@ -31,15 +53,9 @@ metadata:
   required: false
   rowwise: false
   type: string
-  vocab: '["core-site","GPS","core-site approximate","lake center"]'
-- column: Handle
-  neotoma: ndb.collectionunits.handle
-  overwrite: true
-  required: true
-  rowwise: false
-  type: string
+  vocab: [core-site, GPS, core-site approximate, lake center]
 - column: Core.number.or.code
-  neotoma: ndb.collectionunits.corecode
+  neotoma: ndb.collectionunits.core
   overwrite: true
   required: true
   rowwise: false
@@ -93,12 +109,12 @@ metadata:
   rowwise: false
   type: date
 - column: Depositional.Env
-  neotoma: ndb.collectionunits.depenvtid
+  neotoma: ndb.depenvttypes.depenvt
   overwrite: true
   required: false
   rowwise: false
   type: string
-  vocab: '["fixed"]'
+  vocab: [fixed]
 - column: Depth
   neotoma: ndb.analysisunits.depth
   overwrite: true
@@ -118,7 +134,7 @@ metadata:
   required: false
   rowwise: true
   type: string
-  vocab: '["Top", "Mid", "Bottom"]'
+  vocab: [Top, Mid, Bottom]
 - column: Depth.position
   neotoma: ndb.chroncontrols.position
   notes: Use same column as ndb.analysisunits ?
@@ -126,7 +142,7 @@ metadata:
   required: false
   rowwise: true
   type: string
-  vocab: '["Top", "Mid", "Bottom"]'
+  vocab: [Top, Mid, Bottom]
 - column: Dry.Density
   formatorrange: '> 0'
   neotoma: ndb.data.value
@@ -190,6 +206,13 @@ metadata:
   required: false
   rowwise: true
   type: string
+  vocab: null
+- column: Error..214Bi..Units
+  neotoma: ndb.values
+  notes: null
+  required: false
+  rowwise: true
+  type: float
   vocab: null
 - column: Error..214Pb.
   formatorrange: '> 0'
@@ -296,33 +319,32 @@ metadata:
   taxonname: 214Bi
   type: float
   vocab: null
-- column: Error.214Bi..Units
-  neotoma: ndb.values
-  notes: null
-  required: false
-  rowwise: true
-  type: float
-  vocab: null
 - column: Geographic.coordinates
   neotoma: ndb.sites.geog
   overwrite: true
   required: true
   rowwise: false
   type: coordinates (lat,long)
+- column: Handle
+  neotoma: ndb.collectionunits.handle
+  overwrite: true
+  required: true
+  rowwise: true
+  type: string
 - column: Location
   neotoma: ndb.geopoliticalunits.geopoliticalunit
   overwrite: true
   required: false
   rowwise: false
   type: string
-  vocab: '["fixed"]'
+  vocab: [fixed]
 - column: Method.for.estimating.supported.210Pb
   neotoma: ndb.leadmodels.basis
   overwrite: true
   required: false
   rowwise: false
   type: string
-  vocab: '["asymptote of alpha", "gamma point-subtraction", "gamma average"]'
+  vocab: [asymptote of alpha, gamma point-subtraction, gamma average]
 - column: Modeler
   neotoma: ndb.chronologies.contactid
   overwrite: true
@@ -335,7 +357,7 @@ metadata:
   required: true
   rowwise: false
   type: string
-  vocab: '["fixed"]'
+  vocab: [fixed]
 - column: Publications
   formatorrange: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
   neotoma: ndb.publications.doi
@@ -344,7 +366,13 @@ metadata:
   required: false
   rowwise: false
   type: string
-  vocab: '["fixed"]'
+  vocab: [fixed]
+- column: Reference
+  neotoma: ndb.contactreferences.contactid
+  overwrite: true
+  required: false
+  rowwise: true
+  type: string
 - column: Site ID
   neotoma: ndb.sites.siteid
   overwrite: true
@@ -359,7 +387,7 @@ metadata:
   type: coordinates (lat,long)
 - column: Site.name
   neotoma: ndb.sites.sitename
-  overwrite: true
+  overwrite: false
   required: true
   rowwise: false
   type: string
@@ -486,7 +514,7 @@ metadata:
   required: true
   rowwise: false
   type: string
-  vocab: '["CRS", "CIC", "CF:CS", "PLUM", "other"]'
+  vocab: [CRS, CIC, 'CF:CS', PLUM, other]
 - column: X210Pb.Date
   neotoma: ndb.chroncontrols.age
   notes: Use same column as sampleages
@@ -540,7 +568,7 @@ metadata:
   uncertainty:
     uncertaintybasis: null
     uncertaintycolumn: Error.214Bi
-    unitcolumn: Error.214Bi..Units
+    unitcolumn: Error..214Bi..Units
   unitcolumn: X214Bi.Units
 - column: X214Bi.Units
   neotoma: ndb.variableunits.variableunits

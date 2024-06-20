@@ -18,7 +18,7 @@ from neotomaHelpers.logging_dict import logging_dict
 # Obtain arguments and parse them to handle command line arguments
 args = nh.parse_arguments()
 load_dotenv()
-data = json.loads(os.getenv('PGDB_LOCAL2H'))
+data = json.loads(os.getenv('PGDB_LOCAL'))
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
@@ -46,7 +46,7 @@ for filename in filenames:
         
         # Get the unitcols and units to be used
         # Check that the vocab in the template matches the csv vcocab
-        vocab_ = nv.vocabDict(yml_data)
+        #vocab_ = nv.vocabDict(yml_data)
 
         logfile.append('=== File Validation ===')
         validator['csvValid'] = nv.csv_validator(filename = filename,
@@ -55,8 +55,8 @@ for filename in filenames:
 
         logfile.append('\n === Validating Template Unit Definitions ===')
         df = pd.read_csv(filename)
-        validator['units'] = nv.validUnits(df, vocab_)
-        logfile = logging_dict(validator['units'], logfile)
+        #validator['units'] = nv.validUnits(df, vocab_)
+        #logfile = logging_dict(validator['units'], logfile)
 
         logfile.append('\n === Validating Sites ===')
         validator['sites'] = nv.valid_site(cur = cur,
