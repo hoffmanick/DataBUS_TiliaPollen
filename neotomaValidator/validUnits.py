@@ -1,40 +1,41 @@
-def validUnits (csv_vocab, vocab_dict):    
-    """_Are the units provided valid based on defined unit names?_
-    We pass in two dictionaries, that are expected to have matching keys in the dicts.
-    For each key in `unitcols` (the columns in the template that contain units) we then
-    have a key in `units` that contains the valid units for that column.
+def validUnits(cur, yml_dict, df):   
+    # Update the function documentation to reflect the current implementation and parameters
+    """
+    Validate the units in the DataFrame based on the vocabulary specified in the YAML configuration.
 
     Args:
-        template (_list_): _The csv file content, as a pd.DataFrame._
-        unitcols (_dict_): _The names of each set of columns listing units in the file, with a key linked to the `units` column._
-        units (_dict_): _Acceptable units for each data column type._
+        cur (psycopg2.extensions.cursor): Database cursor for executing SQL queries.
+        yml_dict (dict): Dictionary containing metadata and configuration from a YAML file.
+        df (pandas.DataFrame): DataFrame containing the data to be validated.
 
     Returns:
-        _list_: _A list of columns with invalid units._
-    """    
-    response = { 'pass': False, 'message': [] }
+        dict: A dictionary with keys 'valid' (boolean indicating overall validation success),
+              and 'message' (list of strings with validation messages for each column).
+    """
+    response = { 'valid': list(), 'message': list() }
+    
+    # Extract entries from the yml_dict that contain a vocab
+    yml_dict = yml_dict['metadata']
+    vocab_entries = [entry for entry in yml_dict if 'vocab' in entry and (entry['vocab'] is not None)]
 
-    for key, values in vocab_dict.items():
-        # Retrieve the values in the csv file
-        column_values = csv_vocab[key].tolist()
-        # Check that the csv_vocab values are valid according to the YAML
-        if vocab_dict[key] == ['fixed']:
-            # check that all rows are the same
-            valid = all(elem == column_values[0] for elem in column_values) 
+    for entry in vocab_entries:
+        column_values = df[entry['column']].tolist()
+        if entry['vocab'] == ['fixed']:
+            if all(elem == column_values[0] for elem in column_values):
+                response['valid'].append(True)
+                response['message'].append(f"✔ Column {entry['column']} contains valid units.")
+            else:
+                response['valid'].append(False)
+                response['message'].append(f"✗ Column {entry['column']} should be unique. Multiple values found")
         else:
-            # check the elements match with the template
-            valid = all(value in values for value in column_values)
-        
-        if valid == False:
-            response['message'].append(f"✗ Column {key} contains units that do not follow the expected set.")
+            if all(value in entry['vocab'] for value in column_values):
+                response['valid'].append(True)
+                response['message'].append(f"✔ Column {entry['column']} contains valid units.")
+            else:
+                response['valid'].append(False)
+                response['message'].append(f"✗ Column {entry['column']} contains invalid units.")
 
-    if len(response['message']) == 0:
-        response['pass'] = True
-        response['message'].append(f"✔ All units validate.")
+    response['valid'] = all(response['valid'])
     return response
 
     # Todo: Consider using the csv file from nu.read_csv instead of a pd.DataFrame
-    # Currently, the pull params function cannot be used as it has the `table` requirement
-    # and needs the yml file too - we could mix the nu.VocabDict as it works with the template
-    # then pull params to clean the csv file to only retrieve params we are interested in
-    # For now, the easy work around is using pandas as above.

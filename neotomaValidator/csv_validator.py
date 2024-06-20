@@ -22,6 +22,9 @@ def csv_validator(filename, yml_data):
     #log_file = []
     # Take directly from .yml file
     col_values = [d.get('column') for d in yml_data]
+    # Remove specific columns from col_values as they are taken from the metadata in the xlsx template
+    columns_to_remove = ['databaseid', 'datasetname', 'datasettypeid', 'labnumber']
+    col_values = [col for col in col_values if col not in columns_to_remove]
 
     if not os.path.isfile(filename):
         raise FileNotFoundError(f"The file '{filename}' could not be found within the current path.")
