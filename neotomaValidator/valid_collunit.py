@@ -16,7 +16,7 @@ def valid_collunit(cur, yml_dict, csv_file):
     response = {'valid': [],
                 'sitelist': [],
                 'message': []}
-    params = ["handle", "colldate", "geog", "location"]
+    params = ["handle", "core", "colldate", "geog", "location"]
     inputs = pull_params(params, yml_dict, csv_file, 'ndb.collectionunits')
     coords = inputs['geog']
     try:
