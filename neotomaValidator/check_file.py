@@ -11,7 +11,8 @@ def check_file(filename):
         _dict_: _A dict type object with properties `pass` (bool), `match` (int) and `message` (str[])._
     """    
     response = {'pass': False, 'match': 0, 'message': []}
-    logfile = filename + '.log'
+    modified_filename = filename.replace('data/', 'data/validation_logs/')
+    logfile = modified_filename + '.valid.log'
     
     if os.path.exists(logfile):
         error = []

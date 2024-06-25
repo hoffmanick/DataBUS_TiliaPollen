@@ -1,5 +1,5 @@
-from .retrieve_dict import retrieve_dict
-from .clean_column import clean_column
+from neotomaHelpers.retrieve_dict import retrieve_dict
+from neotomaHelpers.clean_column import clean_column
 
 def yaml_values(yml_dict, csv_template, column):
     """_Extract values from CSV file conforming to the YAML dictionary entry_

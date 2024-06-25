@@ -1,0 +1,3 @@
+[submodule "libs/Ostracodes"]
+	path = libs/Ostracodes
+	url = git@github.com:NeotomaDB/DataBUS_Ostracode.git
