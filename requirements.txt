@@ -8,3 +8,6 @@ PyYAML==6.0
 six==1.16.0
 tzdata==2023.3
 openpyxl
+
+# Install DataBUS from gitHub
+git+https://github.com//NeotomaDB/DataBUS.git@main
