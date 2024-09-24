@@ -7,592 +7,394 @@ metadata:
   notes: null
   overwrite: false
   required: true
-  value: 210Pb
+  value: ostracode
 - column: datasettypeid
   neotoma: ndb.datasettypes.datasettypeid
   notes: null
   overwrite: false
   required: true
-  value: Geochronologic
+  value: ostracode
 - column: databaseid
   neotoma: ndb.datasetdatabases.databaseid
-  notes: Placeholder
+  notes: null
   overwrite: false
   required: true
-  value: 37
+  value: null
 - column: labnumber
   neotoma: ndb.samples.labnumber
   notes: null
   overwrite: false
   required: false
   value: null
-- column: Analyst
-  neotoma: ndb.sampleanalysts.contactid
-  overwrite: true
-  required: false
-  rowwise: true
-  type: string
-  vocab: [fixed]
-- column: Assigned.137Cs.Date
-  neotoma: ndb.geochroncontrols.age
-  overwrite: true
-  required: false
-  rowwise: true
-  taxonname: 137Cs
-  type: float
-  unitcolumn: Assigned.137Cs.Date.Units
-- column: Assigned.137Cs.Date.Units
-  neotoma: ndb.variableunits.variableunits
-  required: false
-  rowwise: true
-  type: string
-  vocab: null
-- column: Coordinate.precision
-  neotoma: ndb.collectionunits.location
-  overwrite: true
-  required: false
-  rowwise: false
-  type: string
-  vocab: [core-site, GPS, core-site approximate, lake center]
-- column: Core.number.or.code
-  neotoma: ndb.collectionunits.core
-  overwrite: true
-  required: true
-  rowwise: false
-  type: string
-- column: Cumulative.210Pb.Inventory
-  neotoma: ndb.leadmodels.cumulativeinventory
-  overwrite: true
-  required: false
-  rowwise: false
-  type: float
-- column: Cumulative.dry.mass
-  formatorrange: '> 0'
-  neotoma: ndb.data.value
-  overwrite: true
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: cumulative dry mass
-  type: float
-  unitcolumn: Cumulative.dry.mass.units
-- column: Cumulative.dry.mass.units
-  neotoma: ndb.variableunits.variableunits
-  required: false
-  rowwise: true
-  type: string
-  vocab: null
-- column: DMAR
-  neotoma: ndb.data.value
-  overwrite: true
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: dry mass accumulation rate
-  type: float
-  uncertainty:
-    uncertaintybasis: null
-    uncertaintycolumn: Error..DMAR.
-    unitcolumn: Error..DMAR..Units
-  unitcolumn: DMAR.Units
-- column: DMAR.Units
-  neotoma: ndb.variableunits.variableunits
-  required: false
-  rowwise: true
-  type: string
-  vocab: null
-- column: Date.of.core.collection
-  formatorrange: '%Y-%m-%d'
-  neotoma: ndb.collectionunits.colldate
-  overwrite: true
-  required: false
-  rowwise: false
-  type: date
-- column: Depositional.Env
-  neotoma: ndb.depenvttypes.depenvt
-  overwrite: true
-  required: false
-  rowwise: false
-  type: string
-  vocab: [fixed]
-- column: Depth
-  neotoma: ndb.analysisunits.depth
-  overwrite: true
-  required: true
-  rowwise: true
-  type: float
-- column: Depth
-  neotoma: ndb.chroncontrols.depth
-  notes: Use same column as ndb.analysisunits ?
-  overwrite: true
-  required: true
-  rowwise: true
-  type: float
-- column: Depth.position
-  neotoma: ndb.analysisunits.position
-  overwrite: true
-  required: false
-  rowwise: true
-  type: string
-  vocab: [Top, Mid, Bottom]
-- column: Depth.position
-  neotoma: ndb.chroncontrols.position
-  notes: Use same column as ndb.analysisunits ?
-  overwrite: true
-  required: false
-  rowwise: true
-  type: string
-  vocab: [Top, Mid, Bottom]
-- column: Dry.Density
-  formatorrange: '> 0'
-  neotoma: ndb.data.value
-  overwrite: true
-  required: false
-  rowwise: true
-  taxonid: 5782
-  taxonname: bulk density
-  type: float
-  unitcolumn: Dry.Density.Units
-- column: Dry.Density.Units
-  neotoma: ndb.variableunits.variableunits
-  required: false
-  rowwise: true
-  type: string
-  vocab: null
-- column: Error..137Cs.
-  formatorrange: '> 0'
-  neotoma: ndb.values
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 137Cs
-  type: float
-  vocab: null
-- column: Error..137Cs..Units
-  neotoma: ndb.values
-  notes: null
-  required: false
-  rowwise: true
-  type: float
-  vocab: null
-- column: Error..210Pb.Date.
-  formatorrange: null
-  neotoma: ndb.values
-  required: false
-  rowwise: true
-  taxonid: null
-  taxonname: null
-  type: float
-  vocab: null
-- column: Error..210Pb.Date.
-  formatorrange: null
-  neotoma: ndb.values
-  required: false
-  rowwise: true
-  taxonid: null
-  taxonname: null
-  type: string
-  vocab: null
-- column: Error..210Pb.Date..1SD.Units
-  neotoma: ndb.values
-  notes: Use same column as sampleages
-  required: false
-  rowwise: true
-  type: float
-  vocab: null
-- column: Error..210Pb.Date..1SD.Units
-  neotoma: ndb.values
-  notes: null
-  required: false
-  rowwise: true
-  type: string
-  vocab: null
-- column: Error..214Bi..Units
-  neotoma: ndb.values
-  notes: null
-  required: false
-  rowwise: true
-  type: float
-  vocab: null
-- column: Error..214Pb.
-  formatorrange: '> 0'
-  neotoma: ndb.values
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 214Pb
-  type: float
-  vocab: null
-- column: Error..214Pb..Units
-  neotoma: ndb.values
-  notes: null
-  required: false
-  rowwise: true
-  type: float
-  vocab: null
-- column: Error..DMAR.
-  formatorrange: null
-  neotoma: ndb.values
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: dry mass accumulation rate
-  type: float
-  vocab: null
-- column: Error..DMAR..Units
-  neotoma: ndb.values
-  notes: null
-  required: false
-  rowwise: true
-  type: float
-  vocab: null
-- column: Error..Supported.210Pb..1SD
-  formatorrange: null
-  neotoma: ndb.values
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 210Pb/210Po
-  type: float
-  vocab: null
-- column: Error..Supported.210Pb..1SD.Units
-  neotoma: ndb.values
-  notes: null
-  required: false
-  rowwise: true
-  type: float
-  vocab: null
-- column: Error..Unsupported.210Pb..1SD
-  formatorrange: null
-  neotoma: ndb.values
-  required: false
-  rowwise: true
-  taxonid: '52472'
-  taxonname: Excess 210Pb
-  type: float
-  vocab: null
-- column: Error..Unsupported.210Pb..1SD.Units
-  neotoma: ndb.values
-  notes: null
-  required: false
-  rowwise: true
-  type: float
-  vocab: null
-- column: Error..total.210Pb.Gamma.
-  formatorrange: '> 0'
-  neotoma: ndb.values
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 210Pb
-  type: float
-  vocab: null
-- column: Error..total.210Pb.Gamma..Units
-  neotoma: ndb.values
-  notes: null
-  required: false
-  rowwise: true
-  type: float
-  vocab: null
-- column: Error..total.210Pb.alpha.
-  formatorrange: '> 0'
-  neotoma: ndb.values
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 210Pb/210Po
-  type: float
-  vocab: null
-- column: Error..total.210Pb.alpha..units
-  neotoma: ndb.values
-  notes: null
-  required: false
-  rowwise: true
-  type: float
-  vocab: null
-- column: Error.214Bi
-  formatorrange: '> 0'
-  neotoma: ndb.values
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 214Bi
-  type: float
-  vocab: null
-- column: Geographic.coordinates
-  neotoma: ndb.sites.geog
-  overwrite: true
-  required: true
-  rowwise: false
-  type: coordinates (lat,long)
 - column: Handle
   neotoma: ndb.collectionunits.handle
-  overwrite: true
-  required: true
-  rowwise: false
-  type: string
-- column: Location
-  neotoma: ndb.geopoliticalunits.geopoliticalunit
-  overwrite: true
+  overwrite: false
   required: false
   rowwise: false
   type: string
-  vocab: [fixed]
-- column: Method.for.estimating.supported.210Pb
-  neotoma: ndb.leadmodels.basis
-  overwrite: true
-  required: false
-  rowwise: false
-  type: string
-  vocab: [asymptote of alpha, gamma point-subtraction, gamma average]
-- column: Modeler
-  neotoma: ndb.chronologies.contactid
-  overwrite: true
-  required: false
-  rowwise: false
-  type: string
-- column: Principal.Investigator.s.
-  neotoma: ndb.datasetpis.contactid
-  overwrite: true
-  required: true
-  rowwise: false
-  type: string
-  vocab: [fixed]
-- column: Publications
-  formatorrange: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
-  neotoma: ndb.publications.doi
-  notes: The format is the regex for a DOI
-  overwrite: true
-  required: false
-  rowwise: false
-  type: string
-  vocab: [fixed]
-- column: Reference
-  neotoma: ndb.contactreferences.contactid
-  overwrite: true
+- column: Original sample number
+  neotoma: ndb.samples.samplename
+  notes: This is a unique physical sample identifier
+  overwrite: false
   required: false
   rowwise: true
   type: string
-- column: Site ID
+- column: siteid
   neotoma: ndb.sites.siteid
-  overwrite: true
+  overwrite: false
   required: false
   rowwise: false
   type: integer
-- column: Site.coordinates
-  neotoma: ndb.collectionunits.geog
-  overwrite: true
-  required: false
-  rowwise: false
-  type: coordinates (lat,long)
-- column: Site.name
+- column: Site name
   neotoma: ndb.sites.sitename
+  notes: This is spatial overlay/sitename
   overwrite: false
   required: true
   rowwise: false
   type: string
-- column: Supported.210Pb
-  neotoma: ndb.data.value
-  overwrite: true
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 210Pb/210Po
-  type: float
-  uncertainty:
-    uncertaintybasis: null
-    uncertaintycolumn: Error..Supported.210Pb..1SD
-    unitcolumn: Error..Supported.210Pb..1SD.Units
-  unitcolumn: Supported.210Pb.Units
-- column: Supported.210Pb.Units
-  neotoma: ndb.variableunits.variableunits
-  required: false
-  rowwise: true
-  type: string
-  vocab: null
-- column: Thickness
-  neotoma: ndb.analysisunits.thickness
-  overwrite: true
-  required: true
-  rowwise: true
-  type: float
-- column: Thickness
-  neotoma: ndb.chroncontrols.thickness
-  notes: Use same column as ndb.analysisunits ?
-  overwrite: true
-  required: true
-  rowwise: true
-  type: float
-- column: Total.210Pb.Alpha..synonym.Total.210Po.
-  formatorrange: '> 0'
-  neotoma: ndb.data.value
-  overwrite: true
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 210Pb/210Po
-  type: float
-  uncertainty:
-    uncertaintybasis: null
-    uncertaintycolumn: Error..total.210Pb.alpha.
-    unitcolumn: Error..total.210Pb.alpha..units
-  unitcolumn: Total.210Pb.Alpha..synonym.Total.210Po..Units
-- column: Total.210Pb.Alpha..synonym.Total.210Po..Units
-  neotoma: ndb.variableunits.variableunits
-  required: false
-  rowwise: true
-  type: string
-  vocab: null
-- column: Total.210Pb.Gamma
-  formatorrange: '> 0'
-  neotoma: ndb.data.value
-  overwrite: true
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 210Pb
-  type: float
-  uncertainty:
-    uncertaintybasis: null
-    uncertaintycolumn: Error..total.210Pb.Gamma.
-    unitcolumn: Error..total.210Pb.Gamma..Units
-  unitcolumn: Total.210Pb.Gamma.Units
-- column: Total.210Pb.Gamma.Units
-  neotoma: ndb.variableunits.variableunits
-  required: false
-  rowwise: true
-  type: string
-  vocab: null
-- column: Unsupported.210Pb
-  neotoma: ndb.data.value
-  overwrite: true
-  required: false
-  rowwise: true
-  taxonid: '52472'
-  taxonname: Excess 210Pb
-  type: float
-  uncertainty:
-    uncertaintybasis: null
-    uncertaintycolumn: Error..Unsupported.210Pb..1SD
-    unitcolumn: Error..Unsupported.210Pb..1SD.Units
-  unitcolumn: Unsupported.210Pb.Units
-- column: Unsupported.210Pb.Units
-  neotoma: ndb.variableunits.variableunits
-  required: false
-  rowwise: true
-  type: string
-  vocab: null
-- column: X137Cs
-  formatorrange: '> 0'
-  neotoma: ndb.data.value
-  overwrite: true
-  required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 137Cs
-  type: float
-  uncertainty:
-    uncertaintybasis: null
-    uncertaintycolumn: Error..137Cs.
-    unitcolumn: Error..137Cs..Units
-  unitcolumn: X137Cs.Units
-- column: X137Cs.Units
-  neotoma: ndb.variableunits.variableunits
-  required: false
-  rowwise: true
-  type: string
-  vocab: null
-- column: X210.Lead.Model.Notes
-  neotoma: ndb.chronologies.notes
-  overwrite: true
+- column: basisOfRecord
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
   required: false
   rowwise: false
   type: string
-- column: X210.LeadModel
-  neotoma: ndb.chronologies.agemodel
-  overwrite: true
+- column: bibliographicCitation
+  formatorrange: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
+  neotoma: ndb.publications.id
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+  vocab: [fixed]
+- column: catalogNumber
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: collectionID
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: comments*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: conductivity*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: continent
+  neotoma: "\u2014NA\u2014"
+  notes: This is a spatial overlay
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: country
+  neotoma: "\u2014NA\u2014"
+  notes: 'Note: Validated this programmatically with the example data and get exact
+    matches (or more precise matches)'
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: day
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: Geographic.coordinates
+  neotoma: ndb.sites.geog
+  overwrite: false
   required: true
   rowwise: false
+  type: coordinates (lat,long)
+- column: dissolved oxygen*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
   type: string
-  vocab: [CRS, CIC, 'CF:CS', PLUM, other]
-- column: X210Pb.Date
-  neotoma: ndb.chroncontrols.age
-  notes: Use same column as sampleages
-  overwrite: true
+- column: duration*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: environment*
+  neotoma: "\u2014NA\u2014"
+  notes: This is a modifier to the depositional environment and might be "location
+    within unit"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: eventDate
+  formatorrange: '%Y-%m-%d'
+  neotoma: ndb.collectionunits.colldate
+  overwrite: false
+  required: false
+  rowwise: false
+  type: date
+- column: family
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: females
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: figured?*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: genus
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: habitat
+  neotoma: ndb.depenvttypes.depenvt
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+  vocab: [fixed]
+- column: institutionCode
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: island
+  neotoma: "\u2014NA\u2014"
+  notes: This is spatial overlay (except when it isn't)
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: islandGroup
+  neotoma: "\u2014NA\u2014"
+  notes: This is spatial overlay (except when it isn't)
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: lifeStage
+  neotoma: "\u2014NA\u2014"
+  notes: This must be some part of the data value/variable description, but I'm not
+    sure where it is.
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: locality
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: males
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: males and females text
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: month
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: municipality
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: nameInPaper
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: order
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: organismQuantity
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  overwrite: false
   required: false
   rowwise: true
   type: float
-  uncertainty:
-    uncertaintybasis: null
-    uncertaintycolumn: Error..210Pb.Date.
-    unitcolumn: Error..210Pb.Date..1SD.Units
-  unitcolumn: X210Pb.Date.Units
-- column: X210Pb.Date
-  neotoma: ndb.sampleages.age
-  overwrite: true
+- column: pH*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: recordedBy
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: salinity*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: samplingProtocol
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: scientificName
+  neotoma: ndb.data.values
+  notes: This is a single Presence/absence value, we have to check to see if there's
+    not information in this field
+  overwrite: false
   required: false
   rowwise: true
   type: string
-  uncertainty:
-    uncertaintybasis: null
-    uncertaintycolumn: Error..210Pb.Date.
-    unitcolumn: Error..210Pb.Date..1SD.Units
-  unitcolumn: X210Pb.Date.Units
-- column: X210Pb.Date.Units
-  neotoma: ndb.variableunits.variableunits
+- column: scientificNameAuthorship
+  neotoma: ndb.taxa.publication
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: sex
+  neotoma: "\u2014NA\u2014"
+  notes: This must be some part of the data value/variable description, but I'm not
+    sure where it is.
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: sexRatio*
+  neotoma: "\u2014NA\u2014"
+  notes: This must be some part of the data value/variable description, but I'm not
+    sure where it is.
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: specificEpithet
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: stateProvince
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: storage*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: subfamily*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: substrate*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: superfamily*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: temperature*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: typeLocality*
+  neotoma: ndb.lakeparameters.depth
+  overwrite: false
   required: false
   rowwise: true
   type: string
-  vocab: null
-- column: X210Pb.Date.Units
-  neotoma: ndb.variableunits.variableunits
+- column: typeStatus
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: vegetation*
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: verbatimDepth
+  neotoma: ndb.lakeparameters.depth
+  notes: This is sampling depth, not lake doepth
+  overwrite: false
   required: false
   rowwise: true
   type: string
-  vocab: null
-- column: X210Pb.dating.horizon
-  neotoma: ndb.leadmodels.datinghorizon
-  overwrite: true
+- column: verbatimElevation
+  neotoma: ndb.sites.altitude
+  overwrite: false
   required: false
   rowwise: false
   type: float
-- column: X214Bi
-  formatorrange: '> 0'
-  neotoma: ndb.data.value
-  overwrite: true
+- column: verbatimLocality
+  neotoma: ndb.sites.sitedescription
+  overwrite: false
   required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 214Bi
-  type: float
-  uncertainty:
-    uncertaintybasis: null
-    uncertaintycolumn: Error.214Bi
-    unitcolumn: Error..214Bi..Units
-  unitcolumn: X214Bi.Units
-- column: X214Bi.Units
-  neotoma: ndb.variableunits.variableunits
-  required: false
-  rowwise: true
+  rowwise: false
   type: string
-  vocab: null
-- column: X214Pb
-  formatorrange: '> 0'
-  neotoma: ndb.data.value
-  overwrite: true
+- column: waterBody
+  neotoma: "\u2014NA\u2014"
+  overwrite: false
   required: false
-  rowwise: true
-  taxonid: ???
-  taxonname: 214Pb
-  type: float
-  uncertainty:
-    uncertaintybasis: null
-    uncertaintycolumn: Error..214Pb.
-    unitcolumn: Error..214Pb..Units
-  unitcolumn: X214Pb.Units
-- column: X214Pb.Units
-  neotoma: ndb.variableunits.variableunits
-  required: false
-  rowwise: true
+  rowwise: false
   type: string
-  vocab: null
+- column: year
+  neotoma: "\u2014NA\u2014"
+  notes: This gets pasted together in the column eventDate
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string

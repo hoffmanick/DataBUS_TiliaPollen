@@ -10,4 +10,4 @@ tzdata==2023.3
 openpyxl
 
 # Install DataBUS from gitHub
-git+https://github.com//NeotomaDB/DataBUS.git@main
+git+https://github.com//NeotomaDB/DataBUS.git@package_ver
