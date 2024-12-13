@@ -14,6 +14,8 @@ from dotenv import load_dotenv
 import DataBUS.neotomaValidator as nv
 import DataBUS.neotomaHelpers as nh
 from DataBUS.neotomaHelpers.logging_dict import logging_dict, logging_response
+from src.valid_sample_age_ost import valid_sample_age_ost
+from src.valid_chronologies_ost import valid_chronologies_ost
 
 # Obtain arguments and parse them to handle command line arguments
 args = nh.parse_arguments()
@@ -68,7 +70,7 @@ for filename in filenames:
                                  yml_dict = yml_dict,
                                  csv_file = csv_file)
         logfile = logging_response(validator['sites'], logfile)
-        
+
         logfile.append('\n === Checking Against Collection Units ===')
         validator['collunits'] = nv.valid_collunit(cur = cur,
                                                    yml_dict = yml_dict,
@@ -79,6 +81,12 @@ for filename in filenames:
         validator['analysisunit'] = nv.valid_analysisunit(yml_dict = yml_dict,
                                                           csv_file = csv_file)
         logfile = logging_response(validator['analysisunit'], logfile)
+
+        logfile.append('\n === Checking Chronologies ===')
+        validator['chronologies'] = valid_chronologies_ost(cur = cur,
+                                                          yml_dict = yml_dict,
+                                                          csv_file = csv_file)
+        logfile = logging_response(validator['chronologies'], logfile)
 
         logfile.append('\n === Checking Dataset ===')
         validator['dataset'] = nv.valid_dataset(cur = cur,
@@ -105,6 +113,13 @@ for filename in filenames:
                                               validator = validator)
         logfile = logging_response(validator['sample'], logfile)
 
+        logfile.append('\n=== Validating Sample Ages ===')
+        validator['sample_age'] = valid_sample_age_ost(cur = cur,
+                                              yml_dict = yml_dict,
+                                              csv_file = csv_file,
+                                              validator = validator)
+        logfile = logging_response(validator['sample_age'], logfile)
+        
         logfile.append('\n === Validating Taxa Names ===')
         validator['taxa'] = nv.valid_data_long(cur = cur,
                                               yml_dict = yml_dict,
@@ -116,12 +131,12 @@ for filename in filenames:
         # Nothing needs to be committed to the database
         conn.rollback()
         
-        #all_true = all([validator[key].validAll for key in validator.keys()])
-        #print(all_true)
-        #all_true = False
+        all_true = all([validator[key].validAll for key in ['sites', 'collunits', 'analysisunit', #'chronologies', 'chron_controls', 
+                                                            'dataset', 'agent', 'database', 
+                                                            'sample', 'taxa']])#'sample_age']])
+
         not_validated_files = "data/not_validated_files"
 
-        all_true = True
         if all_true == False:
             print(f"{filename} cannot be validated.\nMoved {filename} to the 'not_validated_files' folder.")
             os.makedirs(not_validated_files, exist_ok=True)

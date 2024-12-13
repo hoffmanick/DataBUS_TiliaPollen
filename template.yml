@@ -7,25 +7,31 @@ metadata:
   notes: null
   overwrite: false
   required: true
-  value: ostracode
-- column: datasettypeid
-  neotoma: ndb.datasettypes.datasettypeid
-  notes: null
-  overwrite: false
-  required: true
-  value: ostracode
-- column: databaseid
-  neotoma: ndb.datasetdatabases.databaseid
-  notes: null
-  overwrite: false
-  required: true
   value: null
+- column: datasettypeid
+  neotoma: ndb.datasettypes.datasettype
+  notes: null
+  overwrite: false
+  required: true
+  value: ostracode surface sample
+- column: databaseid
+  neotoma: ndb.datasetdatabases.databasename
+  notes: null
+  overwrite: false
+  required: true
+  value: East Asian Nonmarine Ostracod Database
 - column: labnumber
   neotoma: ndb.samples.labnumber
   notes: null
   overwrite: false
   required: false
   value: null
+- column: variableelement
+  neotoma: ndb.variableelements.variableelementid
+  notes: null
+  overwrite: false
+  required: true
+  value: Valve
 - column: Handle
   neotoma: ndb.collectionunits.handle
   overwrite: false
@@ -33,21 +39,22 @@ metadata:
   rowwise: false
   type: string
 - column: Original sample number
-  neotoma: ndb.samples.samplename
-  notes: This is a unique physical sample identifier
+  neotoma: ndb.datasets.notes
+  notes: 'Original Sample Number:'
   overwrite: false
   required: false
   rowwise: true
   type: string
-- column: siteid
-  neotoma: ndb.sites.siteid
+- column: Sample Analyst
+  neotoma: ndb.sampleanalysts.contactid
   overwrite: false
   required: false
-  rowwise: false
-  type: integer
+  rowwise: true
+  type: string
+  vocab: [fixed]
 - column: Site name
   neotoma: ndb.sites.sitename
-  notes: This is spatial overlay/sitename
+  notes: If empty, use waterBody
   overwrite: false
   required: true
   rowwise: false
@@ -66,29 +73,18 @@ metadata:
   rowwise: false
   type: string
   vocab: [fixed]
-- column: catalogNumber
-  neotoma: "\u2014NA\u2014"
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: collectionID
-  neotoma: "\u2014NA\u2014"
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
 - column: comments*
-  neotoma: "\u2014NA\u2014"
+  neotoma: ndb.sites.notes
   overwrite: false
   required: false
   rowwise: false
   type: string
 - column: conductivity*
-  neotoma: "\u2014NA\u2014"
+  neotoma: ndb.datasets.notes
+  notes: 'Conductivity:'
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
 - column: continent
   neotoma: "\u2014NA\u2014"
@@ -98,12 +94,10 @@ metadata:
   rowwise: false
   type: string
 - column: country
-  neotoma: "\u2014NA\u2014"
-  notes: 'Note: Validated this programmatically with the example data and get exact
-    matches (or more precise matches)'
-  overwrite: false
-  required: false
-  rowwise: false
+  neotoma: ndb.geopoliticalunits.geopoliticalunit
+  overwrite: true
+  required: true
+  rowwise: true
   type: string
 - column: day
   neotoma: "\u2014NA\u2014"
@@ -111,17 +105,24 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: Geographic.coordinates
-  neotoma: ndb.sites.geog
+- column: decimalLatitude
+  neotoma: ndb.sites.geog.latitude
   overwrite: false
   required: true
   rowwise: false
-  type: coordinates (lat,long)
+  type: float
+- column: decimalLongitude
+  neotoma: ndb.sites.geog.longitude
+  overwrite: false
+  required: true
+  rowwise: false
+  type: float
 - column: dissolved oxygen*
-  neotoma: "\u2014NA\u2014"
+  neotoma: ndb.datasets.notes
+  notes: 'Dissolved Oxygen:'
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
 - column: duration*
   neotoma: "\u2014NA\u2014"
@@ -144,6 +145,13 @@ metadata:
   required: false
   rowwise: false
   type: date
+- column: eventDate
+  formatorrange: '%Y-%m-%d'
+  neotoma: ndb.sampleages.age
+  overwrite: false
+  required: false
+  rowwise: false
+  type: date
 - column: family
   neotoma: "\u2014NA\u2014"
   overwrite: false
@@ -156,16 +164,16 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: figured?*
+- column: genus
   neotoma: "\u2014NA\u2014"
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: genus
+- column: geodeticDatum
   neotoma: "\u2014NA\u2014"
   overwrite: false
-  required: false
+  required: true
   rowwise: false
   type: string
 - column: habitat
@@ -175,12 +183,6 @@ metadata:
   rowwise: false
   type: string
   vocab: [fixed]
-- column: institutionCode
-  neotoma: "\u2014NA\u2014"
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
 - column: island
   neotoma: "\u2014NA\u2014"
   notes: This is spatial overlay (except when it isn't)
@@ -204,7 +206,7 @@ metadata:
   rowwise: false
   type: string
 - column: locality
-  neotoma: "\u2014NA\u2014"
+  neotoma: ndb.geopoliticalunits.geopoliticalunit
   overwrite: false
   required: false
   rowwise: false
@@ -216,10 +218,11 @@ metadata:
   rowwise: false
   type: string
 - column: males and females text
-  neotoma: "\u2014NA\u2014"
+  neotoma: ndb.datasets.notes
+  notes: 'Males & Females:'
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
 - column: month
   neotoma: "\u2014NA\u2014"
@@ -228,16 +231,17 @@ metadata:
   rowwise: false
   type: string
 - column: municipality
-  neotoma: "\u2014NA\u2014"
-  overwrite: false
-  required: false
-  rowwise: false
+  neotoma: ndb.geopoliticalunits.geopoliticalunit
+  overwrite: true
+  required: true
+  rowwise: true
   type: string
 - column: nameInPaper
-  neotoma: "\u2014NA\u2014"
+  neotoma: ndb.datasets.notes
+  notes: 'Name in paper:'
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
 - column: order
   neotoma: "\u2014NA\u2014"
@@ -253,28 +257,32 @@ metadata:
   rowwise: true
   type: float
 - column: pH*
-  neotoma: "\u2014NA\u2014"
+  neotoma: ndb.datasets.notes
+  notes: 'pH:'
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
 - column: recordedBy
-  neotoma: "\u2014NA\u2014"
+  neotoma: ndb.datasetpis.contactid
   overwrite: false
   required: false
   rowwise: false
   type: string
+  vocab: [fixed]
+- column: Dataset Processor
+  neotoma: ndb.datasetprocessor.contactid
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+  vocab: [fixed]
 - column: salinity*
-  neotoma: "\u2014NA\u2014"
+  neotoma: ndb.datasets.notes
+  notes: 'Salinity:'
   overwrite: false
   required: false
-  rowwise: false
-  type: string
-- column: samplingProtocol
-  neotoma: "\u2014NA\u2014"
-  overwrite: false
-  required: false
-  rowwise: false
+  rowwise: true
   type: string
 - column: scientificName
   neotoma: ndb.data.values
@@ -313,16 +321,10 @@ metadata:
   rowwise: false
   type: string
 - column: stateProvince
-  neotoma: "\u2014NA\u2014"
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: storage*
-  neotoma: "\u2014NA\u2014"
-  overwrite: false
-  required: false
-  rowwise: false
+  neotoma: ndb.geopoliticalunits.geopoliticalunit
+  overwrite: true
+  required: true
+  rowwise: true
   type: string
 - column: subfamily*
   neotoma: "\u2014NA\u2014"
@@ -343,32 +345,28 @@ metadata:
   rowwise: false
   type: string
 - column: temperature*
-  neotoma: "\u2014NA\u2014"
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: typeLocality*
-  neotoma: ndb.lakeparameters.depth
+  neotoma: ndb.datasets.notes
+  notes: 'Temperature:'
   overwrite: false
   required: false
   rowwise: true
   type: string
-- column: typeStatus
+- column: typeLocality*
   neotoma: "\u2014NA\u2014"
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
 - column: vegetation*
-  neotoma: "\u2014NA\u2014"
+  neotoma: ndb.datasets.notes
+  notes: 'Vegetation:'
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
 - column: verbatimDepth
-  neotoma: ndb.lakeparameters.depth
-  notes: This is sampling depth, not lake doepth
+  neotoma: "\u2014NA\u2014"
+  notes: This is sampling depth, not lake depth
   overwrite: false
   required: false
   rowwise: true
