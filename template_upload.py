@@ -3,11 +3,11 @@ import os
 import psycopg2
 import glob
 from dotenv import load_dotenv
-import neotomaHelpers as nh
-import neotomaUploader as nu
-from neotomaValidator.csv_validator import csv_validator
-from neotomaValidator.check_file import check_file
-from neotomaHelpers.logging_dict import logging_dict
+import DataBUS.neotomaHelpers as nh
+import DataBUS.neotomaUploader as nu
+from DataBUS.neotomaValidator.valid_csv import valid_csv
+from DataBUS.neotomaValidator.check_file import check_file
+from DataBUS.neotomaHelpers.logging_dict import logging_dict, logging_response
 """
 Use this command after having validated the files to 
 upload to Neotoma.
@@ -47,10 +47,10 @@ for filename in filenames:
     filecheck = check_file(filename)
 
     if hashcheck['pass'] is False and filecheck['pass'] is False:
-        csv_template = nh.read_csv(filename)
+        csv_file = nh.read_csv(filename)
         logfile.append("File must be properly validated before it can be uploaded.")
     else:
-        csv_template = nh.read_csv(filename)
+        csv_file = nh.read_csv(filename)
         # This possibly needs to be fixed. How do we know that there is one or more header rows?
 
     uploader = {}
@@ -59,128 +59,92 @@ for filename in filenames:
     yml_data = yml_dict['metadata']
 
     # Verify that the CSV columns and the YML keys match
-    csv_valid = csv_validator(filename = filename,
+    csv_valid = valid_csv(filename = filename,
                                 yml_data = yml_data)
 
     logfile.append('\n=== Inserting New Site ===')
     uploader['sites'] = nu.insert_site(cur = cur,
                                     yml_dict = yml_dict,
-                                    csv_template = csv_template)
-    logfile = logging_dict(uploader['sites'], logfile, 'sitelist')
+                                    csv_file = csv_file)
+    logfile = logging_response(uploader['sites'], logfile)
     
     #     # logfile.append('=== Inserting Site Geopol ===')
     #     # uploader['geopolid'] = nu.insert_geopol(cur = cur,
     #     #                                        yml_dict = yml_dict,
-    #     #                                        csv_template = csv_template,
+    #     #                                        csv_file = csv_file,
     #     #                                        uploader = uploader)
     #     # logfile.append(f"Geopolitical Unit: {uploader['geopolid']}")
 
     logfile.append('\n === Inserting Collection Units ===')
-    # Placeholders are present
     uploader['collunitid'] = nu.insert_collunit(cur = cur,
                                             yml_dict = yml_dict,
-                                            csv_template = csv_template,
+                                            csv_file = csv_file,
                                             uploader = uploader)
-    logfile = logging_dict(uploader['collunitid'], logfile, "collunits['collunit']")
+    logfile = logging_response(uploader['collunitid'], logfile)
   
     logfile.append('\n=== Inserting Analysis Units ===')
     uploader['anunits'] = nu.insert_analysisunit(cur = cur,
                                                 yml_dict = yml_dict,
-                                                csv_template = csv_template,
+                                                csv_file = csv_file,
                                                 uploader = uploader)
-    logfile = logging_dict(uploader['anunits'], logfile)
-
-    logfile.append('\n=== Inserting Chronology ===')
-    # Placeholders exist
-    uploader['chronology'] = nu.insert_chronology(cur = cur,
-                                                yml_dict = yml_dict,
-                                                csv_template = csv_template,
-                                                uploader = uploader)
-    logfile = logging_dict(uploader['chronology'], logfile)
-    
-    logfile.append('\n=== Inserting Chroncontrol ===')
-    uploader['chroncontrol'] = nu.insert_chron_control(cur = cur,
-                                                    yml_dict = yml_dict,
-                                                    csv_template = csv_template,
-                                                    uploader = uploader)
-    logfile = logging_dict(uploader['chroncontrol'], logfile)
+    logfile = logging_response(uploader['anunits'], logfile)
 
     logfile.append('\n=== Inserting Dataset ===')
-    # Placeholders exist
     uploader['datasetid'] = nu.insert_dataset(cur = cur,
                                             yml_dict = yml_dict,
-                                            csv_template = csv_template,
+                                            csv_file = csv_file,
                                             uploader = uploader)
-    logfile = logging_dict(uploader['datasetid'], logfile)
+    logfile = logging_response(uploader['datasetid'], logfile)
 
-    logfile.append('\n=== Inserting Dataset PI ===')
-    uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
-                                                yml_dict = yml_dict,
-                                                csv_template = csv_template,
-                                                uploader = uploader)
-    logfile = logging_dict(uploader['datasetpi'], logfile)
+    # logfile.append('\n=== Inserting Dataset PI ===')
+    # uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
+    #                                             yml_dict = yml_dict,
+    #                                             csv_file = csv_file,
+    #                                             uploader = uploader)
+    # logfile = logging_response(uploader['datasetpi'], logfile)
  
-    logfile.append('\n=== Inserting Data Processor ===')
-    uploader['processor'] = nu.insert_data_processor(cur = cur,
-                                                    yml_dict = yml_dict,
-                                                    csv_template = csv_template,
-                                                    uploader = uploader)
-    logfile = logging_dict(uploader['processor'], logfile)
- 
-    logfile.append('\n=== Inserting Repository ===')
-    uploader['repository'] = nu.insert_dataset_repository(cur = cur,
-                                                        yml_dict = yml_dict,
-                                                        csv_template = csv_template,
-                                                        uploader = uploader)
-    logfile = logging_dict(uploader['repository'], logfile)
+    # logfile.append('\n=== Inserting Data Processor ===')
+    # uploader['processor'] = nu.insert_data_processor(cur = cur,
+    #                                                 yml_dict = yml_dict,
+    #                                                 csv_file = csv_file,
+    #                                                 uploader = uploader)
+    # logfile = logging_response(uploader['processor'], logfile)
 
     logfile.append('\n=== Inserting Dataset Database ===')
     uploader['database'] = nu.insert_dataset_database(cur = cur,
                                                     yml_dict = yml_dict,
                                                     uploader = uploader)
-    logfile = logging_dict(uploader['database'], logfile)
+    logfile = logging_response(uploader['database'], logfile)
 
     logfile.append('\n=== Inserting Samples ===')
     uploader['samples'] = nu.insert_sample(cur, 
                                         yml_dict = yml_dict,
-                                        csv_template = csv_template,
+                                        csv_file = csv_file,
                                         uploader = uploader)
-    logfile = logging_dict(uploader['samples'], logfile)
+    logfile = logging_response(uploader['samples'], logfile)
 
-    logfile.append('\n=== Inserting Sample Analyst ===')
-    uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
-                                        yml_dict = yml_dict,
-                                        csv_template = csv_template,
-                                        uploader = uploader)
-    logfile = logging_dict(uploader['sampleAnalyst'], logfile)
-
-    logfile.append('\n === Inserting Sample Age ===')
-    uploader['sampleAge'] = nu.insert_sample_age(cur, 
-                                        yml_dict = yml_dict,
-                                        csv_template = csv_template,
-                                        uploader = uploader)
-    logfile = logging_dict(uploader['sampleAge'], logfile)
+    # logfile.append('\n=== Inserting Sample Analyst ===')
+    # uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
+    #                                     yml_dict = yml_dict,
+    #                                     csv_file = csv_file,
+    #                                     uploader = uploader)
+    # logfile = logging_response(uploader['sampleAnalyst'], logfile)
 
     logfile.append('\n === Inserting Data ===')
-    uploader['data'] = nu.insert_data(cur, 
-                                    yml_dict = yml_dict,
-                                    csv_template = csv_template,
-                                    uploader = uploader)
-    logfile = logging_dict(uploader['data'], logfile)
-
-    # logfile.append('\n === Inserting Uncertainties ===')
-    # uploader['uncertainties'] = nu.insert_data_uncertainties(cur, 
-    #                                 yml_dict = yml_dict,
-    #                                 csv_template = csv_template,
-    #                                 uploader = uploader)
-    # logfile = logging_dict(uploader['uncertainties'], logfile)
+    uploader['data'] = nu.insert_data_long(cur = cur,
+                                           yml_dict = yml_dict, 
+                                           filename = filename,
+                                           uploader = uploader)
+    logfile = logging_response(uploader['data'], logfile)
 
     modified_filename = filename.replace('data/', 'data/upload_logs/')
     with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
         for i in logfile:
             writer.write(i)
             writer.write('\n')
-    all_true = all([uploader[key]['valid'] for key in uploader if 'valid' in uploader[key]])
+    
+    all_true = all([uploader[key].validAll for key in uploader])
+    all_true = all_true and hashcheck
 
     if all_true:
         print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")

@@ -11,11 +11,11 @@ def csv_splitter(data):
     if not os.path.exists(split_files):
                 os.makedirs(split_files)
 
-
     print(data.head())
     print(data.columns)
-
     data_groups = data.groupby(by=['Site name', 'Handle'])
+    print(data_groups.head())
+
 
     for group, rows in data_groups:
         filename = f"data/splitted/{group[1]}.csv"
