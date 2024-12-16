@@ -128,14 +128,23 @@ for filename in filenames:
                                               filename=filename)
         logfile = logging_response(validator['taxa'], logfile)
 
+        logfile.append('\n === Validating Publications ===')
+        validator['publications'] = nv.valid_publication(cur, 
+                                        yml_dict = yml_dict,
+                                        csv_file = csv_file,
+                                        validator = validator)
+        logfile = logging_response(validator['publications'], logfile)
+
         # Nothing needs to be committed to the database
         conn.rollback()
         
-        all_true = all([validator[key].validAll for key in ['sites', 'collunits', 'analysisunit', #'chronologies', 'chron_controls', 
+        all_true = all([validator[key].validAll for key in ['sites', 'collunits', 'analysisunit', 'chronologies',# 'chron_controls', 
                                                             'dataset', 'agent', 'database', 
-                                                            'sample', 'taxa']])#'sample_age']])
+                                                            'sample', 'taxa', 'publications', 'sample_age']])
 
         not_validated_files = "data/not_validated_files"
+
+        all_true = all_true and filecheck['pass']
 
         if all_true == False:
             print(f"{filename} cannot be validated.\nMoved {filename} to the 'not_validated_files' folder.")
