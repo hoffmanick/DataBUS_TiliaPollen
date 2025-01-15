@@ -2,12 +2,18 @@ import json
 import os
 import psycopg2
 import glob
+from datetime import datetime
 from dotenv import load_dotenv
 import DataBUS.neotomaHelpers as nh
 import DataBUS.neotomaUploader as nu
 from DataBUS.neotomaValidator.valid_csv import valid_csv
 from DataBUS.neotomaValidator.check_file import check_file
 from DataBUS.neotomaHelpers.logging_dict import logging_dict, logging_response
+from utils.insert_chronologies_ost import insert_chronology_ost
+from utils.insert_sample_age_ost import insert_sample_age_ost
+from utils.insert_geopolitical_units import insert_geopolitical_units
+from utils.insert_collector import insert_collector
+
 """
 Use this command after having validated the files to 
 upload to Neotoma.
@@ -17,7 +23,7 @@ python template_upload.py
 In that case, the default template 'template.yml' is used.
 
 You can also use a different template file by running:
-python template_upload.py --template='template_xlsx.xlsx'
+python src/eanode_data_upload.py --template='src/templates/eanode_template.yml'
 
 Change 'template_xlsx.xlsx' to desired filename as long as 
 template file that has an .xlsx or .yml extension
@@ -43,8 +49,12 @@ for filename in filenames:
     test_dict = {}
     print(filename)
     logfile = []
+
     hashcheck = nh.hash_file(filename)
-    filecheck = check_file(filename)
+    filecheck = check_file(filename, strict=False) # Will not allow changes in the database.
+
+    logfile = logfile + hashcheck['message'] + filecheck['message']
+    logfile.append(f"\nNew Upload started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     if hashcheck['pass'] is False and filecheck['pass'] is False:
         csv_file = nh.read_csv(filename)
@@ -67,13 +77,13 @@ for filename in filenames:
                                     yml_dict = yml_dict,
                                     csv_file = csv_file)
     logfile = logging_response(uploader['sites'], logfile)
-    
-    #     # logfile.append('=== Inserting Site Geopol ===')
-    #     # uploader['geopolid'] = nu.insert_geopol(cur = cur,
-    #     #                                        yml_dict = yml_dict,
-    #     #                                        csv_file = csv_file,
-    #     #                                        uploader = uploader)
-    #     # logfile.append(f"Geopolitical Unit: {uploader['geopolid']}")
+
+    logfile.append('\n === Inserting Site-Geopolitical Units ===')
+    uploader['geopol_units'] = insert_geopolitical_units(cur = cur,
+                                                yml_dict = yml_dict,
+                                                csv_file = csv_file,
+                                                uploader = uploader)
+    logfile = logging_response(uploader['geopol_units'], logfile)
 
     logfile.append('\n === Inserting Collection Units ===')
     uploader['collunitid'] = nu.insert_collunit(cur = cur,
@@ -81,13 +91,27 @@ for filename in filenames:
                                             csv_file = csv_file,
                                             uploader = uploader)
     logfile = logging_response(uploader['collunitid'], logfile)
-  
+    
+    logfile.append('\n=== Inserting Collector ===')
+    uploader['collector'] = insert_collector(cur = cur,
+                                                yml_dict = yml_dict,
+                                                csv_file = csv_file,
+                                                uploader = uploader)
+    logfile = logging_response(uploader['collector'], logfile)
+    
     logfile.append('\n=== Inserting Analysis Units ===')
     uploader['anunits'] = nu.insert_analysisunit(cur = cur,
                                                 yml_dict = yml_dict,
                                                 csv_file = csv_file,
                                                 uploader = uploader)
     logfile = logging_response(uploader['anunits'], logfile)
+    
+    logfile.append('\n=== Inserting Chronology ===')
+    uploader['chronology'] = insert_chronology_ost(cur = cur,
+                                                  yml_dict = yml_dict,
+                                                  csv_file = csv_file,
+                                                  uploader = uploader)
+    logfile = logging_response(uploader['chronology'], logfile)
 
     logfile.append('\n=== Inserting Dataset ===')
     uploader['datasetid'] = nu.insert_dataset(cur = cur,
@@ -96,19 +120,19 @@ for filename in filenames:
                                             uploader = uploader)
     logfile = logging_response(uploader['datasetid'], logfile)
 
-    # logfile.append('\n=== Inserting Dataset PI ===')
-    # uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
-    #                                             yml_dict = yml_dict,
-    #                                             csv_file = csv_file,
-    #                                             uploader = uploader)
-    # logfile = logging_response(uploader['datasetpi'], logfile)
- 
-    # logfile.append('\n=== Inserting Data Processor ===')
-    # uploader['processor'] = nu.insert_data_processor(cur = cur,
-    #                                                 yml_dict = yml_dict,
-    #                                                 csv_file = csv_file,
-    #                                                 uploader = uploader)
-    # logfile = logging_response(uploader['processor'], logfile)
+    logfile.append('\n=== Inserting Dataset PI ===')
+    uploader['datasetpi'] = nu.insert_dataset_pi(cur = cur,
+                                                yml_dict = yml_dict,
+                                                csv_file = csv_file,
+                                                uploader = uploader)
+    logfile = logging_response(uploader['datasetpi'], logfile)
+    
+    logfile.append('\n=== Inserting Data Processor ===')
+    uploader['processor'] = nu.insert_data_processor(cur = cur,
+                                                    yml_dict = yml_dict,
+                                                    csv_file = csv_file,
+                                                    uploader = uploader)
+    logfile = logging_response(uploader['processor'], logfile)
 
     logfile.append('\n=== Inserting Dataset Database ===')
     uploader['database'] = nu.insert_dataset_database(cur = cur,
@@ -123,12 +147,19 @@ for filename in filenames:
                                         uploader = uploader)
     logfile = logging_response(uploader['samples'], logfile)
 
-    # logfile.append('\n=== Inserting Sample Analyst ===')
-    # uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
-    #                                     yml_dict = yml_dict,
-    #                                     csv_file = csv_file,
-    #                                     uploader = uploader)
-    # logfile = logging_response(uploader['sampleAnalyst'], logfile)
+    logfile.append('\n=== Inserting Sample Analyst ===')
+    uploader['sampleAnalyst'] = nu.insert_sample_analyst(cur, 
+                                        yml_dict = yml_dict,
+                                        csv_file = csv_file,
+                                        uploader = uploader)
+    logfile = logging_response(uploader['sampleAnalyst'], logfile)
+
+    logfile.append('\n=== Validating Sample Ages ===')
+    uploader['sample_age'] = insert_sample_age_ost(cur = cur,
+                                            yml_dict = yml_dict,
+                                            csv_file = csv_file,
+                                           uploader = uploader)
+    logfile = logging_response(uploader['chronology'], logfile)
 
     logfile.append('\n === Inserting Data ===')
     uploader['data'] = nu.insert_data_long(cur = cur,
@@ -137,15 +168,21 @@ for filename in filenames:
                                            uploader = uploader)
     logfile = logging_response(uploader['data'], logfile)
 
+    logfile.append('\n === Uploading Publications ===')
+    uploader['publications'] = nu.insert_publication(cur, 
+                                    yml_dict = yml_dict,
+                                    csv_file = csv_file,
+                                    uploader = uploader)
+    logfile = logging_response(uploader['publications'], logfile)
+
     modified_filename = filename.replace('data/', 'data/upload_logs/')
     with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
         for i in logfile:
             writer.write(i)
             writer.write('\n')
-    
-    all_true = all([uploader[key].validAll for key in uploader])
-    all_true = all_true and hashcheck
 
+    all_true = all([uploader[key].validAll for key in uploader])
+    all_true = all_true and hashcheck['pass']
     if all_true:
         print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
         #conn.commit()

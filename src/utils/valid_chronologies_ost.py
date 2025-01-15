@@ -1,22 +1,8 @@
 import DataBUS.neotomaHelpers as nh
 from DataBUS import Chronology, ChronResponse
 
-def insert_chronology_ost(cur, yml_dict, csv_file, uploader):
-    """
-    Inserts chronology data into Neotoma.
-
-    Args:
-        cur (cursor object): Database cursor to execute SQL queries.
-        yml_dict (dict): Dictionary containing YAML data.
-        csv_file (str): File path to the CSV template.
-        uploader (dict): Dictionary containing uploader details.
-
-    Returns:
-        response (dict): Dictionary containing information about the inserted chronology.
-        Contains keys:
-            'chronology': ID of the inserted chronology.
-            'valid': Boolean indicating if the insertion was successful.
-    """
+def valid_chronologies_ost(cur, yml_dict, csv_file):
+    """_Validating chronologies"""
     response = ChronResponse()
 
     params = [
@@ -73,8 +59,6 @@ def insert_chronology_ost(cur, yml_dict, csv_file, uploader):
         inputs["agetypeid"] = 2
         inputs["agemodel"] = "collection date"
         inputs["chronologyname"] = "Calendar date"
-        inputs["ageboundyounger"] = inputs["age"]
-        inputs["ageboundolder"] = inputs["age"]
         response.message.append("✔ The provided age type is correct.")
         response.valid.append(True)
     else:
@@ -89,17 +73,12 @@ def insert_chronology_ost(cur, yml_dict, csv_file, uploader):
             response.message.append(f"✔ {k} looks valid.")
             response.valid.append(True)
 
-    # if isinstance(inputs["contactid"], list):
-    #     get_contact = """SELECT contactid FROM ndb.contacts WHERE LOWER(%(contactname)s) = contactname;"""
-    #     cur.execute(get_contact, {"contactname": inputs["contactid"][0]})
-    #     inputs["contactid"] = cur.fetchone()
     try:
-        chron = Chronology(
-            collectionunitid=uploader["collunitid"].cuid,
+        Chronology(
             chronologyid=inputs["chronologyid"],
             agetypeid=inputs["agetypeid"],
             contactid=inputs["contactid"],
-            isdefault=inputs["isdefault"],
+            isdefault=1,
             chronologyname=inputs["chronologyname"],
             dateprepared=inputs["dateprepared"],
             agemodel=inputs["agemodel"],
@@ -110,29 +89,9 @@ def insert_chronology_ost(cur, yml_dict, csv_file, uploader):
             recdatemodified=inputs["recdatemodified"],
         )
         response.valid.append(True)
+        response.message.append("✔  Chronology can be created")
     except Exception as e:
         response.valid.append(False)
-        response.message.append("✗  Chronology cannot be created {e}")
-        chron = Chronology(collectionunitid=uploader["collunitid"].cuid)
-
-    if isinstance(inputs["age"], (int, float)):
-        chron.maxage = int(inputs["age"])
-        chron.minage = int(inputs["age"])
-    else:
-        response.message.append("? Age is set to None. Minage/maxage will be None.")
-
-    try:
-        chronid = chron.insert_to_db(cur)
-        response.chronid = chronid
-        response.valid.append(True)
-        response.message.append(f"✔ Added Chronology {chronid}.")
-
-    except Exception as e:
-        response.message.append(
-            f"✗  Chronology Data is not correct. Error message: {e}"
-        )
-        chron = Chronology(collectionunitid=uploader["collunitid"].cuid, agetypeid=1)
-        chronid = chron.insert_to_db(cur)
-        response.valid.append(False)
+        response.message.append(f"✗  Chronology cannot be created: {e}")
     response.validAll = all(response.valid)
     return response

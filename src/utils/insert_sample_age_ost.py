@@ -54,9 +54,9 @@ def insert_sample_age_ost(cur, yml_dict, csv_file, uploader):
             return response
 
     for i in range(len(uploader["samples"].sampleid)):
-        if inputs["age"] and isinstance(inputs["age"], (int, float)):
-            age_younger = inputs["age"]
-            age_older = inputs["age"]
+        if not inputs["age"] and isinstance(inputs["age"], (int, float)):
+            age_younger = None
+            age_older = None
         else:
             response.message.append(
                 "? Age is set to None. Ageyounger/Ageolder will be None."

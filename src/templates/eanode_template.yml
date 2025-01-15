@@ -14,6 +14,12 @@ metadata:
   overwrite: false
   required: true
   value: ostracode surface sample
+- column: colltypeid
+  neotoma: ndb.collectionunits.colltypeid
+  notes: null
+  overwrite: false
+  required: false
+  value: modern
 - column: databaseid
   neotoma: ndb.datasetdatabases.databasename
   notes: null
@@ -34,13 +40,27 @@ metadata:
   value: Valve
 - column: Handle
   neotoma: ndb.collectionunits.handle
-  overwrite: false
+  overwrite: true
   required: false
   rowwise: false
+  type: string
+- column: nameInPaper
+  neotoma: ndb.datasets.notes
+  notes: 'Name in paper:'
+  overwrite: false
+  required: false
+  rowwise: true
   type: string
 - column: Original sample number
   neotoma: ndb.datasets.notes
   notes: 'Original Sample Number:'
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
+- column: pH*
+  neotoma: ndb.datasets.notes
+  notes: 'pH:'
   overwrite: false
   required: false
   rowwise: true
@@ -66,13 +86,12 @@ metadata:
   rowwise: false
   type: string
 - column: bibliographicCitation
-  formatorrange: ^10.\d{4,9}/[-._;()/:A-Z0-9]+$
-  neotoma: ndb.publications.id
+  formatorrange: citation
+  neotoma: ndb.publications.citation
   overwrite: false
   required: false
   rowwise: false
   type: string
-  vocab: [fixed]
 - column: comments*
   neotoma: ndb.sites.notes
   overwrite: false
@@ -86,18 +105,19 @@ metadata:
   required: false
   rowwise: true
   type: string
+- column: temperature*
+  neotoma: ndb.datasets.notes
+  notes: C
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
 - column: continent
   neotoma: "\u2014NA\u2014"
   notes: This is a spatial overlay
   overwrite: false
   required: false
   rowwise: false
-  type: string
-- column: country
-  neotoma: ndb.geopoliticalunits.geopoliticalunit
-  overwrite: true
-  required: true
-  rowwise: true
   type: string
 - column: day
   neotoma: "\u2014NA\u2014"
@@ -177,7 +197,7 @@ metadata:
   rowwise: false
   type: string
 - column: habitat
-  neotoma: ndb.depenvttypes.depenvt
+  neotoma: ndb.collectionunits.depenvtid
   overwrite: false
   required: false
   rowwise: false
@@ -205,8 +225,26 @@ metadata:
   required: false
   rowwise: false
   type: string
+- column: country
+  neotoma: ndb.sitegeopolitical.geopoliticalunit1
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: stateProvince
+  neotoma: ndb.sitegeopolitical.geopoliticalunit2
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: municipality
+  neotoma: ndb.sitegeopolitical.geopoliticalunit3
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
 - column: locality
-  neotoma: ndb.geopoliticalunits.geopoliticalunit
+  neotoma: ndb.sitegeopolitical.geopoliticalunit4
   overwrite: false
   required: false
   rowwise: false
@@ -230,19 +268,6 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: municipality
-  neotoma: ndb.geopoliticalunits.geopoliticalunit
-  overwrite: true
-  required: true
-  rowwise: true
-  type: string
-- column: nameInPaper
-  neotoma: ndb.datasets.notes
-  notes: 'Name in paper:'
-  overwrite: false
-  required: false
-  rowwise: true
-  type: string
 - column: order
   neotoma: "\u2014NA\u2014"
   overwrite: false
@@ -256,15 +281,15 @@ metadata:
   required: false
   rowwise: true
   type: float
-- column: pH*
-  neotoma: ndb.datasets.notes
-  notes: 'pH:'
-  overwrite: false
-  required: false
-  rowwise: true
-  type: string
 - column: recordedBy
   neotoma: ndb.datasetpis.contactid
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+  vocab: [fixed]
+- column: recordedBy
+  neotoma: ndb.collectors.contactid
   overwrite: false
   required: false
   rowwise: false
@@ -320,12 +345,6 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: stateProvince
-  neotoma: ndb.geopoliticalunits.geopoliticalunit
-  overwrite: true
-  required: true
-  rowwise: true
-  type: string
 - column: subfamily*
   neotoma: "\u2014NA\u2014"
   overwrite: false
@@ -343,13 +362,6 @@ metadata:
   overwrite: false
   required: false
   rowwise: false
-  type: string
-- column: temperature*
-  neotoma: ndb.datasets.notes
-  notes: 'Temperature:'
-  overwrite: false
-  required: false
-  rowwise: true
   type: string
 - column: typeLocality*
   neotoma: "\u2014NA\u2014"

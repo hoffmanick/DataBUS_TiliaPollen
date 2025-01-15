@@ -14,17 +14,20 @@ from dotenv import load_dotenv
 import DataBUS.neotomaValidator as nv
 import DataBUS.neotomaHelpers as nh
 from DataBUS.neotomaHelpers.logging_dict import logging_dict, logging_response
-from src.valid_sample_age_ost import valid_sample_age_ost
-from src.valid_chronologies_ost import valid_chronologies_ost
+from utils.valid_sample_age_ost import valid_sample_age_ost
+from utils.valid_chronologies_ost import valid_chronologies_ost
+from utils.valid_geopolitical_units import valid_geopolitical_units
 
-# Obtain arguments and parse them to handle command line arguments
+"""
+python src/eanode_template_validate.py --template='src/templates/eanode_template.yml'
+"""
+
 args = nh.parse_arguments()
 load_dotenv()
 data = json.loads(os.getenv('PGDB_LOCAL'))
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
 
-#filenames = glob.glob(args['data'] + "*.csv")
 directory = Path(args['data'])
 filenames = directory.glob("*.csv")
 valid_logs = Path('data/validation_logs')
@@ -38,12 +41,12 @@ for filename in filenames:
 
     hashcheck = nh.hash_file(filename)
     filecheck = nv.check_file(filename)
+
     logfile = logfile + hashcheck['message'] + filecheck['message']
     logfile.append(f"\nNew validation started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     if hashcheck['pass'] and filecheck['pass']:
         print("  - File is correct and hasn't changed since last validation.")
     else:
-        # Load the yml template as a dictionary
         yml_dict = nh.template_to_dict(temp_file=args['template'])
         yml_data = yml_dict['metadata']
         validator = dict()
@@ -59,7 +62,7 @@ for filename in filenames:
         logfile = logging_dict(validator['csvValid'], logfile)
 
         logfile.append('\n === Validating Template Unit Definitions ===')
-        df = pd.read_csv(filename) #use csv reader
+        df = pd.read_csv(filename)
         validator['units'] = nv.valid_units(cur = cur,
                                  yml_dict = yml_dict,
                                  df = df)
@@ -70,6 +73,13 @@ for filename in filenames:
                                  yml_dict = yml_dict,
                                  csv_file = csv_file)
         logfile = logging_response(validator['sites'], logfile)
+
+        ## ADD GEOLOCALITY
+        logfile.append('\n === Checking Against Geopolitical Units ===')
+        validator['geopol_units'] = valid_geopolitical_units(cur = cur,
+                                                   yml_dict = yml_dict,
+                                                   csv_file = csv_file)
+        logfile = logging_response(validator['geopol_units'], logfile)
 
         logfile.append('\n === Checking Against Collection Units ===')
         validator['collunits'] = nv.valid_collunit(cur = cur,
@@ -94,7 +104,6 @@ for filename in filenames:
                                                 csv_file = csv_file)
         logfile = logging_response(validator['dataset'], logfile)
 
-        ########### PI names:
         logfile.append('\n === Checking Against Contact Names ===')
         validator['agent'] = nv.valid_contact(cur,
                                             csv_file,
@@ -151,9 +160,6 @@ for filename in filenames:
             os.makedirs(not_validated_files, exist_ok=True)
             uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
             os.replace(filename, uploaded_path)
-
-        ########### Write to log.
-        if all_true == False:
             modified_filename = f'{filename}'.replace('data/', 'data/validation_logs/not_validated/')
             modified_filename = Path(modified_filename + '.valid.log')
         else:

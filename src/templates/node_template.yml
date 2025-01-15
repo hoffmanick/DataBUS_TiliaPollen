@@ -1,0 +1,250 @@
+apiVersion: neotoma v2.0
+headers: 2
+kind: Development
+metadata:
+- column: datasetname
+  neotoma: ndb.datasets.datasetname
+  notes: null
+  overwrite: false
+  required: true
+  value: null
+- column: datasettypeid
+  neotoma: ndb.datasettypes.datasettype
+  notes: null
+  overwrite: false
+  required: true
+  value: ostracode surface sample
+- column: databaseid
+  neotoma: ndb.datasetdatabases.databasename
+  notes: null
+  overwrite: false
+  required: true
+  value: Nonmarine Ostracod Distribution in Europe Database
+- column: colltypeid
+  neotoma: ndb.collectionunits.colltypeid
+  notes: null
+  overwrite: false
+  required: true
+  value: modern
+- column: labnumber
+  neotoma: ndb.samples.labnumber
+  notes: null
+  overwrite: false
+  required: false
+  value: null
+- column: variableelement
+  neotoma: ndb.variableelements.variableelementid
+  notes: null
+  overwrite: false
+  required: true
+  value: Valve
+- column: AGE
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: ALTITUDE
+  neotoma: ndb.sites.altitude
+  overwrite: false
+  required: false
+  rowwise: false
+  type: float
+- column: ARTIFICIAL HABITAT
+  neotoma: ndb.collectionunits.depenvtid
+  overwrite: false
+  required: false
+  rowwise: false
+  type: integer
+- column: COMMENTS
+  neotoma: ndb.sites.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: COND
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: COUNTRY
+  neotoma: ndb.sitegeopolitical.geopoliticalunit1
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+  vocab: [fixed]
+- column: DEPTH
+  neotoma: ndb.analysisunits.depth
+  overwrite: false
+  required: false
+  rowwise: false
+  type: float
+- column: DURATION
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: LOCALITY
+  neotoma: ndb.sitegeopolitical.geopoliticalunit3
+  overwrite: true
+  required: false
+  rowwise: true
+  type: string
+- column: MALES?
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: NAME IN REFERENCE
+  neotoma: ndb.data.values
+  notes: This is a single Presence/absence value, we have to check to see if there's
+    not information in this field
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
+- column: NAME IN REFERENCE
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: NATURAL HABITAT
+  neotoma: ndb.collectionunits.depenvtid
+  notes: Combine Natural habitat with artificial habitat and rebuild CSV
+  overwrite: false
+  required: false
+  rowwise: false
+  type: integer
+- column: NO SPEC
+  formatorrange: '> 0'
+  neotoma: ndb.data.value
+  overwrite: false
+  required: false
+  rowwise: true
+  type: float
+- column: REFERENCE
+  neotoma: ndb.collectors.contactid
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: REFERENCE
+  neotoma: ndb.datasetpis.contactid
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: REGION
+  neotoma: ndb.sitegeopolitical.geopoliticalunit2
+  overwrite: true
+  required: false
+  rowwise: true
+  type: string
+- column: Record Number
+  neotoma: ndb.collectionunits.collunitname
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: Record Number
+  neotoma: ndb.collectionunits.handle
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: SEX RATIO
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: SITE
+  neotoma: ndb.sites.sitename
+  notes: If empty, use LOCALITY
+  overwrite: false
+  required: true
+  rowwise: false
+  type: string
+- column: SUBSPECIES
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: SUBSTRATE
+  neotoma: ndb.collectionunits.substrateid
+  overwrite: false
+  required: false
+  rowwise: false
+  type: integer
+- column: Sample Analyst
+  neotoma: ndb.datasetprocessor.contactid
+  notes: "Add column with Dave\u2019s name"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: Sample Analyst
+  neotoma: ndb.sampleanalysts.contactid
+  notes: "Add column with Dave\u2019s name"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+  vocab: [fixed]
+- column: TEMP
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: VEGETATION
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: WATER CHEMISTRY
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: ZONE OF COLL
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: colltypeid
+  constant: 5
+  neotoma: ndb.collectionunits.colltypeid
+  overwrite: false
+  required: false
+  rowwise: false
+  type: integer
+- column: decimalLatitude
+  neotoma: ndb.sites.geog.latitude
+  notes: Create from CSV file unite LATDEG, LATMIN, LATSEC
+  overwrite: false
+  required: true
+  rowwise: false
+  type: float
+- column: decimalLongitude
+  neotoma: ndb.sites.geog.longitude
+  notes: Create from CSV file unite LONGDEG, LONMIN, LONSEC
+  overwrite: false
+  required: true
+  rowwise: false
+  type: float
+- column: pH
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string

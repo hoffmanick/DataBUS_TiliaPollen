@@ -14,4 +14,4 @@ openpyxl
 requests
 
 # Install DataBUS from gitHub
-git+https://github.com//NeotomaDB/DataBUS.git@package_ver
+https://github.com/NeotomaDB/DataBUS/archive/refs/heads/main.zip
