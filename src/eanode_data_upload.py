@@ -13,6 +13,7 @@ from utils.insert_chronologies_ost import insert_chronology_ost
 from utils.insert_sample_age_ost import insert_sample_age_ost
 from utils.insert_geopolitical_units import insert_geopolitical_units
 from utils.insert_collector import insert_collector
+from utils.insert_dataset import insert_dataset_ost
 
 """
 Use this command after having validated the files to 
@@ -91,7 +92,7 @@ for filename in filenames:
                                             csv_file = csv_file,
                                             uploader = uploader)
     logfile = logging_response(uploader['collunitid'], logfile)
-    
+    break
     logfile.append('\n=== Inserting Collector ===')
     uploader['collector'] = insert_collector(cur = cur,
                                                 yml_dict = yml_dict,
@@ -114,7 +115,8 @@ for filename in filenames:
     logfile = logging_response(uploader['chronology'], logfile)
 
     logfile.append('\n=== Inserting Dataset ===')
-    uploader['datasetid'] = nu.insert_dataset(cur = cur,
+    # This function has a modification for datasets in EA
+    uploader['datasetid'] = insert_dataset_ost(cur = cur,
                                             yml_dict = yml_dict,
                                             csv_file = csv_file,
                                             uploader = uploader)

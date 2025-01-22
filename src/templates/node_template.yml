@@ -24,7 +24,7 @@ metadata:
   neotoma: ndb.collectionunits.colltypeid
   notes: null
   overwrite: false
-  required: true
+  required: false
   value: modern
 - column: labnumber
   neotoma: ndb.samples.labnumber
@@ -153,7 +153,7 @@ metadata:
   type: string
 - column: Record Number
   neotoma: ndb.collectionunits.handle
-  overwrite: false
+  overwrite: true
   required: false
   rowwise: false
   type: string

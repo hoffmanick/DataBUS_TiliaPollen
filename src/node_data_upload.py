@@ -23,7 +23,7 @@ python template_upload.py
 In that case, the default template 'template.yml' is used.
 
 You can also use a different template file by running:
-python template_upload.py --template='template_xlsx.xlsx'
+python src/node_data_upload.py --template='src/templates/node_template.yml' --data='data/NODE/' --validation_logs='data/NODE/validation_logs/'
 
 Change 'template_xlsx.xlsx' to desired filename as long as 
 template file that has an .xlsx or .yml extension
@@ -38,20 +38,21 @@ cur = conn.cursor()
 args = nh.parse_arguments()
 overwrite = args['overwrite']
 
+valid_logs = 'data/NODE/validation_logs/'
 filenames = glob.glob(args['data'] + "*.csv")
-upload_logs = 'data/upload_logs'
+upload_logs = 'data/NODE/upload_logs' 
 if not os.path.exists(upload_logs):
             os.makedirs(upload_logs)
 
-uploaded_files = "data/uploaded_files"
+uploaded_files = "data/NODE/uploaded_files"
 
 for filename in filenames:
     test_dict = {}
     print(filename)
     logfile = []
 
-    hashcheck = nh.hash_file(filename)
-    filecheck = check_file(filename, strict=False) # Will not allow changes in the database.
+    hashcheck = nh.hash_file(filename, valid_logs)
+    filecheck = check_file(filename, validation_files=valid_logs, strict=False) # Will not allow changes in the database.
 
     logfile = logfile + hashcheck['message'] + filecheck['message']
     logfile.append(f"\nNew Upload started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -105,13 +106,6 @@ for filename in filenames:
                                                 csv_file = csv_file,
                                                 uploader = uploader)
     logfile = logging_response(uploader['anunits'], logfile)
-    
-    logfile.append('\n=== Inserting Chronology ===')
-    uploader['chronology'] = insert_chronology_ost(cur = cur,
-                                                  yml_dict = yml_dict,
-                                                  csv_file = csv_file,
-                                                  uploader = uploader)
-    logfile = logging_response(uploader['chronology'], logfile)
 
     logfile.append('\n=== Inserting Dataset ===')
     uploader['datasetid'] = nu.insert_dataset(cur = cur,
@@ -154,13 +148,6 @@ for filename in filenames:
                                         uploader = uploader)
     logfile = logging_response(uploader['sampleAnalyst'], logfile)
 
-    logfile.append('\n=== Validating Sample Ages ===')
-    uploader['sample_age'] = insert_sample_age_ost(cur = cur,
-                                            yml_dict = yml_dict,
-                                            csv_file = csv_file,
-                                           uploader = uploader)
-    logfile = logging_response(uploader['chronology'], logfile)
-
     logfile.append('\n === Inserting Data ===')
     uploader['data'] = nu.insert_data_long(cur = cur,
                                            yml_dict = yml_dict, 
@@ -175,7 +162,7 @@ for filename in filenames:
                                     uploader = uploader)
     logfile = logging_response(uploader['publications'], logfile)
 
-    modified_filename = filename.replace('data/', 'data/upload_logs/')
+    modified_filename = filename.replace('data/NODE/', 'data/NODE/upload_logs/')
     with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
         for i in logfile:
             writer.write(i)

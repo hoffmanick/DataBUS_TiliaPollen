@@ -19,7 +19,7 @@ from utils.valid_chronologies_ost import valid_chronologies_ost
 from utils.valid_geopolitical_units import valid_geopolitical_units
 
 """
-python src/node_template_validate.py --template='src/templates/node_template.yml'
+python src/node_template_validate.py --template='src/templates/node_template.yml' --data='data/NODE' --validation_logs='data/NODE/validation_logs/'
 """
 
 args = nh.parse_arguments()
@@ -30,17 +30,17 @@ cur = conn.cursor()
 
 directory = Path(args['data'])
 filenames = directory.glob("*.csv")
-valid_logs = Path('data/NODE/validation_logs')
+valid_logs = 'data/NODE/validation_logs/'
 valid_logs_wrong = Path('data/NODE/validation_logs/not_validated/')
-valid_logs.mkdir(exist_ok=True)
+Path(valid_logs).mkdir(exist_ok=True)
 valid_logs_wrong.mkdir(exist_ok=True)
 
 for filename in filenames:
     print(filename)
     logfile = []
 
-    hashcheck = nh.hash_file(filename)
-    filecheck = nv.check_file(filename)
+    hashcheck = nh.hash_file(filename, valid_logs)
+    filecheck = nv.check_file(filename, validation_files=valid_logs)
 
     logfile = logfile + hashcheck['message'] + filecheck['message']
     logfile.append(f"\nNew validation started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -143,7 +143,7 @@ for filename in filenames:
         
         all_true = all([validator[key].validAll for key in ['sites', 'collunits', 'analysisunit',
                                                             'dataset', 'agent', 'database', 
-                                                            'sample']])#, 'taxa', 'publications']])
+                                                            'sample', 'taxa', 'publications']])
 
         not_validated_files = "data/NODE/not_validated_files"
 

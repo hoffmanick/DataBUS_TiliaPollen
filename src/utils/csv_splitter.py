@@ -6,16 +6,14 @@ import os
 
 ## NODE might be a different splitter where I also make a new column for geog and I might have to group by geog
 
-def csv_splitter(data, params=['Site name', 'Handle']):
+def csv_splitter(data, params=['Handle']):
     split_files = 'data-all/splitted'
     if not os.path.exists(split_files):
                 os.makedirs(split_files)
 
-    print(data.head())
-    print(data.columns)
     data_groups = data.groupby(by=params)
-    print(data_groups.head())
 
     for group, rows in data_groups:
-        filename = f"data-all/splitted/{group[1]}.csv"
+        filename = f"data-all/splitted/{group[0]}.csv"
         rows.to_csv(filename, index=False)
+    print("Finished")

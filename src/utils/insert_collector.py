@@ -24,7 +24,6 @@ def insert_collector(cur, yml_dict, csv_file, uploader):
     if len(inputs["contactid"]) == 1 and isinstance(inputs["contactid"][0],str):
         inputs["contactid"] = inputs["contactid"][0].split(" | ")
     inputs["contactid"] = list(dict.fromkeys(inputs["contactid"]))
-
     contids = nh.get_contacts(cur, inputs["contactid"])
     for agent in contids:
         try:
@@ -49,7 +48,6 @@ def insert_collector(cur, yml_dict, csv_file, uploader):
                 response.valid.append(True)
                 response.message.append(f"✔ Collector {agent['id']} inserted.")
             except Exception as e:
-                print(e)
                 response.message.append(
                     f"✗ Data collector information is not correct. {e}"
                 )
