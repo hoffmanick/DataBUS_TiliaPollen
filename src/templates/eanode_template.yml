@@ -14,12 +14,13 @@ metadata:
   overwrite: false
   required: true
   value: ostracode surface sample
-- column: colltypeid
+- column: CollectionType
   neotoma: ndb.collectionunits.colltypeid
   notes: null
   overwrite: false
   required: false
-  value: modern
+  rowwise: false
+  type: string
 - column: databaseid
   neotoma: ndb.datasetdatabases.databasename
   notes: null
@@ -33,12 +34,12 @@ metadata:
   required: false
   value: null
 - column: variableelement
-  neotoma: ndb.variableelements.variableelementid
+  neotoma: ndb.variableelements.variableelement
   notes: null
   overwrite: false
   required: true
   value: Valve
-- column: Handle
+- column: handleComplete
   neotoma: ndb.collectionunits.handle
   overwrite: true
   required: false
@@ -56,17 +57,17 @@ metadata:
   notes: 'Original Sample Number:'
   overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   type: string
-- column: pH*
+- column: pH
   neotoma: ndb.datasets.notes
   notes: 'pH:'
   overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   type: string
 - column: Sample Analyst
-  neotoma: ndb.sampleanalysts.contactid
+  neotoma: ndb.sampleanalysts.contactname
   overwrite: false
   required: false
   rowwise: true
@@ -90,27 +91,26 @@ metadata:
   neotoma: ndb.publications.citation
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
-- column: comments*
+- column: comments
   neotoma: ndb.sites.notes
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
-- column: conductivity*
+- column: conductivity
   neotoma: ndb.datasets.notes
   notes: 'Conductivity:'
   overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   type: string
-- column: temperature*
+- column: temperature
   neotoma: ndb.datasets.notes
-  notes: C
   overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   type: string
 - column: continent
   neotoma: "\u2014NA\u2014"
@@ -137,20 +137,20 @@ metadata:
   required: true
   rowwise: false
   type: float
-- column: dissolved oxygen*
+- column: dissolved oxygen
   neotoma: ndb.datasets.notes
   notes: 'Dissolved Oxygen:'
   overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   type: string
-- column: duration*
+- column: duration
   neotoma: "\u2014NA\u2014"
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: environment*
+- column: environment
   neotoma: "\u2014NA\u2014"
   notes: This is a modifier to the depositional environment and might be "location
     within unit"
@@ -167,6 +167,20 @@ metadata:
   type: date
 - column: eventDate
   formatorrange: '%Y-%m-%d'
+  neotoma: ndb.chronologies.age
+  overwrite: false
+  required: false
+  rowwise: false
+  type: date
+- column: Age Model
+  formatorrange: '%Y-%m-%d'
+  neotoma: ndb.chronologies.agemodel
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
+- column: eventDate
+  formatorrange: '%Y-%m-%d'
   neotoma: ndb.sampleages.age
   overwrite: false
   required: false
@@ -178,17 +192,29 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: females
-  neotoma: "\u2014NA\u2014"
+- column: value
+  neotoma: ndb.data.value
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
-- column: genus
-  neotoma: "\u2014NA\u2014"
+- column: variableelement
+  neotoma: ndb.variables.variableelement
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
+  type: string
+- column: count
+  neotoma: ndb.variables.variableunits
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
+- column: Taxonname
+  neotoma: ndb.variables.taxon
+  overwrite: false
+  required: false
+  rowwise: true
   type: string
 - column: geodeticDatum
   neotoma: "\u2014NA\u2014"
@@ -249,12 +275,6 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: males
-  neotoma: "\u2014NA\u2014"
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
 - column: males and females text
   neotoma: ndb.datasets.notes
   notes: 'Males & Females:'
@@ -274,48 +294,33 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: organismQuantity
-  formatorrange: '> 0'
-  neotoma: ndb.data.value
-  overwrite: false
-  required: false
-  rowwise: true
-  type: float
 - column: recordedBy
-  neotoma: ndb.datasetpis.contactid
+  neotoma: ndb.datasetpis.contactname
   overwrite: false
   required: false
   rowwise: false
   type: string
   vocab: [fixed]
 - column: recordedBy
-  neotoma: ndb.collectors.contactid
+  neotoma: ndb.collectors.contactname
   overwrite: false
   required: false
   rowwise: false
   type: string
   vocab: [fixed]
 - column: Dataset Processor
-  neotoma: ndb.datasetprocessor.contactid
+  neotoma: ndb.datasetprocessor.contactname
   overwrite: false
   required: false
   rowwise: false
   type: string
   vocab: [fixed]
-- column: salinity*
+- column: salinity
   neotoma: ndb.datasets.notes
   notes: 'Salinity:'
   overwrite: false
   required: false
-  rowwise: true
-  type: string
-- column: scientificName
-  neotoma: ndb.data.values
-  notes: This is a single Presence/absence value, we have to check to see if there's
-    not information in this field
-  overwrite: false
-  required: false
-  rowwise: true
+  rowwise: false
   type: string
 - column: scientificNameAuthorship
   neotoma: ndb.taxa.publication
@@ -331,7 +336,7 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: sexRatio*
+- column: sexRatio
   neotoma: "\u2014NA\u2014"
   notes: This must be some part of the data value/variable description, but I'm not
     sure where it is.
@@ -345,36 +350,36 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: subfamily*
+- column: subfamily
   neotoma: "\u2014NA\u2014"
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: substrate*
+- column: substrate
   neotoma: "\u2014NA\u2014"
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: superfamily*
+- column: superfamily
   neotoma: "\u2014NA\u2014"
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: typeLocality*
+- column: typeLocality
   neotoma: "\u2014NA\u2014"
   overwrite: false
   required: false
   rowwise: true
   type: string
-- column: vegetation*
+- column: vegetation
   neotoma: ndb.datasets.notes
   notes: 'Vegetation:'
   overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   type: string
 - column: verbatimDepth
   neotoma: "\u2014NA\u2014"

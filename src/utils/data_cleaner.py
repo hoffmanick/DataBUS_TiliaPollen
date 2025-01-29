@@ -11,7 +11,9 @@ fix['handleComplete'] = fix['Handle'].astype(str).apply(lambda x: f"EANOD/{x}/OS
 regex = r'^(\w+\s*\w+)'
 fix['Taxonname'] = fix['scientificName'].astype(str).apply(lambda x: re.match(regex, x).group(1))
 fix['habitat'] = fix['habitat'].str.replace('lake', 'lacustrine')
-
+fix['CollectionType'] = "modern"
+fix['Age Model'] = "collection date"
+fix = fix.replace(columns={'nameInPaper': 'Name In Publication'})
 # inconsistencies
 name_inconsistencies = pd.read_csv('data-all/EANODE/inconsistencies/contact_inconsistencies.csv')
 taxa_inconsisntecies = pd.read_csv('data-all/EANODE/inconsistencies/taxa_inconsistencies.csv')

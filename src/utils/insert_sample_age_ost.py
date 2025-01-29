@@ -17,14 +17,11 @@ def insert_sample_age_ost(cur, yml_dict, csv_file, uploader):
             - 'valid' (bool): Indicates if all insertions were successful.
     """
     response = Response() 
-
     params = ["age"]
     
     try:
-        inputs = nh.clean_inputs(
-            nh.pull_params(params, yml_dict, csv_file, "ndb.sampleages")
-        ) #1950 as year zero, so 2010 is -60
-        inputs['age'] = 1950 - inputs['age'][0].year
+        inputs = nh.pull_params(params, yml_dict, csv_file, "ndb.sampleages")
+        print(inputs)
     except Exception as e:
         error_message = str(e)
         try:
@@ -43,13 +40,12 @@ def insert_sample_age_ost(cur, yml_dict, csv_file, uploader):
                     else:
                         new_date = None
             params.remove("age")
-            inputs = nh.clean_inputs(
-            nh.pull_params(params, yml_dict, csv_file, "ndb.sampleages") ) 
+            inputs = nh.pull_params(params, yml_dict, csv_file, "ndb.sampleages")
             inputs["age"] = new_date
             response.valid.append(True)
         except Exception as inner_e:
             response.validAll = False
-            response.message.append("CU parameters cannot be properly extracted. {e}\n")
+            response.message.append("Sample Ages parameters cannot be properly extracted. {e}\n")
             response.message.append(str(inner_e))
             return response
 
@@ -57,7 +53,7 @@ def insert_sample_age_ost(cur, yml_dict, csv_file, uploader):
         if not inputs["age"] and isinstance(inputs["age"], (int, float)):
             age_younger = None
             age_older = None
-        else:
+        else: 
             response.message.append(
                 "? Age is set to None. Ageyounger/Ageolder will be None."
             )

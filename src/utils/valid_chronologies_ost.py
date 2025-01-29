@@ -1,71 +1,90 @@
 import DataBUS.neotomaHelpers as nh
 from DataBUS import Chronology, ChronResponse
+from datetime import datetime
 
 def valid_chronologies_ost(cur, yml_dict, csv_file):
-    """_Validating chronologies"""
+    """
+        Validates chronologies based on provided parameters and data.
+    Args:
+        cur (cursor): Database cursor for executing SQL queries.
+        yml_dict (dict): Dictionary containing YAML configuration data.
+        csv_file (list): List of dictionaries representing CSV file data.
+    Returns:
+        ChronResponse: An object containing validation results, messages, and status.
+    Raises:
+        ValueError: If there is an issue with the extracted parameters.
+        AssertionError: If the date format in the CSV file is incorrect.
+    """
     response = ChronResponse()
 
-    params = [
-        "chronologyid",
-        "collectionunitid",
-        "contactid",
-        "isdefault",
-        "chronologyname",
-        "dateprepared",
-        "agemodel",
-        "ageboundyounger",
-        "ageboundolder",
-        "notes",
-        "recdatecreated",
-        "recdatemodified",
-        "age"
-    ]
-
+    params = ["chronologyid", "collectionunitid", "contactid",
+              "isdefault", "chronologyname", "dateprepared", 
+              "agemodel", "ageboundyounger", "ageboundolder", 
+              "notes", "recdatecreated", "recdatemodified",
+              "age", "agetype"]
     try:
-        inputs = nh.clean_inputs(
-            nh.pull_params(params, yml_dict, csv_file, "ndb.sampleages")
-        ) #1950 as year zero, so 2010 is -60
-        inputs['age'] = 1950 - inputs['age'][0].year
+        inputs = nh.pull_params(params, yml_dict, csv_file, "ndb.chronologies")
+        raise ValueError
     except Exception as e:
         error_message = str(e)
+        error_message = "time data"
         try:
             if "time data" in error_message.lower():
-                event_dates = [item.get('eventDate') for item in csv_file if 'eventDate' in item]
-                new_date = list(set(event_dates))
-                assert len(new_date) == 1, "There should only be one date"
-                new_date = new_date[0]
-                if isinstance(new_date, str) and len(new_date) > 4:
-                    if len(new_date) == 7 and new_date[4] == '-' and new_date[5:7].isdigit():
-                        new_date = f"{new_date}-01"
-                        new_date = 1950 - new_date.year
-                    elif new_date[:4].isdigit():
-                        new_date = int(new_date[:4])
-                        new_date = 1950 - new_date
+                age_dict = nh.retrieve_dict(yml_dict, "ndb.chronologies.age")
+                column = age_dict[0]['column']
+                assert isinstance(datetime.strptime(csv_file[0][column], "%Y/%m/%d"), datetime), "The eleemnt is not a date."
+                if isinstance(csv_file[0][column], str) and len(csv_file[0][column]) >= 4:
+                    if len(csv_file[0][column]) == 7 and csv_file[0][column][4] == '-' and csv_file[0][column][5:7].isdigit():
+                        new_date = f"{csv_file[0][column]}-01"
+                        new_date = new_date.replace('-', '/')
+                        new_date = datetime.strptime(new_date, "%Y/%m/%d")
+                    elif csv_file[0][column][:4].isdigit():
+                        new_date = int(csv_file[0][column][:4])
                     else:
                         new_date = None
-            params.remove("age")
-            inputs = nh.clean_inputs(
-            nh.pull_params(params, yml_dict, csv_file, "ndb.sampleages") ) 
-            inputs["age"] = new_date
+                else:
+                    new_date = None
             response.valid.append(True)
         except Exception as inner_e:
             response.validAll = False
             response.message.append("Chronology parameters cannot be properly extracted. {e}\n")
             response.message.append(str(inner_e))
             return response
+    inputs['age'] = [1953, 1750, 2025]
+    if inputs['agemodel'] == "collection date":
+        if isinstance(inputs['age'], (float, int)):
+            inputs['age'] = 1950 - inputs['age']
+        elif isinstance(inputs['age'], datetime):
+            inputs['age'] = 1950 - inputs['age'].year
+        elif isinstance(inputs['age'], list):
+            inputs['age'] = [1950 - value.year if isinstance(value, datetime) else 1950 - value
+                             for value in inputs['age']]
+            if not (inputs["ageboundolder"] and inputs["ageboundyounger"]):
+                inputs["ageboundyounger"]= int(min(inputs["age"])) 
+                inputs["ageboundolder"]= int(max(inputs["age"])) 
+    
+    # to add for lead models because they use more calendar format
 
-    if inputs['age']:
-        inputs["agetype"] = "cal yr BP"
-        inputs["agetypeid"] = 2
-        inputs["agemodel"] = "collection date"
-        inputs["chronologyname"] = "Calendar date"
-        response.message.append("✔ The provided age type is correct.")
-        response.valid.append(True)
+    if inputs["agetype"]: 
+        inputs["agetype"].replace("cal yr BP" 'Calendar years BP')
+    agetype_query = """SELECT agetypeid FROM ndb.agetypes WHERE LOWER(agetype) = %(agetype)s"""
+    if inputs["agetype"]:
+        cur.execute(agetype_query, {'agetype': inputs["agetype"].lower()})
+        id = cur.fetchone()
+        if id:
+            inputs["agetypeid"] = id[0]
+            response.message.append("✔ The provided age type is correct.")
+            response.valid.append(True)
+        else:
+            response.message.append("✗ The provided age type does not exist in Neotoma DB.")
+            response.valid.append(False)
+            inputs["agetypeid"] = None
     else:
         response.message.append("? No age type provided.")
         response.valid.append(True)
         inputs["agetypeid"] = None
 
+    del inputs["agetype"], inputs["age"]
     for k in inputs:
         if not inputs[k]:
             response.message.append(f"? {k} has no values.")
@@ -74,20 +93,7 @@ def valid_chronologies_ost(cur, yml_dict, csv_file):
             response.valid.append(True)
 
     try:
-        Chronology(
-            chronologyid=inputs["chronologyid"],
-            agetypeid=inputs["agetypeid"],
-            contactid=inputs["contactid"],
-            isdefault=1,
-            chronologyname=inputs["chronologyname"],
-            dateprepared=inputs["dateprepared"],
-            agemodel=inputs["agemodel"],
-            ageboundyounger=inputs["ageboundyounger"],
-            ageboundolder=inputs["ageboundolder"],
-            notes=inputs["notes"],
-            recdatecreated=inputs["recdatecreated"],
-            recdatemodified=inputs["recdatemodified"],
-        )
+        Chronology(**inputs)
         response.valid.append(True)
         response.message.append("✔  Chronology can be created")
     except Exception as e:

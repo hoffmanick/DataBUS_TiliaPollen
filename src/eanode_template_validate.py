@@ -14,9 +14,6 @@ from dotenv import load_dotenv
 import DataBUS.neotomaValidator as nv
 import DataBUS.neotomaHelpers as nh
 from DataBUS.neotomaHelpers.logging_dict import logging_dict, logging_response
-from utils.valid_sample_age_ost import valid_sample_age_ost
-from utils.valid_chronologies_ost import valid_chronologies_ost
-from utils.valid_geopolitical_units import valid_geopolitical_units
 
 """
 python src/eanode_template_validate.py --template='src/templates/eanode_template.yml'
@@ -51,10 +48,18 @@ for filename in filenames:
         yml_data = yml_dict['metadata']
         validator = dict()
         csv_file = nh.read_csv(filename)
+
+    #     #substitutions
+    #         substitutions = {'lake': 'lacustrine'}
+    # if inputs["depenvtid"].lower() in substitutions:
+    #         inputs["depenvtid"] = substitutions[inputs["depenvtid"].lower()]
         
         # Get the unitcols and units to be used
         # Check that the vocab in the template matches the csv vcocab
         #vocab_ = nv.vocabDict(yml_data)
+        inputs = {'cur': cur,
+                  'yml_dict': yml_dict,
+                  'csv_file': csv_file}
 
         logfile.append('\n=== File Validation ===')
         validator['csvValid'] = nv.valid_csv(filename = filename,
@@ -64,27 +69,20 @@ for filename in filenames:
         logfile.append('\n === Validating Template Unit Definitions ===')
         df = pd.read_csv(filename)
         validator['units'] = nv.valid_units(cur = cur,
-                                 yml_dict = yml_dict,
-                                 df = df)
+                                            yml_dict = yml_dict,
+                                            df = df)
         logfile = logging_dict(validator['units'], logfile)
 
         logfile.append('\n === Validating Sites ===')
-        validator['sites'] = nv.valid_site(cur = cur,
-                                 yml_dict = yml_dict,
-                                 csv_file = csv_file)
+        validator['sites'] = nv.valid_site(**inputs)
         logfile = logging_response(validator['sites'], logfile)
 
-        ## ADD GEOLOCALITY
         logfile.append('\n === Checking Against Geopolitical Units ===')
-        validator['geopol_units'] = valid_geopolitical_units(cur = cur,
-                                                   yml_dict = yml_dict,
-                                                   csv_file = csv_file)
+        validator['geopol_units'] = nv.valid_geopolitical_units(**inputs)
         logfile = logging_response(validator['geopol_units'], logfile)
 
         logfile.append('\n === Checking Against Collection Units ===')
-        validator['collunits'] = nv.valid_collunit(cur = cur,
-                                                   yml_dict = yml_dict,
-                                                   csv_file = csv_file)
+        validator['collunits'] = nv.valid_collunit(**inputs)
         logfile = logging_response(validator['collunits'], logfile)
 
         logfile.append('\n === Checking Against Analysis Units ===')
@@ -93,48 +91,32 @@ for filename in filenames:
         logfile = logging_response(validator['analysisunit'], logfile)
 
         logfile.append('\n === Checking Chronologies ===')
-        validator['chronologies'] = valid_chronologies_ost(cur = cur,
-                                                          yml_dict = yml_dict,
-                                                          csv_file = csv_file)
+        validator['chronologies'] = nv.valid_chronologies(**inputs)
         logfile = logging_response(validator['chronologies'], logfile)
 
         logfile.append('\n === Checking Dataset ===')
-        validator['dataset'] = nv.valid_dataset(cur = cur,
-                                                yml_dict = yml_dict,
-                                                csv_file = csv_file)
+        validator['dataset'] = nv.valid_dataset(**inputs, name="Name In Publication")
         logfile = logging_response(validator['dataset'], logfile)
 
         logfile.append('\n === Checking Against Contact Names ===')
-        validator['agent'] = nv.valid_contact(cur,
-                                            csv_file,
-                                            yml_dict)
+        validator['agent'] = nv.valid_contact(**inputs)
         logfile = logging_response(validator['agent'], logfile)
 
         logfile.append('\n=== Validating Dataset Database ===')
         validator['database'] = nv.valid_dataset_database(cur = cur,
-                                                        yml_dict = yml_dict)
+                                                          yml_dict = yml_dict)
         logfile = logging_response(validator['database'], logfile)
 
         logfile.append('\n=== Validating Samples ===')
-        validator['sample'] = nv.valid_sample(cur = cur,
-                                              yml_dict = yml_dict,
-                                              csv_file = csv_file,
-                                              validator = validator)
+        validator['sample'] = nv.valid_sample(**inputs, validator = validator)
         logfile = logging_response(validator['sample'], logfile)
 
         logfile.append('\n=== Validating Sample Ages ===')
-        validator['sample_age'] = valid_sample_age_ost(cur = cur,
-                                              yml_dict = yml_dict,
-                                              csv_file = csv_file,
-                                              validator = validator)
+        validator['sample_age'] = nv.valid_sample_age(**inputs, validator = validator)
         logfile = logging_response(validator['sample_age'], logfile)
         
         logfile.append('\n === Validating Taxa Names ===')
-        validator['taxa'] = nv.valid_data_long(cur = cur,
-                                              yml_dict = yml_dict,
-                                              csv_file = csv_file,
-                                              validator = validator,
-                                              filename=filename)
+        validator['taxa'] = nv.valid_data(**inputs)
         logfile = logging_response(validator['taxa'], logfile)
 
         logfile.append('\n === Validating Publications ===')
@@ -147,16 +129,16 @@ for filename in filenames:
         # Nothing needs to be committed to the database
         conn.rollback()
         
-        all_true = all([validator[key].validAll for key in ['sites', 'collunits', 'analysisunit', 'chronologies',# 'chron_controls', 
+        all_true = all([validator[key].validAll for key in ['sites', 'collunits', 'analysisunit', 'chronologies', 
                                                             'dataset', 'agent', 'database', 
                                                             'sample', 'taxa', 'publications', 'sample_age']])
 
         not_validated_files = "data/not_validated_files"
-
         all_true = all_true and filecheck['pass']
 
         if all_true == False:
-            print(f"{filename} cannot be validated.\nMoved {filename} to the 'not_validated_files' folder.")
+            print(f"{filename} cannot be validated.\n"
+                  f"Moved {filename} to the 'not_validated_files' folder.")
             os.makedirs(not_validated_files, exist_ok=True)
             uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
             os.replace(filename, uploaded_path)
