@@ -49,11 +49,6 @@ for filename in filenames:
         validator = dict()
         csv_file = nh.read_csv(filename)
 
-    #     #substitutions
-    #         substitutions = {'lake': 'lacustrine'}
-    # if inputs["depenvtid"].lower() in substitutions:
-    #         inputs["depenvtid"] = substitutions[inputs["depenvtid"].lower()]
-        
         # Get the unitcols and units to be used
         # Check that the vocab in the template matches the csv vcocab
         #vocab_ = nv.vocabDict(yml_data)
@@ -61,17 +56,17 @@ for filename in filenames:
                   'yml_dict': yml_dict,
                   'csv_file': csv_file}
 
-        logfile.append('\n=== File Validation ===')
-        validator['csvValid'] = nv.valid_csv(filename = filename,
-                                   yml_data = yml_data)
-        logfile = logging_dict(validator['csvValid'], logfile)
+        # logfile.append('\n=== File Validation ===')
+        # validator['csvValid'] = nv.valid_csv(filename = filename,
+        #                            yml_data = yml_data)
+        # logfile = logging_dict(validator['csvValid'], logfile)
 
-        logfile.append('\n === Validating Template Unit Definitions ===')
-        df = pd.read_csv(filename)
-        validator['units'] = nv.valid_units(cur = cur,
-                                            yml_dict = yml_dict,
-                                            df = df)
-        logfile = logging_dict(validator['units'], logfile)
+        # logfile.append('\n === Validating Template Unit Definitions ===')
+        # df = pd.read_csv(filename)
+        # validator['units'] = nv.valid_units(cur = cur,
+        #                                     yml_dict = yml_dict,
+        #                                     df = df)
+        # logfile = logging_dict(validator['units'], logfile)
 
         logfile.append('\n === Validating Sites ===')
         validator['sites'] = nv.valid_site(**inputs)
@@ -120,10 +115,7 @@ for filename in filenames:
         logfile = logging_response(validator['taxa'], logfile)
 
         logfile.append('\n === Validating Publications ===')
-        validator['publications'] = nv.valid_publication(cur, 
-                                        yml_dict = yml_dict,
-                                        csv_file = csv_file,
-                                        validator = validator)
+        validator['publications'] = nv.valid_publication(**inputs)
         logfile = logging_response(validator['publications'], logfile)
 
         # Nothing needs to be committed to the database

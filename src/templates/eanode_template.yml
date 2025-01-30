@@ -38,9 +38,28 @@ metadata:
   notes: null
   overwrite: false
   required: true
-  value: Valve
-- column: handleComplete
+  rowwise: true
+  type: string
+- column: Handle
   neotoma: ndb.collectionunits.handle
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+- column: handleComplete
+  neotoma: ndb.collectionunits.collunitname
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+- column: handleComplete
+  neotoma: ndb.analysisunits.analysisunitname
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+- column: handleComplete
+  neotoma: ndb.samples.samplename
   overwrite: true
   required: false
   rowwise: false
@@ -50,6 +69,13 @@ metadata:
   notes: 'Name in paper:'
   overwrite: false
   required: false
+  rowwise: true
+  type: string
+- column: variableelement
+  neotoma: ndb.datasets.notes
+  notes: null
+  overwrite: false
+  required: true
   rowwise: true
   type: string
 - column: Original sample number
@@ -179,6 +205,13 @@ metadata:
   required: false
   rowwise: false
   type: str
+- column: Age Model
+  formatorrange: '%Y-%m-%d'
+  neotoma: ndb.chronologies.agetype
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: eventDate
   formatorrange: '%Y-%m-%d'
   neotoma: ndb.sampleages.age
@@ -194,6 +227,12 @@ metadata:
   type: string
 - column: value
   neotoma: ndb.data.value
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
+- column: value
+  neotoma: ndb.datasets.notes
   overwrite: false
   required: false
   rowwise: true
@@ -305,7 +344,7 @@ metadata:
   neotoma: ndb.collectors.contactname
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
   vocab: [fixed]
 - column: Dataset Processor
