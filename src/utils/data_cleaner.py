@@ -13,7 +13,8 @@ fix['Taxonname'] = fix['scientificName'].astype(str).apply(lambda x: re.match(re
 fix['habitat'] = fix['habitat'].str.replace('lake', 'lacustrine')
 fix['CollectionType'] = "modern"
 fix['Age Model'] = "collection date"
-fix = fix.replace(columns={'nameInPaper': 'Name In Publication'})
+fix['Age Type'] = 'Calendar years BP'
+fix = fix.rename(columns={'nameInPaper': 'Name In Publication'})
 # inconsistencies
 name_inconsistencies = pd.read_csv('data-all/EANODE/inconsistencies/contact_inconsistencies.csv')
 taxa_inconsisntecies = pd.read_csv('data-all/EANODE/inconsistencies/taxa_inconsistencies.csv')
@@ -35,5 +36,6 @@ for _, row in fix.iterrows():
         expanded_rows.append(new_row)
 
 fix = pd.DataFrame(expanded_rows)
+fix.to_excel('data-all/original/EANOD published data June 2024-fixed.xlsx', index=False)
 
 csv_splitter(fix, params=['Handle'])

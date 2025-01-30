@@ -64,7 +64,7 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: nameInPaper
+- column: Name In Publication
   neotoma: ndb.datasets.notes
   notes: 'Name in paper:'
   overwrite: false
@@ -205,7 +205,7 @@ metadata:
   required: false
   rowwise: false
   type: str
-- column: Age Model
+- column: Age Type
   formatorrange: '%Y-%m-%d'
   neotoma: ndb.chronologies.agetype
   overwrite: false
