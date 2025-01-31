@@ -118,6 +118,7 @@ for filename in filenames:
         validator['publications'] = nv.valid_publication(**inputs)
         logfile = logging_response(validator['publications'], logfile)
 
+
         # Nothing needs to be committed to the database
         conn.rollback()
         

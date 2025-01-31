@@ -40,6 +40,13 @@ metadata:
   required: true
   rowwise: true
   type: string
+- column: context
+  neotoma: ndb.variables.variablecontext
+  notes: null
+  overwrite: false
+  required: true
+  rowwise: true
+  type: string
 - column: Handle
   neotoma: ndb.collectionunits.handle
   overwrite: true

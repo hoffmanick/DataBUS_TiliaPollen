@@ -5,7 +5,8 @@ def parse_text(text):
     results = []
     if pd.isna(text):
         results.append({"variableelement": "valve", 
-                        "value": 1, 
+                        "value": 1,
+                        "context": None, 
                         "count": 'presence/absence'})
         return results
      
@@ -17,6 +18,7 @@ def parse_text(text):
         num = int(match_specimen.group(1))
         results.append({"variableelement": "valve", 
                         "value": num, 
+                        "context": None,
                         "count": 'NISP'})
         return results
     
@@ -27,11 +29,14 @@ def parse_text(text):
     for num, category in matches:
         category = category.lower().rstrip('s')
         if category == 'female':
-            category = 'female valve'
+            context = 'female'
+            category = 'valve'
         elif category == 'male':
-            category = 'male valve'
+            context = 'male'
+            category = 'valve'
         else:
             category = 'valve'
+            context = None
         if num:
             num = int(num) 
             count = "NISP"
@@ -39,6 +44,6 @@ def parse_text(text):
             num = 1
             count = "presence/absence"
         
-        results.append({"variableelement": category, "value": num, "count": count})
+        results.append({"variableelement": category, "value": num, "context": context, "count": count})
     
     return results
