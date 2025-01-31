@@ -13,7 +13,7 @@ import pandas as pd
 from dotenv import load_dotenv
 import DataBUS.neotomaValidator as nv
 import DataBUS.neotomaHelpers as nh
-from DataBUS.neotomaHelpers.logging_dict import logging_dict, logging_response
+from DataBUS.neotomaHelpers.logging_dict import logging_response
 
 """
 python src/eanode_template_validate.py --template='src/templates/eanode_template.yml'

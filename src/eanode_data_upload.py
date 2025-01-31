@@ -94,8 +94,8 @@ for filename in filenames:
 
     logfile.append('\n=== Inserting Dataset ===')
     # This function has a modification for datasets in EA
-    uploader['datasetid'] = nu.insert_dataset(**inputs, name="nameInPaper")
-    logfile = logging_response(uploader['datasetid'], logfile)
+    uploader['datasets'] = nu.insert_dataset(**inputs, name="nameInPaper")
+    logfile = logging_response(uploader['datasets'], logfile)
 
     logfile.append('\n=== Inserting Dataset PI ===')
     uploader['datasetpi'] = nu.insert_dataset_pi(**inputs)
