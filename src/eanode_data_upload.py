@@ -83,18 +83,18 @@ for filename in filenames:
     logfile.append('\n=== Inserting Collector ===')
     uploader['collector'] = nu.insert_collector(**inputs)
     logfile = logging_response(uploader['collector'], logfile)
-    
+
     logfile.append('\n=== Inserting Analysis Units ===')
     uploader['anunits'] = nu.insert_analysisunit(**inputs)
     logfile = logging_response(uploader['anunits'], logfile)    
-    
+
     logfile.append('\n=== Inserting Chronology ===')
     uploader['chronology'] = nu.insert_chronology(**inputs)
     logfile = logging_response(uploader['chronology'], logfile)
 
     logfile.append('\n=== Inserting Dataset ===')
     # This function has a modification for datasets in EA
-    uploader['datasets'] = nu.insert_dataset(**inputs, name="nameInPaper")
+    uploader['datasets'] = nu.insert_dataset(**inputs, name="name In Publication")
     logfile = logging_response(uploader['datasets'], logfile)
 
     logfile.append('\n=== Inserting Dataset PI ===')

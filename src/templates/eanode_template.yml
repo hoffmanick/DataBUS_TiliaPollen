@@ -2,11 +2,12 @@ apiVersion: neotoma v2.0
 headers: 2
 kind: Development
 metadata:
-- column: datasetname
+- column: handleComplete
   neotoma: ndb.datasets.datasetname
   notes: null
   overwrite: false
   required: true
+  rowwise: false
   value: null
 - column: datasettypeid
   neotoma: ndb.datasettypes.datasettype
@@ -71,20 +72,6 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: Name In Publication
-  neotoma: ndb.datasets.notes
-  notes: 'Name in paper:'
-  overwrite: false
-  required: false
-  rowwise: true
-  type: string
-- column: variableelement
-  neotoma: ndb.datasets.notes
-  notes: null
-  overwrite: false
-  required: true
-  rowwise: true
-  type: string
 - column: Original sample number
   neotoma: ndb.datasets.notes
   notes: 'Original Sample Number:'
@@ -92,9 +79,57 @@ metadata:
   required: false
   rowwise: false
   type: string
+- column: Name In Publication
+  neotoma: ndb.datasets.notes
+  notes: 'Name in paper:'
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
+- column: males and females text
+  neotoma: ndb.datasets.notes
+  notes: null
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
 - column: pH
   neotoma: ndb.datasets.notes
   notes: 'pH:'
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: conductivity
+  neotoma: ndb.datasets.notes
+  notes: 'Conductivity:'
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: temperature
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: dissolved oxygen
+  neotoma: ndb.datasets.notes
+  notes: 'Dissolved Oxygen:'
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: salinity
+  neotoma: ndb.datasets.notes
+  notes: 'Salinity:'
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: vegetation
+  neotoma: ndb.datasets.notes
+  notes: 'Vegetation:'
   overwrite: false
   required: false
   rowwise: false
@@ -132,19 +167,7 @@ metadata:
   required: false
   rowwise: true
   type: string
-- column: conductivity
-  neotoma: ndb.datasets.notes
-  notes: 'Conductivity:'
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: temperature
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
+
 - column: continent
   neotoma: "\u2014NA\u2014"
   notes: This is a spatial overlay
@@ -170,13 +193,7 @@ metadata:
   required: true
   rowwise: false
   type: float
-- column: dissolved oxygen
-  neotoma: ndb.datasets.notes
-  notes: 'Dissolved Oxygen:'
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
+
 - column: duration
   neotoma: "\u2014NA\u2014"
   overwrite: false
@@ -234,12 +251,6 @@ metadata:
   type: string
 - column: value
   neotoma: ndb.data.value
-  overwrite: false
-  required: false
-  rowwise: true
-  type: string
-- column: value
-  neotoma: ndb.datasets.notes
   overwrite: false
   required: false
   rowwise: true
@@ -321,13 +332,6 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: males and females text
-  neotoma: ndb.datasets.notes
-  notes: 'Males & Females:'
-  overwrite: false
-  required: false
-  rowwise: true
-  type: string
 - column: month
   neotoma: "\u2014NA\u2014"
   overwrite: false
@@ -361,13 +365,7 @@ metadata:
   rowwise: false
   type: string
   vocab: [fixed]
-- column: salinity
-  neotoma: ndb.datasets.notes
-  notes: 'Salinity:'
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
+
 - column: scientificNameAuthorship
   neotoma: ndb.taxa.publication
   overwrite: false
@@ -420,13 +418,7 @@ metadata:
   required: false
   rowwise: true
   type: string
-- column: vegetation
-  neotoma: ndb.datasets.notes
-  notes: 'Vegetation:'
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
+
 - column: verbatimDepth
   neotoma: "\u2014NA\u2014"
   notes: This is sampling depth, not lake depth

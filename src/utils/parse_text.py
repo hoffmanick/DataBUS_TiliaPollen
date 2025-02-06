@@ -4,7 +4,7 @@ import re
 def parse_text(text):
     results = []
     if pd.isna(text):
-        results.append({"variableelement": "valve", 
+        results.append({"variableelement": "valve (undiff)", 
                         "value": 1,
                         "context": None, 
                         "count": 'presence/absence'})
@@ -16,7 +16,7 @@ def parse_text(text):
                               re.IGNORECASE)
     if match_specimen:
         num = int(match_specimen.group(1))
-        results.append({"variableelement": "valve", 
+        results.append({"variableelement": "valve (undiff)", 
                         "value": num, 
                         "context": None,
                         "count": 'NISP'})
@@ -29,13 +29,13 @@ def parse_text(text):
     for num, category in matches:
         category = category.lower().rstrip('s')
         if category == 'female':
-            context = 'female'
-            category = 'valve'
+            category = 'valve (female)'
+            context = None
         elif category == 'male':
-            context = 'male'
-            category = 'valve'
+            category = 'valve (male)'
+            context = None
         else:
-            category = 'valve'
+            category = 'valve (undiff)'
             context = None
         if num:
             num = int(num) 

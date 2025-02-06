@@ -4,8 +4,16 @@ from csv_splitter import csv_splitter
 import re
 
 original = pd.read_excel('data-all/original/EANOD published data June 2024.xlsx')
-fix = original.assign(**{'Sample Analyst': 'Smith Robin J.',
-                   'Dataset Processor': 'Simth Robin J.'})
+fix = original.assign(**{'Sample Analyst': 'Smith, Robin James',
+                   'Dataset Processor': 'Smith, Robin James'})
+fix['bibliographicCitation'] = fix['bibliographicCitation'].str.replace('Smith, R. J.,', 'Smith, Robin James &')
+fix['bibliographicCitation'] = fix['bibliographicCitation'].str.replace('Smith, R. J.', 'Smith, Robin James')
+fix['bibliographicCitation'] = fix['bibliographicCitation'].str.replace('Smith, Robin J.,', 'Smith, Robin James &')
+fix['bibliographicCitation'] = fix['bibliographicCitation'].str.replace('Smith, Robin J.', 'Smith, Robin James')
+fix = fix.replace('Smith, Robin J.,', 'Smith, Robin James &')
+fix = fix.replace('Smith, Robin J.', 'Smith, Robin James')
+
+
 fix.columns = [col.replace('*', '') for col in fix.columns]
 fix['handleComplete'] = fix['Handle'].astype(str).apply(lambda x: f"EANOD/{x}/OST")
 regex = r'^(\w+\s*\w+)'

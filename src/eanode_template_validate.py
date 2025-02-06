@@ -9,7 +9,6 @@ import os
 from pathlib import Path
 import json
 import psycopg2
-import pandas as pd
 from dotenv import load_dotenv
 import DataBUS.neotomaValidator as nv
 import DataBUS.neotomaHelpers as nh
@@ -62,7 +61,6 @@ for filename in filenames:
         # logfile = logging_dict(validator['csvValid'], logfile)
 
         # logfile.append('\n === Validating Template Unit Definitions ===')
-        # df = pd.read_csv(filename)
         # validator['units'] = nv.valid_units(cur = cur,
         #                                     yml_dict = yml_dict,
         #                                     df = df)
