@@ -79,7 +79,7 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: Name In Publication
+- column: Name in publication
   neotoma: ndb.datasets.notes
   notes: 'Name in paper:'
   overwrite: false

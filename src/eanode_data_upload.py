@@ -94,7 +94,7 @@ for filename in filenames:
 
     logfile.append('\n=== Inserting Dataset ===')
     # This function has a modification for datasets in EA
-    uploader['datasets'] = nu.insert_dataset(**inputs, name="name In Publication")
+    uploader['datasets'] = nu.insert_dataset(**inputs, name="Name in Publication")
     logfile = logging_response(uploader['datasets'], logfile)
 
     logfile.append('\n=== Inserting Dataset PI ===')
@@ -141,8 +141,8 @@ for filename in filenames:
     all_true = all_true and hashcheck['pass']
     if all_true:
         print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
-        #conn.commit()
-        conn.rollback()
+        conn.commit()
+        #conn.rollback()
         if not os.path.exists(uploaded_files):
            os.makedirs(uploaded_files)
         uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))

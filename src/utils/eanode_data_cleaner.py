@@ -22,7 +22,7 @@ fix['habitat'] = fix['habitat'].str.replace('lake', 'lacustrine')
 fix['CollectionType'] = "modern"
 fix['Age Model'] = "collection date"
 fix['Age Type'] = 'Calendar years BP'
-fix = fix.rename(columns={'nameInPaper': 'Name In Publication'})
+fix = fix.rename(columns={'nameInPaper': 'Name in publication'})
 # inconsistencies
 name_inconsistencies = pd.read_csv('data-all/EANODE/inconsistencies/contact_inconsistencies.csv')
 taxa_inconsisntecies = pd.read_csv('data-all/EANODE/inconsistencies/taxa_inconsistencies.csv')

@@ -88,7 +88,7 @@ for filename in filenames:
         logfile = logging_response(validator['chronologies'], logfile)
 
         logfile.append('\n === Checking Dataset ===')
-        validator['dataset'] = nv.valid_dataset(**inputs, name="Name In Publication")
+        validator['dataset'] = nv.valid_dataset(**inputs, name="Name in Publication")
         logfile = logging_response(validator['dataset'], logfile)
 
         logfile.append('\n === Checking Against Contact Names ===')
