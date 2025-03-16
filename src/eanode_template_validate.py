@@ -104,6 +104,7 @@ for filename in filenames:
         validator['sample'] = nv.valid_sample(**inputs, validator = validator)
         logfile = logging_response(validator['sample'], logfile)
 
+
         logfile.append('\n=== Validating Sample Ages ===')
         validator['sample_age'] = nv.valid_sample_age(**inputs, validator = validator)
         logfile = logging_response(validator['sample_age'], logfile)
@@ -116,13 +117,11 @@ for filename in filenames:
         validator['publications'] = nv.valid_publication(**inputs)
         logfile = logging_response(validator['publications'], logfile)
 
-
-        # Nothing needs to be committed to the database
         conn.rollback()
         
         all_true = all([validator[key].validAll for key in ['sites', 'collunits', 'analysisunit', 'chronologies', 
-                                                            'dataset', 'agent', 'database', 
-                                                            'sample', 'taxa', 'publications', 'sample_age']])
+                                                            'dataset', 'agent', 'database', 'publications', 'sample_age',
+                                                            'sample', 'taxa']])
 
         not_validated_files = "data/not_validated_files"
         all_true = all_true and filecheck['pass']

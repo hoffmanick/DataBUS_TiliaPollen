@@ -28,14 +28,8 @@ metadata:
   overwrite: false
   required: true
   value: East Asian Nonmarine Ostracod Database
-- column: labnumber
-  neotoma: ndb.samples.labnumber
-  notes: null
-  overwrite: false
-  required: false
-  value: null
 - column: variableelement
-  neotoma: ndb.variableelements.variableelement
+  neotoma: ndb.variables.variableelement
   notes: null
   overwrite: false
   required: true
@@ -225,6 +219,13 @@ metadata:
 - column: Age Model
   formatorrange: '%Y-%m-%d'
   neotoma: ndb.chronologies.agemodel
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
+- column: Age Model
+  formatorrange: '%Y-%m-%d'
+  neotoma: ndb.sampleages.agetype
   overwrite: false
   required: false
   rowwise: false
