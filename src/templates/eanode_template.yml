@@ -366,7 +366,6 @@ metadata:
   rowwise: false
   type: string
   vocab: [fixed]
-
 - column: scientificNameAuthorship
   neotoma: ndb.taxa.publication
   overwrite: false
