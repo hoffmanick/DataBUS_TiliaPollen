@@ -1,11 +1,12 @@
-import pandas as pd
+import pandas as pd 
 from parse_text import parse_text
 from csv_splitter import csv_splitter
 import re
 
-original = pd.read_excel('data-all/original/EANOD published data June 2024.xlsx')
+original = pd.read_excel('data/original/EANOD published data June 2024.xlsx')
 fix = original.assign(**{'Sample Analyst': 'Smith, Robin James',
                    'Dataset Processor': 'Smith, Robin James'})
+
 fix['bibliographicCitation'] = fix['bibliographicCitation'].str.replace('Smith, R. J.,', 'Smith, Robin James &')
 fix['bibliographicCitation'] = fix['bibliographicCitation'].str.replace('Smith, R. J.', 'Smith, Robin James')
 fix['bibliographicCitation'] = fix['bibliographicCitation'].str.replace('Smith, Robin J.,', 'Smith, Robin James &')
@@ -22,11 +23,16 @@ fix['habitat'] = fix['habitat'].str.replace('lake', 'lacustrine')
 fix['CollectionType'] = "modern"
 fix['Age Model'] = "collection date"
 fix['Age Type'] = 'Calendar years BP'
-fix = fix.rename(columns={'nameInPaper': 'Name in publication'})
+fix = fix.rename(columns={'nameInPaper': 'Name in record',
+                          'temperature': 'Temperature (°C)',
+                          'conductivity': 'Conductivity',
+                          'Dissolved oxygen': 'Dissolved oxygen',
+                          'salinity': 'Salinity',
+                          'vegetation': 'Vegetation'})
 # inconsistencies
-name_inconsistencies = pd.read_csv('data-all/EANODE/inconsistencies/contact_inconsistencies.csv')
-taxa_inconsisntecies = pd.read_csv('data-all/EANODE/inconsistencies/taxa_inconsistencies.csv')
-pub_inconsistencies = pd.read_csv('data-all/EANODE/inconsistencies/publication_inconsistencies.csv')
+name_inconsistencies = pd.read_csv('data/EANODE/inconsistencies/contact_inconsistencies.csv')
+taxa_inconsisntecies = pd.read_csv('data/EANODE/inconsistencies/taxa_inconsistencies.csv')
+pub_inconsistencies = pd.read_csv('data/EANODE/inconsistencies/publication_inconsistencies.csv')
 
 dfs = [name_inconsistencies, taxa_inconsisntecies, pub_inconsistencies]
 
@@ -44,6 +50,6 @@ for _, row in fix.iterrows():
         expanded_rows.append(new_row)
 
 fix = pd.DataFrame(expanded_rows)
-fix.to_excel('data-all/original/EANOD published data June 2024-fixed.xlsx', index=False)
+fix.to_excel('data/original/EANOD published data June 2024-fixed.xlsx', index=False)
 
 csv_splitter(fix, params=['Handle'])

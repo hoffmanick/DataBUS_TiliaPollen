@@ -73,7 +73,7 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: Name in publication
+- column: Name in record
   neotoma: ndb.datasets.notes
   notes: 'Name in paper:'
   overwrite: false
@@ -94,14 +94,14 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: conductivity
+- column: Conductivity
   neotoma: ndb.datasets.notes
   notes: 'Conductivity:'
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: temperature
+- column: Temperature (°C)
   neotoma: ndb.datasets.notes
   overwrite: false
   required: false
@@ -114,14 +114,14 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: salinity
+- column: Salinity
   neotoma: ndb.datasets.notes
   notes: 'Salinity:'
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: vegetation
+- column: Vegetation
   neotoma: ndb.datasets.notes
   notes: 'Vegetation:'
   overwrite: false
