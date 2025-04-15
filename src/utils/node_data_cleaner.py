@@ -29,7 +29,7 @@ fix['CollectionType'] = "modern"
 fix['Age Model'] = "Collection Date"
 fix['Age Type'] = 'Calendar years BP'
 
-fix = fix.rename(columns={'NAME IN REFERENCE': 'Name In Publication'})
+fix = fix.rename(columns={'NAME IN REFERENCE': 'Name in record'})
 # inconsistencies
 #name_inconsistencies = pd.read_csv('data-all/EANODE/inconsistencies/contact_inconsistencies.csv')
 #taxa_inconsisntecies = pd.read_csv('data-all/EANODE/inconsistencies/taxa_inconsistencies.csv')
