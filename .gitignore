@@ -175,3 +175,6 @@ managedb.sh
 NODE field explanations.doc
 
 Inconsistencies/
+src/remove_cu2.py
+src/utils/eanode_data_cleaner2.py
+src/utils/replacement.py
