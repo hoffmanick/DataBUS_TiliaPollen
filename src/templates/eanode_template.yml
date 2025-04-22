@@ -267,7 +267,7 @@ metadata:
   overwrite: false
   required: false
   rowwise: true
-  type: string
+  type: string python src/node_template_validate.py --template='src/templates/node_template.yml'
 - column: Taxonname
   neotoma: ndb.variables.taxon
   overwrite: false

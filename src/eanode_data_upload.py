@@ -26,7 +26,7 @@ template file that has an .xlsx or .yml extension
 """
 
 load_dotenv()
-data = json.loads(os.getenv('PGDB_TANK'))
+data = json.loads(os.getenv('PGDB_LOCAL'))
 
 conn = psycopg2.connect(**data, connect_timeout = 5)
 cur = conn.cursor()
@@ -140,8 +140,8 @@ for filename in filenames:
         all_true = all_true and hashcheck['pass']
         if all_true:
             print(f"{filename} was uploaded.\nMoved {filename} to the 'uploaded_files' folder.")
-            conn.commit()
-            #conn.rollback()
+            #conn.commit()
+            conn.rollback()
             if not os.path.exists(uploaded_files):
                 os.makedirs(uploaded_files)
             uploaded_path = os.path.join(uploaded_files, os.path.basename(filename))

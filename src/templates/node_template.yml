@@ -20,7 +20,7 @@ metadata:
   overwrite: false
   required: true
   value: Nonmarine Ostracod Distribution in Europe Database
-- column: colltypeid
+- column: CollectionType
   neotoma: ndb.collectionunits.colltypeid
   notes: null
   overwrite: false
@@ -89,20 +89,45 @@ metadata:
   type: string
 - column: LOCALITY
   neotoma: ndb.sitegeopolitical.geopoliticalunit3
-  overwrite: true
+  overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   type: string
+  vocab: [fixed]
 - column: MALES?
   neotoma: ndb.datasets.notes
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: NAME IN REFERENCE
-  neotoma: ndb.data.values
-  notes: This is a single Presence/absence value, we have to check to see if there's
-    not information in this field
+- column: Taxonname
+  neotoma: ndb.variables.taxon
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
+# - column: NAME IN REFERENCE
+#   neotoma: ndb.data.values
+#   notes: This is a single Presence/absence value, we have to check to see if there's
+#     not information in this field
+#   overwrite: false
+#   required: false
+#   rowwise: true
+#   type: string
+- column: variableelement
+  neotoma: ndb.variables.variableelement
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
+- column: value
+  neotoma: ndb.data.value
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
+- column: count
+  neotoma: ndb.variables.variableunits
   overwrite: false
   required: false
   rowwise: true
@@ -111,7 +136,7 @@ metadata:
   neotoma: ndb.datasets.notes
   overwrite: false
   required: false
-  rowwise: false
+  rowwise: true
   type: string
 - column: NATURAL HABITAT
   neotoma: ndb.collectionunits.depenvtid
@@ -120,31 +145,32 @@ metadata:
   required: false
   rowwise: false
   type: integer
-- column: NO SPEC
-  formatorrange: '> 0'
-  neotoma: ndb.data.value
-  overwrite: false
-  required: false
-  rowwise: true
-  type: float
+# - column: NO SPEC
+#   formatorrange: '> 0'
+#   neotoma: ndb.data.value
+#   overwrite: false
+#   required: false
+#   rowwise: true
+#   type: float
 - column: REFERENCE
-  neotoma: ndb.collectors.contactid
+  neotoma: ndb.collectors.contactname
   overwrite: false
   required: false
   rowwise: false
   type: string
 - column: REFERENCE
-  neotoma: ndb.datasetpis.contactid
+  neotoma: ndb.datasetpis.contactname
   overwrite: false
   required: false
   rowwise: false
   type: string
 - column: REGION
   neotoma: ndb.sitegeopolitical.geopoliticalunit2
-  overwrite: true
+  overwrite: false
   required: false
-  rowwise: true
+  rowwise: false
   type: string
+  vocab: [fixed]
 - column: Record Number
   neotoma: ndb.collectionunits.collunitname
   overwrite: false
@@ -183,14 +209,14 @@ metadata:
   rowwise: false
   type: integer
 - column: Sample Analyst
-  neotoma: ndb.datasetprocessor.contactid
+  neotoma: ndb.datasetprocessor.contactname
   notes: "Add column with Dave\u2019s name"
   overwrite: false
   required: false
   rowwise: false
   type: string
 - column: Sample Analyst
-  neotoma: ndb.sampleanalysts.contactid
+  neotoma: ndb.sampleanalysts.contactname
   notes: "Add column with Dave\u2019s name"
   overwrite: false
   required: false
@@ -221,13 +247,6 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: colltypeid
-  constant: 5
-  neotoma: ndb.collectionunits.colltypeid
-  overwrite: false
-  required: false
-  rowwise: false
-  type: integer
 - column: decimalLatitude
   neotoma: ndb.sites.geog.latitude
   notes: Create from CSV file unite LATDEG, LATMIN, LATSEC
