@@ -123,6 +123,7 @@ for filename in filenames:
                     writer.write(i)
                     writer.write('\n') 
         except Exception as e:
+            print(e)
             not_validated_files = "data/not_validated_files"
             os.makedirs(not_validated_files, exist_ok=True)
             uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
