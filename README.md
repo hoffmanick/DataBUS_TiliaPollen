@@ -1,4 +1,3 @@
-#
 <!-- badges: start -->
 
 [![lifecycle](https://img.shields.io/badge/lifecycle-active-green.svg)](https://www.tidyverse.org/lifecycle/#active)
