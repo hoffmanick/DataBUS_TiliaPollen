@@ -85,6 +85,7 @@ for filename in filenames:
             logfile.append('\n=== Validating Samples ===')
             validator['sample'] = nv.valid_sample(**inputs, validator = validator)
             logfile = logging_response(validator['sample'], logfile)
+            
 
             # logfile.append('\n=== Validating Sample Ages ===')
             # validator['sample_age'] = nv.valid_sample_age(**inputs, validator = validator)
@@ -119,7 +120,7 @@ for filename in filenames:
                 for i in logfile:
                     writer.write(i)
                     writer.write('\n') 
-        
+
         except Exception as e:
             logfile.append('\n === Validation Failed ===')
             logfile.append(f"{str(e)}")

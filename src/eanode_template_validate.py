@@ -1,4 +1,4 @@
-"""_Validate 210Pb csv Files_
+"""_Validate EASNODE CSV Files_
    Assumes there is a `data` folder from which the python script is run.
    The script obtains all `csv` files in ./data and then reads through
    each of them, validating each field to ensure they are acceptable for
