@@ -1,19 +1,19 @@
 import pandas as pd
 import os
 
-# 'decimalLatitude', 'decimalLongitude' need to be merged into a Geog column
-# to add 'siteID' if non existent.
-
-## NODE might be a different splitter where I also make a new column for geog and I might have to group by geog
-
-def csv_splitter(data, params=['Handle'], path = 'data-all/splitted'):
+def csv_splitter(data, params=['Handle'], path = 'data/splitted'):
     split_files = path
     if not os.path.exists(split_files):
                 os.makedirs(split_files)
 
     data_groups = data.groupby(by=params)
-
+    ngr = data_groups.ngroups
+    print(f"Number of groups: {ngr}.")
     for group, rows in data_groups:
-        filename = f"{path}/{group[0]}.csv"
+        ngr -= 1
+        counter = (ngr / data_groups.ngroups) * 100
+        if ngr % 10 == 0: 
+            print(f"Missing: {counter:.2f}%")
+        filename = f"{path}/{group}.csv"
         rows.to_csv(filename, index=False)
     print("Finished")
