@@ -6,7 +6,6 @@ from datetime import datetime
 from dotenv import load_dotenv
 import DataBUS.neotomaHelpers as nh
 import DataBUS.neotomaUploader as nu
-from DataBUS.neotomaValidator.valid_csv import valid_csv
 from DataBUS.neotomaValidator.check_file import check_file
 from DataBUS.neotomaHelpers.logging_dict import logging_response
 
@@ -70,7 +69,7 @@ for filename in filenames:
         logfile.append('\n=== Inserting Site ===')
         uploader['sites'] = nu.insert_site(**inputs)
         logfile = logging_response(uploader['sites'], logfile)
-
+ 
         inputs.update({'uploader': uploader})
         logfile.append('\n === Inserting Site-Geopolitical Units ===')
         uploader['geopol_units'] = nu.insert_geopolitical_units(**inputs)

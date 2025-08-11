@@ -6,7 +6,7 @@ data = pd.read_excel('data-all/original/NODE database 22May2024.xls')
 references = pd.read_csv('data-all/original/NODE_reference_list.tsv',
                          sep='\t', 
                          usecols=['NODE FULL REFERENCES', 'NODE REFERENCE CITATIONS'])
-authors = pd.read_csv('data-all/NODE/authors_list2.csv', index_col=False)
+authors = pd.read_csv('data-all/original/NODE/authors_list2.csv', index_col=False)
 
 data = data.merge(references, left_on='REFERENCE', right_on='NODE REFERENCE CITATIONS', how='left') 
 data.columns = data.columns.str.lower()
@@ -29,6 +29,14 @@ data['taxonname'] = data['taxonname'] = data['genus'].str.strip() + ' ' + data['
 for pat in pattern:
     data['taxonname'] = data['taxonname'].str.replace(pat, '')
 data['taxonname'] = data['taxonname'].str.replace('  ', ' ')
+
+data['taxonname'] = data['taxonname'].str.replace('Cypris biinosa', 'Cypris bispinosa')
+data['taxonname'] = data['taxonname'].str.replace('Strandesia inulosa', 'Strandesia spinulosa')
+data['taxonname'] = data['taxonname'].str.replace('Candonocypris aezelandiae',	'Candonocypris novaezelandiae')
+data['taxonname'] = data['taxonname'].str.replace('Fabaeformiscandona  balatonica', 'Fabaeformiscandona balatonica')
+data['taxonname'] = data['taxonname'].str.replace('Mixtacandona andli', 'Mixtacandona spandli')
+data['taxonname'] = data['taxonname'].str.replace('Pseudocandona preica', 'Pseudocandona prespica')
+data['taxonname'] = data['taxonname'].str.replace('Vestalenula ecC', 'Vestalenula spec.C')
 
 regex = r'^(\w+(?:\s+\w+)?)'
 data['taxonname'] = data['taxonname'].astype(str).apply(lambda x:
