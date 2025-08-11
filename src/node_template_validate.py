@@ -84,7 +84,7 @@ for filename in filenames:
 
             logfile.append('\n=== Validating Samples ===')
             validator['sample'] = nv.valid_sample(**inputs, validator = validator)
-            logfile = logging_response(validator['sample'], logfile)
+            logfile = logging_response(validator['sample'], logfile)          
 
             # logfile.append('\n=== Validating Sample Ages ===')
             # validator['sample_age'] = nv.valid_sample_age(**inputs, validator = validator)
@@ -106,9 +106,9 @@ for filename in filenames:
 
             if all_true == False:
                 print(f"{filename} moved to 'not_validated_files' folder.")
-                # os.makedirs(not_validated_files, exist_ok=True)
-                # uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
-                # os.replace(filename, uploaded_path)
+                os.makedirs(not_validated_files, exist_ok=True)
+                uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
+                os.replace(filename, uploaded_path)
                 modified_filename = f'{filename}'.replace('data/', 'data/validation_logs/not_validated/')
                 modified_filename = Path(modified_filename + '.valid.log')
             else:
@@ -119,15 +119,15 @@ for filename in filenames:
                 for i in logfile:
                     writer.write(i)
                     writer.write('\n') 
-        
+
         except Exception as e:
+            print(f"{filename} moved to 'not_validated_files' folder: {e}.")
             logfile.append('\n === Validation Failed ===')
             logfile.append(f"{str(e)}")
-            print(e)
-            # not_validated_files = "data/not_validated_files"
-            # os.makedirs(not_validated_files, exist_ok=True)
-            # uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
-            # os.replace(filename, uploaded_path)
+            not_validated_files = "data/not_validated_files"
+            os.makedirs(not_validated_files, exist_ok=True)
+            uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
+            os.replace(filename, uploaded_path)
             modified_filename = f'{filename}'.replace('data/', 'data/validation_logs/not_validated/')
             modified_filename = Path(modified_filename + '.valid.log')
             with modified_filename.open(mode = 'w', encoding = "utf-8") as writer:

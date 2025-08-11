@@ -2,12 +2,174 @@ apiVersion: neotoma v2.0
 headers: 2
 kind: Development
 metadata:
-- column: datasetname
+- column: site
+  neotoma: ndb.sites.sitename
+  notes: If empty, used LOCALITY
+  overwrite: false
+  required: true
+  rowwise: false
+  type: string
+- column: latitude
+  neotoma: ndb.sites.geog.latitude
+  notes: Create from CSV file unite LATDEG, LATMIN, LATSEC
+  overwrite: false
+  required: true
+  rowwise: false
+  type: float
+- column: longitude
+  neotoma: ndb.sites.geog.longitude
+  notes: Create from CSV file unite LONGDEG, LONMIN, LONSEC
+  overwrite: false
+  required: true
+  rowwise: false
+  type: float
+- column: altitude
+  neotoma: ndb.sites.altitude
+  overwrite: false
+  required: false
+  rowwise: false
+  type: float
+- column: comments
+  neotoma: ndb.sites.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: country
+  neotoma: ndb.sitegeopolitical.geopoliticalunit1
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+  vocab: [fixed]
+- column: region
+  neotoma: ndb.sitegeopolitical.geopoliticalunit2
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+  vocab: [fixed]
+- column: locality
+  neotoma: ndb.sitegeopolitical.geopoliticalunit3
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+  vocab: [fixed]
+- column: record_number
+  neotoma: ndb.collectionunits.collunitname
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: handle_complete
+  neotoma: ndb.collectionunits.handle
+  overwrite: true
+  required: false
+  rowwise: false
+  type: string
+- column: collection_type
+  neotoma: ndb.collectionunits.colltypeid
+  notes: null
+  overwrite: false
+  required: false
+  value: modern
+- column: habitat
+  neotoma: ndb.collectionunits.depenvtid
+  overwrite: false
+  required: false
+  rowwise: false
+  type: integer
+- column: substrate
+  neotoma: ndb.collectionunits.substrateid
+  overwrite: false
+  required: false
+  rowwise: false
+  type: integer
+- column: depth
+  neotoma: ndb.analysisunits.depth
+  overwrite: false
+  required: false
+  rowwise: false
+  type: float
+- column: record_number
   neotoma: ndb.datasets.datasetname
   notes: null
   overwrite: false
   required: true
   value: null
+- column: cond
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: duration
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: males?
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: sex ratio
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: subspecies
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: name in record
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
+- column: temp
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: vegetation
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: water chemistry
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: zone of coll
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: ph
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: ph
+  neotoma: ndb.datasets.notes
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
 - column: datasettypeid
   neotoma: ndb.datasettypes.datasettype
   notes: null
@@ -20,100 +182,28 @@ metadata:
   overwrite: false
   required: true
   value: Nonmarine Ostracod Distribution in Europe Database
-- column: CollectionType
-  neotoma: ndb.collectionunits.colltypeid
-  notes: null
-  overwrite: false
-  required: false
-  value: modern
-- column: labnumber
-  neotoma: ndb.samples.labnumber
-  notes: null
-  overwrite: false
-  required: false
-  value: null
-- column: variableelement
-  neotoma: ndb.variableelements.variableelementid
-  notes: null
-  overwrite: false
-  required: true
-  value: Valve
-- column: AGE
+
+- column: age # ages
   neotoma: ndb.datasets.notes
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: ALTITUDE
-  neotoma: ndb.sites.altitude
-  overwrite: false
-  required: false
-  rowwise: false
-  type: float
-- column: ARTIFICIAL HABITAT
-  neotoma: ndb.collectionunits.depenvtid
-  overwrite: false
-  required: false
-  rowwise: false
-  type: integer
-- column: COMMENTS
-  neotoma: ndb.sites.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: COND
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: COUNTRY
-  neotoma: ndb.sitegeopolitical.geopoliticalunit1
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-  vocab: [fixed]
-- column: DEPTH
-  neotoma: ndb.analysisunits.depth
-  overwrite: false
-  required: false
-  rowwise: false
-  type: float
-- column: DURATION
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: LOCALITY
-  neotoma: ndb.sitegeopolitical.geopoliticalunit3
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-  vocab: [fixed]
-- column: MALES?
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: Taxonname
+
+- column: taxonname
   neotoma: ndb.variables.taxon
   overwrite: false
   required: false
   rowwise: true
   type: string
-# - column: NAME IN REFERENCE
-#   neotoma: ndb.data.values
-#   notes: This is a single Presence/absence value, we have to check to see if there's
-#     not information in this field
-#   overwrite: false
-#   required: false
-#   rowwise: true
-#   type: string
+- column: taxonname
+  neotoma: ndb.data.values
+  notes: This is a single Presence/absence value, we have to check to see if there's
+    not information in this field
+  overwrite: false
+  required: false
+  rowwise: true
+  type: string
 - column: variableelement
   neotoma: ndb.variables.variableelement
   overwrite: false
@@ -132,138 +222,39 @@ metadata:
   required: false
   rowwise: true
   type: string
-- column: NAME IN REFERENCE
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: true
-  type: string
-- column: NATURAL HABITAT
-  neotoma: ndb.collectionunits.depenvtid
-  notes: Combine Natural habitat with artificial habitat and rebuild CSV
-  overwrite: false
-  required: false
-  rowwise: false
-  type: integer
-# - column: NO SPEC
-#   formatorrange: '> 0'
-#   neotoma: ndb.data.value
-#   overwrite: false
-#   required: false
-#   rowwise: true
-#   type: float
-- column: REFERENCE
-  neotoma: ndb.collectors.contactname
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: REFERENCE
+- column: pi
   neotoma: ndb.datasetpis.contactname
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: REGION
-  neotoma: ndb.sitegeopolitical.geopoliticalunit2
+- column: dataset_processor
+  neotoma: ndb.datasetprocessor.contactname
+  notes: "Add column with Dave's name"
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: sample_analyst
+  neotoma: ndb.sampleanalysts.contactname
+  notes: "Add column with Dave's name"
   overwrite: false
   required: false
   rowwise: false
   type: string
   vocab: [fixed]
-- column: Record Number
-  neotoma: ndb.collectionunits.collunitname
+- column: references
+  neotoma: ndb.publications.citation
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: Record Number
-  neotoma: ndb.collectionunits.handle
-  overwrite: true
-  required: false
-  rowwise: false
-  type: string
-- column: SEX RATIO
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: SITE
-  neotoma: ndb.sites.sitename
-  notes: If empty, use LOCALITY
-  overwrite: false
-  required: true
-  rowwise: false
-  type: string
-- column: SUBSPECIES
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: SUBSTRATE
-  neotoma: ndb.collectionunits.substrateid
+
+- column: validation status of coordinates
+  neotoma: ndb.collectionunits.notes
   overwrite: false
   required: false
   rowwise: false
   type: integer
-- column: Sample Analyst
-  neotoma: ndb.datasetprocessor.contactname
-  notes: "Add column with Dave\u2019s name"
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: Sample Analyst
-  neotoma: ndb.sampleanalysts.contactname
-  notes: "Add column with Dave\u2019s name"
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-  vocab: [fixed]
-- column: TEMP
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: VEGETATION
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: WATER CHEMISTRY
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: ZONE OF COLL
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: decimalLatitude
-  neotoma: ndb.sites.geog.latitude
-  notes: Create from CSV file unite LATDEG, LATMIN, LATSEC
-  overwrite: false
-  required: true
-  rowwise: false
-  type: float
-- column: decimalLongitude
-  neotoma: ndb.sites.geog.longitude
-  notes: Create from CSV file unite LONGDEG, LONMIN, LONSEC
-  overwrite: false
-  required: true
-  rowwise: false
-  type: float
-- column: pH
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
+  # column: age_model
+  # column: age_type
