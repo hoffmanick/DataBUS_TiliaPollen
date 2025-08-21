@@ -18,26 +18,29 @@ data['latitude'] = data['latdeg'] + data['latmin'] / 60 + data['latsec'] / 3600
 def fill_site(x):
     non_null = x.dropna()
     if not non_null.empty:
-        return x.fillna(non_null.iloc[0])
-    return x
-data['sitename'] = data['site']
-data['sitename'] = data.groupby(['longitude', 'latitude'])['sitename'].transform(fill_site)
-data.loc[data['sitename'].isna(), 'sitename'] = data['site'].fillna('') + ' ' + data['locality'].fillna('')
+        most_common = non_null.value_counts().idxmax()
+        return pd.Series([most_common] * len(x), index=x.index)
+    else:
+        return x
+data['sitename'] = data['locality'].fillna('country')
+mask = data['sitename'].str.contains('unspecified|no_precise_loc', case=False, na=False)
+data.loc[mask, 'sitename'] = data.loc[mask, 'region'].fillna(data.loc[mask, 'country'])
+
 data['sitename'] = data['sitename'].str.strip()
+data['sitename'] = data.groupby(['longitude', 'latitude'])['sitename'].transform(fill_site)
 data = data.assign(**{'sample_analyst': 'Horne, David',
                       'dataset_processor': 'Horne, David'})
 
 # CU
-data['collectionunit_name'] = data['site'].fillna('') + ' ' + data['locality'].fillna('')
-data['collectionunit_name'] = data['collectionunit_name'].str.strip()
+data['collectionunit_name'] = data['locality'].fillna('') + ' ' + data['site'].fillna('')
+data['collectionunit_name'] = data['collectionunit_name'].fillna('handle_complete').str.strip()
 data['collectiondate'] = pd.to_datetime(
     {'year': pd.to_numeric(data['year.1'], errors='coerce'),
      'month': pd.to_numeric(data['month'], errors='coerce'), 
      'day': pd.to_numeric(data['day'], errors='coerce').fillna(1)},
     errors='coerce')
 data = data.rename(columns = {'year.1': 'collectionyear'})
-# Some elements in 'name in record' are non-existant.
-# Will filter them out - ask Dave about it.
+
 # Taxon Data
 pattern = ['? To be checked', '?to be checked', '? to be checked', '?To be checked', '?',
            'n.sp', 'n. sp.', 'cf.', 'cf', 'aff.', 'aff', 'sp. nov', 'sp', 'nov', '.', 'spec',]
@@ -71,8 +74,7 @@ data['natural habitat'] = data['natural habitat'].fillna(data['artificial habita
 data.drop(columns=['artificial habitat',
                    'londeg', 'lonmin', 'lonsec',
                    'latdeg', 'latmin', 'latsec',
-                   'reference', 'node reference citations',
-                   'year.1'], inplace=True)
+                   'reference', 'node reference citations'], inplace=True)
 
 data['natural habitat'] = data['natural habitat'].str.replace(r'lake', 'lacustrine', flags=re.IGNORECASE)
 data = data.rename(columns={'natural habitat': 'habitat',
@@ -97,7 +99,7 @@ data['record_number'] = 'NODE-R' + (
 data['handle_complete'] = data['record_number']
 columns = [
     # Site
-    'record_number', 'site', 'longitude', 'latitude', 'altitude', 'depth', 
+    'record_number', 'sitename', 'site', 'longitude', 'latitude', 'altitude', 'depth', 
     # CU
     'handle_complete', 'collectionunit_name', 'habitat', 'water chemistry', 'collection_type',
     'substrate', 'vegetation', 'ph', 'temp', 'cond', 'environment', 'duration', 'collectiondate',
@@ -117,6 +119,7 @@ columns = [
     'zone of coll', 'comments', 'validation status of coordinates'
 ]
 data = data[columns]
+data.sort_values(by=['record_number'], inplace=True)
 data.to_excel('data-all/original/NODE-cleanedAug2025.xlsx', index=False)
 
 csv_splitter(data, params='record_number')

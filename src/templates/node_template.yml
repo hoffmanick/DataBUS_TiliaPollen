@@ -2,7 +2,7 @@ apiVersion: neotoma v2.0
 headers: 2
 kind: Development
 metadata:
-- column: site
+- column: sitename
   neotoma: ndb.sites.sitename
   notes: If empty, used LOCALITY
   overwrite: false
@@ -56,7 +56,7 @@ metadata:
   rowwise: false
   type: string
   vocab: [fixed]
-- column: record_number
+- column: collectionunit_name
   neotoma: ndb.collectionunits.collunitname
   overwrite: false
   required: false
