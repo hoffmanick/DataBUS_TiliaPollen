@@ -12,13 +12,30 @@ data = data.merge(references, left_on='REFERENCE', right_on='NODE REFERENCE CITA
 data.columns = data.columns.str.lower()
 
 # Site Data
-data['site'] = data['site'].fillna(data['locality'])
+#data['sitename'] = data['site'].fillna(data['locality'])
 data['longitude'] = data['londeg'] + data['lonmin'] / 60 + data['lonsec'] / 3600
 data['latitude'] = data['latdeg'] + data['latmin'] / 60 + data['latsec'] / 3600
-
+def fill_site(x):
+    non_null = x.dropna()
+    if not non_null.empty:
+        return x.fillna(non_null.iloc[0])
+    return x
+data['sitename'] = data['site']
+data['sitename'] = data.groupby(['longitude', 'latitude'])['sitename'].transform(fill_site)
+data.loc[data['sitename'].isna(), 'sitename'] = data['site'].fillna('') + ' ' + data['locality'].fillna('')
+data['sitename'] = data['sitename'].str.strip()
 data = data.assign(**{'sample_analyst': 'Horne, David',
                       'dataset_processor': 'Horne, David'})
 
+# CU
+data['collectionunit_name'] = data['site'].fillna('') + ' ' + data['locality'].fillna('')
+data['collectionunit_name'] = data['collectionunit_name'].str.strip()
+data['collectiondate'] = pd.to_datetime(
+    {'year': pd.to_numeric(data['year.1'], errors='coerce'),
+     'month': pd.to_numeric(data['month'], errors='coerce'), 
+     'day': pd.to_numeric(data['day'], errors='coerce').fillna(1)},
+    errors='coerce')
+data = data.rename(columns = {'year.1': 'collectionyear'})
 # Some elements in 'name in record' are non-existant.
 # Will filter them out - ask Dave about it.
 # Taxon Data
@@ -45,7 +62,7 @@ data['taxonname'] = data['taxonname'].astype(str).apply(lambda x:
 data['count'] = 'presence/absence'
 data['value'] = 1
 data['variableelement'] = 'valve (undiff)'
-data['context'] = None
+data['context'] = 'live'
 
 # Habitat Data
 data['natural habitat'] = data['natural habitat'].fillna(data['artificial habitat'])
@@ -62,12 +79,11 @@ data = data.rename(columns={'natural habitat': 'habitat',
                             'name in reference': 'name in record',
                             'node full references': 'references'})
 
-## PI
+## PI and Collector
 data['pi'] = None
 for idx, row in authors.iterrows():
     title = row['citation']
     data.loc[data['references'].str.contains(title, na=False, regex=False), 'pi'] = row['authors']
-
 
 # Add missing data
 data['collection_type'] = 'modern'
@@ -76,17 +92,17 @@ data['age_type'] = 'Calendar years BP'
 
 # Record Data
 data['record_number'] = 'NODE-R' + (
-    data.groupby(['longitude', 'latitude', 'locality'], dropna=False).ngroup().add(1).astype(str)
+    data.groupby(['longitude', 'latitude', 'collectionunit_name', 'collectionyear'], dropna=False).ngroup().add(1).astype(str)
 )
 data['handle_complete'] = data['record_number']
 columns = [
     # Site
     'record_number', 'site', 'longitude', 'latitude', 'altitude', 'depth', 
     # CU
-    'handle_complete', 'habitat', 'water chemistry', 'collection_type',
-    'substrate', 'vegetation', 'ph', 'temp', 'cond', 'environment', 'duration', 
+    'handle_complete', 'collectionunit_name', 'habitat', 'water chemistry', 'collection_type',
+    'substrate', 'vegetation', 'ph', 'temp', 'cond', 'environment', 'duration', 'collectiondate',
     # Chronologies
-    'age', 'age_model', 'age_type', 
+    'age', 'age_model', 'age_type', 'collectionyear',
     # Publications
     'references', 'year', 'published?',
     # GPU
