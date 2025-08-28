@@ -6,10 +6,21 @@ data = pd.read_excel('data-all/original/NODE database 22May2024.xls')
 references = pd.read_csv('data-all/original/NODE_reference_list.tsv',
                          sep='\t', 
                          usecols=['NODE FULL REFERENCES', 'NODE REFERENCE CITATIONS'])
-authors = pd.read_csv('data-all/original/NODE/authors_list2.csv', index_col=False)
-
 data = data.merge(references, left_on='REFERENCE', right_on='NODE REFERENCE CITATIONS', how='left') 
 data.columns = data.columns.str.lower()
+
+# PIs and Collectors
+data['node full references'] = data['node full references'].str.replace(r'(?<=\b)[Il](?=\d)', "1", regex=True)
+data['pi'] = data['node full references'].str.extract(r'^(.*?)(?:\s+\d{4}|\s+unpublished data)',
+                                                           flags=re.IGNORECASE)
+data['pi'] = data['pi'].str.strip().str.replace(r'\s+', ' ', regex=True)
+
+data['pi'] = data['pi'].str.replace(r'&', '|', regex=True)
+data['pi'] = data['pi'].str.replace(r'.,', '.', regex=True)
+data['pi'] = data['pi'].str.replace(r'(\.)\s*,\s*(?=[A-Z])', r'\1| ', regex=True)
+data['pi'] = data['pi'].str.replace(r'\s+et al\.?$', '', regex=True)
+data['pi'] = data['pi'].str.replace(r'\s+and\s+', '|', regex=True)
+data['pi'] = data['pi'].str.strip()
 
 # Site Data
 #data['sitename'] = data['site'].fillna(data['locality'])
@@ -80,12 +91,6 @@ data['natural habitat'] = data['natural habitat'].str.replace(r'lake', 'lacustri
 data = data.rename(columns={'natural habitat': 'habitat',
                             'name in reference': 'name in record',
                             'node full references': 'references'})
-
-## PI and Collector
-data['pi'] = None
-for idx, row in authors.iterrows():
-    title = row['citation']
-    data.loc[data['references'].str.contains(title, na=False, regex=False), 'pi'] = row['authors']
 
 # Add missing data
 data['collection_type'] = 'modern'
