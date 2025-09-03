@@ -29,12 +29,6 @@ metadata:
   required: false
   rowwise: false
   type: float
-- column: comments
-  neotoma: ndb.sites.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
 - column: country
   neotoma: ndb.sitegeopolitical.geopoliticalunit1
   overwrite: false
@@ -56,7 +50,7 @@ metadata:
   rowwise: false
   type: string
   vocab: [fixed]
-- column: collectionunit_name
+- column: record_number
   neotoma: ndb.collectionunits.collunitname
   overwrite: false
   required: false
@@ -86,8 +80,14 @@ metadata:
   required: false
   rowwise: false
   type: integer
+- column: collection_date
+  neotoma: ndb.collectionunits.colldate
+  overwrite: false
+  required: false
+  rowwise: false
+  type: integer
 - column: depth
-  neotoma: ndb.analysisunits.depth
+  neotoma: ndb.collectionunits.waterdepth
   overwrite: false
   required: false
   rowwise: false
@@ -98,77 +98,17 @@ metadata:
   overwrite: false
   required: true
   value: null
-- column: cond
+- column: datasetnotes
   neotoma: ndb.datasets.notes
   overwrite: false
   required: false
   rowwise: false
   type: string
-- column: duration
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: males?
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: sex ratio
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: subspecies
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: name in record
+- column: name in publication
   neotoma: ndb.datasets.notes
   overwrite: false
   required: false
   rowwise: true
-  type: string
-- column: temp
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: vegetation
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: water chemistry
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: zone of coll
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: ph
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-- column: ph
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
   type: string
 - column: datasettypeid
   neotoma: ndb.datasettypes.datasettype
@@ -182,24 +122,8 @@ metadata:
   overwrite: false
   required: true
   value: Nonmarine Ostracod Distribution in Europe Database
-
-- column: age # ages
-  neotoma: ndb.datasets.notes
-  overwrite: false
-  required: false
-  rowwise: false
-  type: string
-
 - column: taxonname
   neotoma: ndb.variables.taxon
-  overwrite: false
-  required: false
-  rowwise: true
-  type: string
-- column: taxonname
-  neotoma: ndb.data.values
-  notes: This is a single Presence/absence value, we have to check to see if there's
-    not information in this field
   overwrite: false
   required: false
   rowwise: true
@@ -230,31 +154,29 @@ metadata:
   type: string
 - column: dataset_processor
   neotoma: ndb.datasetprocessor.contactname
-  notes: "Add column with Dave's name"
   overwrite: false
   required: false
   rowwise: false
   type: string
 - column: sample_analyst
   neotoma: ndb.sampleanalysts.contactname
-  notes: "Add column with Dave's name"
   overwrite: false
   required: false
   rowwise: false
   type: string
   vocab: [fixed]
-- column: references
+- column: citation
   neotoma: ndb.publications.citation
   overwrite: false
   required: false
   rowwise: false
   type: string
-
-- column: validation status of coordinates
+- column: coord validation
   neotoma: ndb.collectionunits.notes
   overwrite: false
   required: false
   rowwise: false
-  type: integer
+  type: string
   # column: age_model
   # column: age_type
+  # column: collectionyear
