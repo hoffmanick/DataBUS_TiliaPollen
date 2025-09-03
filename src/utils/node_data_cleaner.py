@@ -42,7 +42,8 @@ data = data.rename(columns={'year': 'collectionyear'})
 
 # Record Data
 data['record_number'] = 'NODE-R' + (
-    data.groupby(['longitude', 'latitude', 'sitename', 'collectionyear', 'node full references'], 
+    data.groupby(['longitude', 'latitude', 'sitename', 
+                  'collectionyear', 'node full references'], 
                  dropna=False).ngroup().add(1).astype(str))
 data['handle_complete'] = data['record_number']
 
