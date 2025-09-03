@@ -27,6 +27,7 @@ data['pi'] = data['pi'].str.strip("|")
 data['longitude'] = round(data['londeg'] + data['lonmin'] / 60 + data['lonsec'] / 3600, 6)
 data['latitude'] = round(data['latdeg'] + data['latmin'] / 60 + data['latsec'] / 3600, 6)
 data['sitename'] = data['locality'].fillna('') + ', ' + data['site'].fillna('')
+data['sitename'] = data['sitename'].str.strip(', ')
 data['sitename'] = data['sitename'].str.strip()
 data = data.assign(**{'sample_analyst': 'Horne, David',
                       'dataset_processor': 'Horne, David'})
@@ -34,14 +35,14 @@ data = data.assign(**{'sample_analyst': 'Horne, David',
 # CU
 data = data.rename(columns = {'year': 'taxonname_year',
                               'field23': 'year'})
-data['day'] = data['day'].fillna(1)
-data['collectiondate'] = pd.to_datetime(data[["year", "month", "day"]], errors='coerce').dt.date
+data.loc[data['month'].notna() & data['year'].notna() & data['day'].isna(), 'day'] = 1
+data['collection_date'] = pd.to_datetime(data[["year", "month", "day"]], errors='coerce')
 data["collection_date"] = data["collection_date"].dt.strftime("%Y-%m-%d")
 data = data.rename(columns={'year': 'collectionyear'})
 
 # Record Data
 data['record_number'] = 'NODE-R' + (
-    data.groupby(['longitude', 'latitude', 'sitename', 'collectionyear'], 
+    data.groupby(['longitude', 'latitude', 'sitename', 'collectionyear', 'node full references'], 
                  dropna=False).ngroup().add(1).astype(str))
 data['handle_complete'] = data['record_number']
 
@@ -67,36 +68,54 @@ data.drop(columns=['artificial habitat',
 
 data['natural habitat'] = data['natural habitat'].str.replace(r'lake', 'lacustrine', flags=re.IGNORECASE)
 data = data.rename(columns={'natural habitat': 'habitat',
-                            'name in ref': 'name_in_publication',
+                            'name in ref': 'name in publication',
                             'node full references': 'citation',
-                            'age': 'age_of_waterbody',
-                            'combo403': 'coord_validation'})
+                            'age': 'age of waterbody',
+                            'combo403': 'coord validation'})
 
 # Add missing data
 data['collection_type'] = 'modern'
 data['age_model'] = 'Collection Date'
 data['age_type'] = 'Calendar years BP'
 
+data = data.rename(columns={'temp': 'temperature',
+                            'ph': 'pH'})
+
+comment_cols = ['comments', 'cond', 'duration','sex ratio',
+                'males?','subspecies','temperature',
+                'vegetation','water chemistry', 'zone of coll',
+                'pH','age of waterbody', 'environment']
+# diff treatment for 'name in publication'
+def notes_parser(row):
+    parts = []
+    for col in comment_cols:
+        value = row[col]
+        if pd.notnull(value):  # skip NaN
+            parts.append(f"{col.capitalize()}: {value}")
+    return " | ".join(parts)
+
+data['datasetnotes'] = data.apply(notes_parser, axis=1)
+
+comment_cols = ['coord validation']
+data['collunitnotes'] = data.apply(notes_parser, axis=1)
 columns = [
     # Site
-    'record_number', 'sitename', 'site', 'longitude', 'latitude', 'altitude', 'depth', 
+    'record_number', 'sitename', 'longitude', 'latitude', 'altitude',
     # CU
-    'handle_complete', 'habitat', 'water chemistry', 'collection_type',
-    'substrate', 'vegetation', 'ph', 'temp', 'cond', 'environment', 'duration', 'collectiondate',
+    'handle_complete', 'habitat', 'water chemistry', 'depth', 'collection_type', 
+    'collunitnotes', 'substrate', 'vegetation', 'pH', 'temperature', 'cond', 
+    'environment', 'duration', 'collection_date', 'age of waterbody', 'datasetnotes',
     # Chronologies
-    'age_of_waterbody', 'age_model', 'age_type', 'collectionyear',
+    'age_model', 'age_type',
     # Publications
-    'references', 'published?',
+    'citation',
     # GPU
-    'country', 'region', 'locality', 'day', 'month',
+    'country', 'region', 'site', 'locality', 'day', 'month', 'collectionyear',
     # Taxa
-    'taxonname','taxonname_year', 'count', 'value', 'variableelement',
-    'context', 'name_in_publication', 'genus', 'species', 'subspecies', 
-    'no spec', 'males?', 'sex ratio', 
+    'taxonname', 'taxonname_year', 'count', 'value', 'variableelement',
+    'context', 'name in publication',
     # Contacts
-    'pi', 'sample_analyst', 'dataset_processor',
-    # Notes
-    'zone of coll', 'comments', 'coord_validation'
+    'pi', 'sample_analyst', 'dataset_processor'
 ]
 data = data[columns]
 data.sort_values(by=['record_number'], inplace=True)
