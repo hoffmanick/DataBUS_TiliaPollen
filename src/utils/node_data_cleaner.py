@@ -2,7 +2,7 @@ import pandas as pd
 import re
 from csv_splitter import csv_splitter
 
-data = pd.read_excel('data-all/original/NODE database 22May2024.xls')
+data = pd.read_excel('data-all/original/NODE_03Sept2025.xlsx')
 references = pd.read_csv('data-all/original/NODE_reference_list.tsv',
                          sep='\t', 
                          usecols=['NODE FULL REFERENCES', 'NODE REFERENCE CITATIONS'])
@@ -16,7 +16,7 @@ data['pi'] = data['node full references'].str.extract(r'^(.*?)(?:\s+\d{4}|\s+unp
 data['pi'] = data['pi'].str.strip().str.replace(r'\s+', ' ', regex=True)
 
 data['pi'] = data['pi'].str.replace(r'&', '|', regex=True)
-data['pi'] = data['pi'].str.replace(r'.,', '.', regex=True)
+data['pi'] = data['pi'].str.replace(r'\.,', '. |', regex=True)
 data['pi'] = data['pi'].str.replace(r'(\.)\s*,\s*(?=[A-Z])', r'\1| ', regex=True)
 data['pi'] = data['pi'].str.replace(r'\s+et al\.?$', '', regex=True)
 data['pi'] = data['pi'].str.replace(r'\s+and\s+', '|', regex=True)
@@ -24,55 +24,47 @@ data['pi'] = data['pi'].str.strip()
 
 # Site Data
 #data['sitename'] = data['site'].fillna(data['locality'])
-data['longitude'] = data['londeg'] + data['lonmin'] / 60 + data['lonsec'] / 3600
-data['latitude'] = data['latdeg'] + data['latmin'] / 60 + data['latsec'] / 3600
-def fill_site(x):
-    non_null = x.dropna()
-    if not non_null.empty:
-        most_common = non_null.value_counts().idxmax()
-        return pd.Series([most_common] * len(x), index=x.index)
-    else:
-        return x
-data['sitename'] = data['locality'].fillna('country')
-mask = data['sitename'].str.contains('unspecified|no_precise_loc', case=False, na=False)
-data.loc[mask, 'sitename'] = data.loc[mask, 'region'].fillna(data.loc[mask, 'country'])
+data['longitude'] = round(data['londeg'] + data['lonmin'] / 60 + data['lonsec'] / 3600, 6)
+data['latitude'] = round(data['latdeg'] + data['latmin'] / 60 + data['latsec'] / 3600, 6)
+# def fill_site(x):
+#     non_null = x.dropna()
+#     if not non_null.empty:
+#         most_common = non_null.value_counts().idxmax()
+#         return pd.Series([most_common] * len(x), index=x.index)
+#     else:
+#         return x
+data['sitename'] = data['locality'].fillna('') + ' ' + data['site'].fillna('')
+#mask = data['sitename'].str.contains('unspecified|no_precise_loc', case=False, na=False)
+#data.loc[mask, 'sitename'] = data.loc[mask, 'region'].fillna(data.loc[mask, 'country'])
 
 data['sitename'] = data['sitename'].str.strip()
-data['sitename'] = data.groupby(['longitude', 'latitude'])['sitename'].transform(fill_site)
+#data['sitename'] = data.groupby(['longitude', 'latitude'])['sitename'].transform(fill_site)
 data = data.assign(**{'sample_analyst': 'Horne, David',
                       'dataset_processor': 'Horne, David'})
 
 # CU
-data['collectionunit_name'] = data['locality'].fillna('') + ' ' + data['site'].fillna('')
-data['collectionunit_name'] = data['collectionunit_name'].fillna('handle_complete').str.strip()
-data['collectiondate'] = pd.to_datetime(
-    {'year': pd.to_numeric(data['year.1'], errors='coerce'),
-     'month': pd.to_numeric(data['month'], errors='coerce'), 
-     'day': pd.to_numeric(data['day'], errors='coerce').fillna(1)},
-    errors='coerce')
-data = data.rename(columns = {'year.1': 'collectionyear'})
+#data['collectionunit_name'] = data['locality'].fillna('') + ' ' + data['site'].fillna('')
+
+data = data.rename(columns = {'year': 'taxonname_year',
+                              'field23': 'year'})
+data['day'] = data['day'].fillna(1)
+data['collectiondate'] = pd.to_datetime(data[["year", "month", "day"]], errors='coerce').dt.date
+data = data.rename(columns={'year': 'collectionyear'})
+
+# Record Data
+data['record_number'] = 'NODE-R' + (
+    data.groupby(['longitude', 'latitude', 'sitename', 'collectionyear'], dropna=False).ngroup().add(1).astype(str)
+)
+data['handle_complete'] = data['record_number']
 
 # Taxon Data
-pattern = ['? To be checked', '?to be checked', '? to be checked', '?To be checked', '?',
-           'n.sp', 'n. sp.', 'cf.', 'cf', 'aff.', 'aff', 'sp. nov', 'sp', 'nov', '.', 'spec',]
 
 data['taxonname'] = data['taxonname'] = data['genus'].str.strip() + ' ' + data['species'].str.strip()
-for pat in pattern:
-    data['taxonname'] = data['taxonname'].str.replace(pat, '')
 data['taxonname'] = data['taxonname'].str.replace('  ', ' ')
 
-data['taxonname'] = data['taxonname'].str.replace('Cypris biinosa', 'Cypris bispinosa')
-data['taxonname'] = data['taxonname'].str.replace('Strandesia inulosa', 'Strandesia spinulosa')
-data['taxonname'] = data['taxonname'].str.replace('Candonocypris aezelandiae',	'Candonocypris novaezelandiae')
-data['taxonname'] = data['taxonname'].str.replace('Fabaeformiscandona  balatonica', 'Fabaeformiscandona balatonica')
-data['taxonname'] = data['taxonname'].str.replace('Mixtacandona andli', 'Mixtacandona spandli')
-data['taxonname'] = data['taxonname'].str.replace('Pseudocandona preica', 'Pseudocandona prespica')
-data['taxonname'] = data['taxonname'].str.replace('Vestalenula ecC', 'Vestalenula spec.C')
-
 regex = r'^(\w+(?:\s+\w+)?)'
-data['taxonname'] = data['taxonname'].astype(str).apply(lambda x:
-                                                      re.match(regex, x).group(1)
-                                                      if re.match(regex, x) else None)
+data['taxonname'] = data['taxonname'].astype(str).str.extract(regex)
+
 data['count'] = 'presence/absence'
 data['value'] = 1
 data['variableelement'] = 'valve (undiff)'
@@ -89,42 +81,38 @@ data.drop(columns=['artificial habitat',
 
 data['natural habitat'] = data['natural habitat'].str.replace(r'lake', 'lacustrine', flags=re.IGNORECASE)
 data = data.rename(columns={'natural habitat': 'habitat',
-                            'name in reference': 'name in record',
-                            'node full references': 'references'})
+                            'name in ref': 'name_in_publication',
+                            'node full references': 'references',
+                            'age': 'age_of_waterbody'})
 
 # Add missing data
 data['collection_type'] = 'modern'
 data['age_model'] = 'Collection Date'
 data['age_type'] = 'Calendar years BP'
 
-# Record Data
-data['record_number'] = 'NODE-R' + (
-    data.groupby(['longitude', 'latitude', 'collectionunit_name', 'collectionyear'], dropna=False).ngroup().add(1).astype(str)
-)
-data['handle_complete'] = data['record_number']
 columns = [
     # Site
     'record_number', 'sitename', 'site', 'longitude', 'latitude', 'altitude', 'depth', 
     # CU
-    'handle_complete', 'collectionunit_name', 'habitat', 'water chemistry', 'collection_type',
+    'handle_complete', 'habitat', 'water chemistry', 'collection_type',
     'substrate', 'vegetation', 'ph', 'temp', 'cond', 'environment', 'duration', 'collectiondate',
     # Chronologies
-    'age', 'age_model', 'age_type', 'collectionyear',
+    'age_of_waterbody', 'age_model', 'age_type', 'collectionyear',
     # Publications
-    'references', 'year', 'published?',
+    'references', 'published?',
     # GPU
     'country', 'region', 'locality', 'day', 'month',
     # Taxa
-    'taxonname', 'count', 'value', 'variableelement',
-    'context', 'name in record', 'genus', 'species', 'subspecies', 
+    'taxonname','taxonname_year', 'count', 'value', 'variableelement',
+    'context', 'name_in_publication', 'genus', 'species', 'subspecies', 
     'no spec', 'males?', 'sex ratio', 
     # Contacts
     'pi', 'sample_analyst', 'dataset_processor',
     # Notes
-    'zone of coll', 'comments', 'validation status of coordinates'
+    'zone of coll', 'comments', 'combo403'
 ]
 data = data[columns]
 data.sort_values(by=['record_number'], inplace=True)
 data.to_excel('data-all/original/NODE-cleanedAug2025.xlsx', index=False)
 
-csv_splitter(data, params='record_number')
+#csv_splitter(data, params='record_number')
