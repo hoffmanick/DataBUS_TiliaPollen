@@ -50,8 +50,8 @@ data['handle_complete'] = data['record_number']
 # Taxon Data
 data['taxonname'] = data['taxonname'] = data['genus'].str.strip() + ' ' + data['species'].str.strip()
 data['taxonname'] = data['taxonname'].str.replace('  ', ' ')
-regex = r'^(\w+(?:\s+\w+)?)'
-data['taxonname'] = data['taxonname'].astype(str).str.extract(regex)
+# regex = r'^(\w+(?:\s+\w+)?)'
+# data['taxonname'] = data['taxonname'].astype(str).str.extract(regex)
 
 data['count'] = 'presence/absence'
 data['value'] = 1
@@ -82,20 +82,21 @@ data['age_type'] = 'Calendar years BP'
 data = data.rename(columns={'temp': 'temperature',
                             'ph': 'pH'})
 
-comment_cols = ['comments', 'cond', 'duration','sex ratio',
-                'males?','subspecies','temperature',
-                'vegetation','water chemistry', 'zone of coll',
-                'pH','age of waterbody', 'environment']
-# diff treatment for 'name in publication'
-def notes_parser(row):
+def notes_parser(row, sep=" | "):
     parts = []
     for col in comment_cols:
         value = row[col]
         if pd.notnull(value):  # skip NaN
             parts.append(f"{col.capitalize()}: {value}")
-    return " | ".join(parts)
+    return sep.join(parts)
 
+comment_cols = ['comments', 'cond', 'duration', 'temperature', 
+                'vegetation', 'water chemistry', 'zone of coll',
+                'pH', 'age of waterbody', 'environment']
 data['datasetnotes'] = data.apply(notes_parser, axis=1)
+
+comment_cols = ['name in publication', 'subspecies', 'sex ratio', 'males?']
+data['datasetnotes2'] = data.apply(notes_parser, axis=1, sep="; ")
 
 comment_cols = ['coord validation']
 data['collunitnotes'] = data.apply(notes_parser, axis=1)
@@ -106,6 +107,7 @@ columns = [
     'handle_complete', 'habitat', 'water chemistry', 'depth', 'collection_type', 
     'collunitnotes', 'substrate', 'vegetation', 'pH', 'temperature', 'cond', 
     'environment', 'duration', 'collection_date', 'age of waterbody', 'datasetnotes',
+    'datasetnotes2',
     # Chronologies
     'age_model', 'age_type',
     # Publications

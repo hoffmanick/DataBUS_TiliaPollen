@@ -6,7 +6,6 @@ from datetime import datetime
 from dotenv import load_dotenv
 import DataBUS.neotomaHelpers as nh
 import DataBUS.neotomaUploader as nu
-from DataBUS.neotomaValidator.valid_csv import valid_csv
 from DataBUS.neotomaValidator.check_file import check_file
 from DataBUS.neotomaHelpers.logging_dict import logging_response
  
@@ -81,6 +80,7 @@ for filename in filenames:
     uploader['collunitid'] = nu.insert_collunit(**inputs)
     logfile = logging_response(uploader['collunitid'], logfile)
     
+    # Add collector
     logfile.append('\n=== Inserting Analysis Units ===')
     uploader['anunits'] = nu.insert_analysisunit(**inputs)
     logfile = logging_response(uploader['anunits'], logfile)
@@ -97,6 +97,7 @@ for filename in filenames:
     uploader['processor'] = nu.insert_data_processor(**inputs)
     logfile = logging_response(uploader['processor'], logfile)
 
+    # Add Chronologies
     logfile.append('\n=== Inserting Dataset Database ===')
     uploader['database'] = nu.insert_dataset_database(cur = cur,
                                                     yml_dict = yml_dict,
@@ -107,6 +108,7 @@ for filename in filenames:
     uploader['samples'] = nu.insert_sample(**inputs)
     logfile = logging_response(uploader['samples'], logfile)
 
+    #insert sample ages
     logfile.append('\n=== Inserting Sample Analyst ===')
     uploader['sampleAnalyst'] = nu.insert_sample_analyst(**inputs)
     logfile = logging_response(uploader['sampleAnalyst'], logfile)
@@ -118,9 +120,6 @@ for filename in filenames:
     logfile.append('\n === Uploading Publications ===')
     uploader['publications'] = nu.insert_publication(**inputs)
     logfile = logging_response(uploader['publications'], logfile)
-    print(uploader['publications'])
-    conn.rollback()
-    break
 
     modified_filename = filename.replace('data/NODE/', 'data/NODE/upload_logs/')
     with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:

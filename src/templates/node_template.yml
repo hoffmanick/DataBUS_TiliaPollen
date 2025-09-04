@@ -104,7 +104,7 @@ metadata:
   required: false
   rowwise: false
   type: string
-- column: name in publication
+- column: datasetnotes2
   neotoma: ndb.datasets.notes
   overwrite: false
   required: false
@@ -148,6 +148,12 @@ metadata:
   type: string
 - column: pi
   neotoma: ndb.datasetpis.contactname
+  overwrite: false
+  required: false
+  rowwise: false
+  type: string
+- column: pi
+  neotoma: ndb.collectors.contactname
   overwrite: false
   required: false
   rowwise: false
