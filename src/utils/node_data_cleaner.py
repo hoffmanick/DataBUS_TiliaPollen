@@ -39,6 +39,7 @@ data.loc[data['month'].notna() & data['year'].notna() & data['day'].isna(), 'day
 data['collection_date'] = pd.to_datetime(data[["year", "month", "day"]], errors='coerce')
 data["collection_date"] = data["collection_date"].dt.strftime("%Y-%m-%d")
 data = data.rename(columns={'year': 'collectionyear'})
+data['collection_date'] = data['collection_date'].fillna(data['collectionyear'])
 
 # Record Data
 data['record_number'] = 'NODE-R' + (

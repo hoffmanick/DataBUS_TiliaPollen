@@ -86,6 +86,44 @@ metadata:
   required: false
   rowwise: false
   type: integer
+- column: collection_date
+  formatorrange: '%Y-%m-%d'
+  neotoma: ndb.chronologies.age
+  overwrite: false
+  required: false
+  rowwise: false
+  type: date
+- column: collection_date
+  formatorrange: '%Y-%m-%d'
+  neotoma: ndb.sampleages.age
+  overwrite: false
+  required: false
+  rowwise: false
+  type: date
+- column: age_model
+  neotoma: ndb.chronologies.agemodel
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
+- column: age_model
+  neotoma: ndb.chronologies.chronologyname
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
+- column: age_type
+  neotoma: ndb.chronologies.agetype
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
+- column: age_type
+  neotoma: ndb.sampleages.agetype
+  overwrite: false
+  required: false
+  rowwise: false
+  type: str
 - column: depth
   neotoma: ndb.collectionunits.waterdepth
   overwrite: false
