@@ -85,7 +85,7 @@ metadata:
   overwrite: false
   required: false
   rowwise: false
-  type: integer
+  type: date
 - column: collection_date
   formatorrange: '%Y-%m-%d'
   neotoma: ndb.chronologies.age
@@ -118,7 +118,7 @@ metadata:
   required: false
   rowwise: false
   type: str
-- column: age_type
+- column: age_model
   neotoma: ndb.sampleages.agetype
   overwrite: false
   required: false
@@ -221,6 +221,3 @@ metadata:
   required: false
   rowwise: false
   type: string
-  # column: age_model
-  # column: age_type
-  # column: collectionyear

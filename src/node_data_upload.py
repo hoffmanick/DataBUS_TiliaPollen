@@ -75,15 +75,22 @@ for filename in filenames:
     logfile.append('\n === Inserting Site-Geopolitical Units ===')
     uploader['geopol_units'] = nu.insert_geopolitical_units(**inputs)
     logfile = logging_response(uploader['geopol_units'], logfile)
-
+ 
     logfile.append('\n === Inserting Collection Units ===')
     uploader['collunitid'] = nu.insert_collunit(**inputs)
     logfile = logging_response(uploader['collunitid'], logfile)
     
-    # Add collector
+    logfile.append('\n=== Inserting Collector ===')
+    uploader['collector'] = nu.insert_collector(**inputs)
+    logfile = logging_response(uploader['collector'], logfile)
+
     logfile.append('\n=== Inserting Analysis Units ===')
     uploader['anunits'] = nu.insert_analysisunit(**inputs)
     logfile = logging_response(uploader['anunits'], logfile)
+
+    logfile.append('\n=== Inserting Chronology ===')
+    uploader['chronology'] = nu.insert_chronology(**inputs)
+    logfile = logging_response(uploader['chronology'], logfile)
 
     logfile.append('\n=== Inserting Dataset ===')
     uploader['datasets'] = nu.insert_dataset(**inputs)
@@ -108,7 +115,10 @@ for filename in filenames:
     uploader['samples'] = nu.insert_sample(**inputs)
     logfile = logging_response(uploader['samples'], logfile)
 
-    #insert sample ages
+    logfile.append('\n=== Inserting Sample Ages ===')
+    uploader['sample_age'] = nu.insert_sample_age(**inputs)
+    logfile = logging_response(uploader['sample_age'], logfile)
+
     logfile.append('\n=== Inserting Sample Analyst ===')
     uploader['sampleAnalyst'] = nu.insert_sample_analyst(**inputs)
     logfile = logging_response(uploader['sampleAnalyst'], logfile)

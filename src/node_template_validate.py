@@ -67,7 +67,7 @@ for filename in filenames:
             validator['analysisunit'] = nv.valid_analysisunit(yml_dict = yml_dict,
                                                               csv_file = csv_file)
             logfile = logging_response(validator['analysisunit'], logfile)
-
+            
             logfile.append('\n === Checking Chronologies ===')
             validator['chronologies'] = nv.valid_chronologies(**inputs)
             logfile = logging_response(validator['chronologies'], logfile)
