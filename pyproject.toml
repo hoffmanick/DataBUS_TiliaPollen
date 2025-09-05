@@ -1,3 +1,7 @@
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "databus-ostracode"
 version = "0.1.0"
@@ -32,7 +36,6 @@ dependencies = [
     "six==1.16.0",
     "tzdata==2023.3",
 ]
-
 
 [project.urls]
 Issues = "https://github.com/NeotomaDB/DataBUS_Ostracode/issues"
