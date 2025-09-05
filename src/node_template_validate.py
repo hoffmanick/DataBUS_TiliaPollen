@@ -15,7 +15,7 @@ import DataBUS.neotomaHelpers as nh
 from DataBUS.neotomaHelpers.logging_dict import logging_response
 
 """
-python src/node_template_validate.py --template='src/templates/node_template.yml'
+python src/node_template_validate.py --template='src/templates/node_template.yml' --data='data/NODE/' --validation_logs='data/NODE/validation_logs/'
 """
 
 args = nh.parse_arguments()
@@ -26,8 +26,8 @@ cur = conn.cursor()
 
 directory = Path(args['data'])
 filenames = directory.glob("*.csv")
-valid_logs = 'data/validation_logs/'
-valid_logs_wrong = Path('data/validation_logs/not_validated/')
+valid_logs = 'data/NODE/validation_logs/'
+valid_logs_wrong = Path('data/NODE/validation_logs/not_validated/')
 Path(valid_logs).mkdir(exist_ok=True)
 valid_logs_wrong.mkdir(exist_ok=True)
 
@@ -55,7 +55,6 @@ for filename in filenames:
             validator['sites'] = nv.valid_site(**inputs)
             logfile = logging_response(validator['sites'], logfile)
 
-            ## ADD GEOLOCALITY
             logfile.append('\n === Checking Against Geopolitical Units ===')
             validator['geopol_units'] = nv.valid_geopolitical_units(**inputs)
             logfile = logging_response(validator['geopol_units'], logfile)
@@ -68,6 +67,10 @@ for filename in filenames:
             validator['analysisunit'] = nv.valid_analysisunit(yml_dict = yml_dict,
                                                               csv_file = csv_file)
             logfile = logging_response(validator['analysisunit'], logfile)
+            
+            logfile.append('\n === Checking Chronologies ===')
+            validator['chronologies'] = nv.valid_chronologies(**inputs)
+            logfile = logging_response(validator['chronologies'], logfile)
 
             logfile.append('\n === Checking Dataset ===')
             validator['dataset'] = nv.valid_dataset(**inputs, name="Name in record")
@@ -86,10 +89,10 @@ for filename in filenames:
             validator['sample'] = nv.valid_sample(**inputs, validator = validator)
             logfile = logging_response(validator['sample'], logfile)          
 
-            # logfile.append('\n=== Validating Sample Ages ===')
-            # validator['sample_age'] = nv.valid_sample_age(**inputs, validator = validator)
-            #logfile = logging_response(validator['sample_age'], logfile)
-            
+            logfile.append('\n=== Validating Sample Ages ===')
+            validator['sample_age'] = nv.valid_sample_age(**inputs, validator = validator)
+            logfile = logging_response(validator['sample_age'], logfile)
+
             logfile.append('\n === Validating Taxa Names ===')
             validator['taxa'] = nv.valid_data(**inputs)
             logfile = logging_response(validator['taxa'], logfile)
@@ -101,7 +104,7 @@ for filename in filenames:
             conn.rollback()
             all_true = all([validator[key].validAll for key in validator])
 
-            not_validated_files = "data/not_validated_files"
+            not_validated_files = "data/NODE/not_validated_files"
             all_true = all_true and filecheck['pass']
 
             if all_true == False:
@@ -109,10 +112,10 @@ for filename in filenames:
                 os.makedirs(not_validated_files, exist_ok=True)
                 uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
                 os.replace(filename, uploaded_path)
-                modified_filename = f'{filename}'.replace('data/', 'data/validation_logs/not_validated/')
+                modified_filename = f'{filename}'.replace('data/NODE/', 'data/NODE/validation_logs/not_validated/')
                 modified_filename = Path(modified_filename + '.valid.log')
             else:
-                modified_filename = f'{filename}'.replace('data/', 'data/validation_logs/')
+                modified_filename = f'{filename}'.replace('data/NODE/', 'data/NODE/validation_logs/')
                 modified_filename = Path(modified_filename + '.valid.log')
             
             with modified_filename.open(mode = 'w', encoding = "utf-8") as writer:
@@ -124,11 +127,11 @@ for filename in filenames:
             print(f"{filename} moved to 'not_validated_files' folder: {e}.")
             logfile.append('\n === Validation Failed ===')
             logfile.append(f"{str(e)}")
-            not_validated_files = "data/not_validated_files"
+            not_validated_files = "data/NODE/not_validated_files"
             os.makedirs(not_validated_files, exist_ok=True)
             uploaded_path = os.path.join(not_validated_files, os.path.basename(filename))
             os.replace(filename, uploaded_path)
-            modified_filename = f'{filename}'.replace('data/', 'data/validation_logs/not_validated/')
+            modified_filename = f'{filename}'.replace('data/NODE/', 'data/NODE/validation_logs/not_validated/')
             modified_filename = Path(modified_filename + '.valid.log')
             with modified_filename.open(mode = 'w', encoding = "utf-8") as writer:
                 for i in logfile:

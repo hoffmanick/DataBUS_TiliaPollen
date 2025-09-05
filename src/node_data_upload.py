@@ -6,7 +6,6 @@ from datetime import datetime
 from dotenv import load_dotenv
 import DataBUS.neotomaHelpers as nh
 import DataBUS.neotomaUploader as nu
-from DataBUS.neotomaValidator.valid_csv import valid_csv
 from DataBUS.neotomaValidator.check_file import check_file
 from DataBUS.neotomaHelpers.logging_dict import logging_response
  
@@ -76,14 +75,22 @@ for filename in filenames:
     logfile.append('\n === Inserting Site-Geopolitical Units ===')
     uploader['geopol_units'] = nu.insert_geopolitical_units(**inputs)
     logfile = logging_response(uploader['geopol_units'], logfile)
-
+ 
     logfile.append('\n === Inserting Collection Units ===')
     uploader['collunitid'] = nu.insert_collunit(**inputs)
     logfile = logging_response(uploader['collunitid'], logfile)
     
+    logfile.append('\n=== Inserting Collector ===')
+    uploader['collector'] = nu.insert_collector(**inputs)
+    logfile = logging_response(uploader['collector'], logfile)
+
     logfile.append('\n=== Inserting Analysis Units ===')
     uploader['anunits'] = nu.insert_analysisunit(**inputs)
     logfile = logging_response(uploader['anunits'], logfile)
+
+    logfile.append('\n=== Inserting Chronology ===')
+    uploader['chronology'] = nu.insert_chronology(**inputs)
+    logfile = logging_response(uploader['chronology'], logfile)
 
     logfile.append('\n=== Inserting Dataset ===')
     uploader['datasets'] = nu.insert_dataset(**inputs)
@@ -97,6 +104,7 @@ for filename in filenames:
     uploader['processor'] = nu.insert_data_processor(**inputs)
     logfile = logging_response(uploader['processor'], logfile)
 
+    # Add Chronologies
     logfile.append('\n=== Inserting Dataset Database ===')
     uploader['database'] = nu.insert_dataset_database(cur = cur,
                                                     yml_dict = yml_dict,
@@ -106,6 +114,10 @@ for filename in filenames:
     logfile.append('\n=== Inserting Samples ===')
     uploader['samples'] = nu.insert_sample(**inputs)
     logfile = logging_response(uploader['samples'], logfile)
+
+    logfile.append('\n=== Inserting Sample Ages ===')
+    uploader['sample_age'] = nu.insert_sample_age(**inputs)
+    logfile = logging_response(uploader['sample_age'], logfile)
 
     logfile.append('\n=== Inserting Sample Analyst ===')
     uploader['sampleAnalyst'] = nu.insert_sample_analyst(**inputs)
@@ -118,9 +130,6 @@ for filename in filenames:
     logfile.append('\n === Uploading Publications ===')
     uploader['publications'] = nu.insert_publication(**inputs)
     logfile = logging_response(uploader['publications'], logfile)
-    print(uploader['publications'])
-    conn.rollback()
-    break
 
     modified_filename = filename.replace('data/NODE/', 'data/NODE/upload_logs/')
     with open(modified_filename + '.upload.log', 'w', encoding = "utf-8") as writer:
