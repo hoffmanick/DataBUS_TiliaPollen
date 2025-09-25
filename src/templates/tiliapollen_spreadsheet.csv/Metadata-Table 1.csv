@@ -1,0 +1,4 @@
+Column,Neotoma,Required,Overwrite,Value,Notes
+datasettypeid,ndb.datasettypes.datasettype,TRUE,FALSE,pollen,
+databaseid,"ndb.datasetdatabases.databasename
+",TRUE,FALSE,African Pollen Database,
