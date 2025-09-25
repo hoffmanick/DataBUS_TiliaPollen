@@ -3,6 +3,8 @@ data/
 data-all/
 data-toy/
 src/remove_cu.py
+!data/LV1_pollen_combined.csv
+!data/LV2_pollen_combined.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
