@@ -55,57 +55,58 @@ for filename in filenames:
             validator['sites'] = nv.valid_site(**inputs)
             logfile = logging_response(validator['sites'], logfile)
 
-            # logfile.append('\n === Checking Against Geopolitical Units ===')
-            # validator['geopol_units'] = nv.valid_geopolitical_units(**inputs)
-            # logfile = logging_response(validator['geopol_units'], logfile)
+            logfile.append('\n === Checking Against Geopolitical Units ===')
+            validator['geopol_units'] = nv.valid_geopolitical_units(**inputs)
+            logfile = logging_response(validator['geopol_units'], logfile)
 
-            # logfile.append('\n === Checking Against Collection Units ===')
-            # validator['collunits'] = nv.valid_collunit(**inputs)
-            # logfile = logging_response(validator['collunits'], logfile)
+            logfile.append('\n === Checking Against Collection Units ===')
+            validator['collunits'] = nv.valid_collunit(**inputs)
+            logfile = logging_response(validator['collunits'], logfile)
 
-            # logfile.append('\n === Checking Against Analysis Units ===')
-            # validator['analysisunit'] = nv.valid_analysisunit(yml_dict = yml_dict,
-            #                                                 csv_file = csv_file)
-            # logfile = logging_response(validator['analysisunit'], logfile)
+            logfile.append('\n === Checking Against Analysis Units ===')
+            validator['analysisunit'] = nv.valid_analysisunit(yml_dict = yml_dict,
+                                                            csv_file = csv_file)
+            logfile = logging_response(validator['analysisunit'], logfile)
 
-            # logfile.append('\n === Checking Chronologies ===')
-            # validator['chronologies'] = nv.valid_chronologies(**inputs)
-            # logfile = logging_response(validator['chronologies'], logfile)
+            logfile.append('\n === Checking Chronologies ===')
+            validator['chronologies'] = nv.valid_chronologies(**inputs)
+            logfile = logging_response(validator['chronologies'], logfile)
 
-            # logfile.append('\n === Checking Dataset ===')
-            # validator['dataset'] = nv.valid_dataset(**inputs, name="Name in record")
-            # logfile = logging_response(validator['dataset'], logfile)
+            logfile.append('\n === Checking Dataset ===')
+            validator['dataset'] = nv.valid_dataset2(**inputs, name="Name in record")
+            logfile = logging_response(validator['dataset'], logfile)
 
-            # logfile.append('\n === Checking Against Contact Names ===')
-            # validator['agent'] = nv.valid_contact(**inputs)
-            # logfile = logging_response(validator['agent'], logfile)
+            logfile.append('\n === Checking Against Contact Names ===')
+            validator['agent'] = nv.valid_contact2(**inputs)
+            logfile = logging_response(validator['agent'], logfile)
 
-            # logfile.append('\n=== Validating Dataset Database ===')
-            # validator['database'] = nv.valid_dataset_database(cur = cur,
-            #                                                 yml_dict = yml_dict)
-            # logfile = logging_response(validator['database'], logfile)
+            logfile.append('\n=== Validating Dataset Database ===')
+            validator['database'] = nv.valid_dataset_database(cur = cur,
+                                                            yml_dict = yml_dict)
+            logfile = logging_response(validator['database'], logfile)
 
-            # logfile.append('\n=== Validating Samples ===')
-            # validator['sample'] = nv.valid_sample(**inputs, validator = validator)
-            # logfile = logging_response(validator['sample'], logfile)
+            logfile.append('\n=== Validating Samples ===')
+            validator['sample'] = nv.valid_sample(**inputs, validator = validator)
+            logfile = logging_response(validator['sample'], logfile)
 
-            # logfile.append('\n=== Validating Sample Ages ===')
-            # validator['sample_age'] = nv.valid_sample_age(**inputs, validator = validator)
-            # logfile = logging_response(validator['sample_age'], logfile)
+            logfile.append('\n=== Validating Sample Ages ===')
+            validator['sample_age'] = nv.valid_sample_age2(**inputs, validator = validator)
+            logfile = logging_response(validator['sample_age'], logfile)
             
-            # logfile.append('\n === Validating Taxa Names ===')
-            # validator['taxa'] = nv.valid_data(**inputs)
-            # logfile = logging_response(validator['taxa'], logfile)
+            logfile.append('\n === Validating Taxa Names ===')
+            validator['taxa'] = nv.valid_data(**inputs)
+            logfile = logging_response(validator['taxa'], logfile)
 
-            # logfile.append('\n === Validating Publications ===')
-            # validator['publications'] = nv.valid_publication(**inputs)
-            # logfile = logging_response(validator['publications'], logfile)
+            logfile.append('\n === Validating Publications ===')
+            validator['publications'] = nv.valid_publication(**inputs)
+            logfile = logging_response(validator['publications'], logfile)
 
             conn.rollback()
             all_true = all([validator[key].validAll for key in validator])
 
             not_validated_files = "data/not_validated_files"
             all_true = all_true and filecheck['pass']
+            all_true
 
             if all_true == False:
                 print(f"{filename} moved to 'not_validated_files' folder.")

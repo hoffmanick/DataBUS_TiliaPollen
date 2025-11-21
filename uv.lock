@@ -1,6 +1,6 @@
 version = 1
 revision = 3
-requires-python = "==3.11.10"
+requires-python = "==3.11.13"
 
 [[package]]
 name = "babel"
@@ -204,7 +204,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "databus-ostracode"
+name = "databus-tilia-pollen"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

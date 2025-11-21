@@ -1,0 +1,31 @@
+{
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "neotoma",
+            "database": "neotoma",
+            "username": "nicholashoffman",
+            "password": "CarlSagan1938."
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MariaDB",
+            "name": "global_paleofire",
+            "socketPath": "/tmp/mysql.sock",
+            "database": "gcd_paleofire_in_progress",
+            "username": "nicholashoffman",
+            "password": "CarlSagan1938."
+        }
+    ]
+}

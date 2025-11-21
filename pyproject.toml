@@ -3,13 +3,13 @@ requires      = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "databus-ostracode"
+name = "databus-tilia-pollen"
 version = "0.1.0"
 description = "Add your description here"
 authors = [{name = "Socorro E Dominguez Vidana", email = "dominguezvid@uwisc.edu"}]
 license = "MIT"
 license-files = ["LICENSE.md"]
-requires-python = "==3.11.10"
+requires-python = "==3.11.13"
 readme = {file = "README.md", content-type = "text/markdown"}
 keywords = ["neotoma", "paleoecology", "interoperability", "postgres", "SQL"]
 classifiers = [
@@ -38,8 +38,8 @@ dependencies = [
 ]
 
 [project.urls]
-Issues = "https://github.com/NeotomaDB/DataBUS_Ostracode/issues"
-Repository = "https://github.com/NeotomaDB/DataBUS_Ostracode/"
+Issues = "https://github.com/NeotomaDB/DataBUS_TiliaPollen/issues"
+Repository = "https://github.com/NeotomaDB/DataBUS_TiliaPollen/"
 
 [project.optional-dependencies]
 build = ["build", "twine"]
