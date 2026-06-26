@@ -1,0 +1,2209 @@
+apiVersion: neotoma v2.0
+headers: 2
+kind: Development
+metadata:
+- column: DatasetType
+  neotoma: ndb.datasettypes.datasettypeid
+  required: true
+  value: pollen
+- column: databaseid
+  neotoma: 'ndb.datasetdatabases.databasename'
+  required: true
+  value: African Pollen Database
+- column: depths
+  neotoma: ndb.analysisunits.depth
+  notes:
+  required:
+  rowwise: true
+  type: float
+- column: Anal.Thick
+  neotoma: ndb.analysisunits.thickness
+  notes:
+  required:
+  rowwise: true
+  type: float
+- column: Age
+  neotoma: ndb.sampleages.age
+  notes:
+  required:
+  rowwise: true
+  type: float
+  chronologyname: Temoltzin-Loranca et al. (2023)
+# - column: value_Sample.quantity_1
+#   neotoma: ndb.data.value
+#   notes:
+#   required:
+#   rowwise: true
+#   taxonname: Sample quantity
+#   type: float
+# - column: value_Lycopodium.tablets_1
+#   neotoma: ndb.data.value
+#   notes:
+#   required:
+#   rowwise: true
+#   taxonname: Lycopodium tablets
+#   type: float
+- column: value_cf..Clausena_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Clausena
+  type: float
+- column: value_cf..Elaeis_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Elaeis
+  type: float
+- column: value_Maytenus_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Maytenus
+  type: float
+- column: value_cf..Motandra_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Motandra
+  type: float
+- column: value_cf.poleonaea_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Napoleonaea
+  type: float
+- column: value_cf..Nesogordonia_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Nesogordonia
+  type: float
+- column: value_Gerbera.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Gerbera-type
+  type: float
+- column: value_Holoptelea_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Holoptelea
+  type: float
+- column: value_cf..Quercus_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Quercus
+  type: float
+- column: value_cf..Trifolium_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Trifolium
+  type: float
+- column: value_cf..Hydrocotyle_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Hydrocotyle
+  type: float
+- column: value_cf..Argomuellera_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Argomuellera
+  type: float
+- column: value_Pinus_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Pinus
+  type: float
+- column: value_Eucalyptus_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Eucalyptus
+  type: float
+- column: value_Dodonaea_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Dodonaea
+  type: float
+- column: value_Poaceae_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Poaceae
+  type: float
+- column: value_Cyperaceae_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cyperaceae
+  type: float
+- column: value_Cyperus.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cyperus-type
+  type: float
+- column: value_Artemisia_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Artemisia
+  type: float
+- column: value_Asteroideae_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Asteroideae
+  type: float
+- column: value_Cichorioideae_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cichorioideae
+  type: float
+- column: value_Alchemilla_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Alchemilla
+  type: float
+- column: value_Apiaceae_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Apiaceae
+  type: float
+- column: value_Bidens.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Bidens-type
+  type: float
+- column: value_Brassicaceae_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Brassicaceae
+  type: float
+- column: value_Centaurea_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Centaurea
+  type: float
+- column: value_Herniaria_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Herniaria
+  type: float
+- column: value_Caryophyllaceae_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Caryophyllaceae
+  type: float
+- column: value_Poaceae..Cerealia.type._1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Poaceae (Cerealia-type)
+  type: float
+- column: value_Zea.mays_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Zea mays
+  type: float
+- column: value_Amaranthaceae_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Amaranthaceae
+  type: float
+- column: value_Commelina.africana_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Commelina africana
+  type: float
+- column: value_Conyza.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Conyza-type
+  type: float
+- column: value_Senecio.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Senecio-type
+  type: float
+- column: value_Xanthium_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Xanthium
+  type: float
+- column: value_Euphorbia_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Euphorbia
+  type: float
+- column: value_Grewia_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Grewia
+  type: float
+- column: value_Gunnera_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Gunnera
+  type: float
+- column: value_Hypericum.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Hypericum-type
+  type: float
+- column: value_Justicia.diclipteroides.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Justicia diclipteroides-type
+  type: float
+- column: value_Justicia.flava_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Justicia flava
+  type: float
+- column: value_Impatiens_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Impatiens
+  type: float
+- column: value_Indigofera_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Indigofera
+  type: float
+- column: value_Lamiaceae_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Lamiaceae
+  type: float
+- column: value_Liliaceae.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Liliaceae-type
+  type: float
+- column: value_Malvaceae_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Malvaceae
+  type: float
+- column: value_Plantago.lanceolata_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Plantago lanceolata
+  type: float
+- column: value_Psoralea_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Psoralea
+  type: float
+- column: value_Ranunculus.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Ranunculus-type
+  type: float
+- column: value_Rhynchosia.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Rhynchosia-type
+  type: float
+- column: value_Rumex_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Rumex
+  type: float
+- column: value_Solanum.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Solanum-type
+  type: float
+- column: value_Urera.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urera-type
+  type: float
+- column: value_Urtica.membranacea_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urtica membranacea
+  type: float
+- column: value_Urticaceae..type.2._1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urticaceae (type 2)
+  type: float
+- column: value_Urtica.pilulifera_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urtica pilulifera
+  type: float
+- column: value_Urticaceae.Moraceae..type.4._1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urticaceae/Moraceae (type 4)
+  type: float
+- column: value_Tarenna_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Tarenna
+  type: float
+- column: value_Unknown..other.pollen._1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Unknown (other pollen)
+  type: float
+- column: value_Actiniopteris_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Actiniopteris
+  type: float
+- column: value_Cyathea_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cyathea
+  type: float
+- column: value_Cystopteris_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cystopteris
+  type: float
+- column: value_Polypodiaceae..Lepisorus.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: 'Polypodiaceae: Lepisorus-type'
+  type: float
+- column: value_Pteridophyta..monolete._1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Pteridophyta (monolete)
+  type: float
+- column: value_Pteris_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Pteris
+  type: float
+- column: value_cf..Xiphopteris_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Xiphopteris
+  type: float
+- column: value_cf..Azolla_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Azolla
+  type: float
+- column: value_cf..Loxogramme_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Loxogramme
+  type: float
+- column: value_Typha.angustifolia_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Typha angustifolia
+  type: float
+- column: value_Typha.latifolia_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Typha latifolia
+  type: float
+- column: value_Ustulina_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Ustulina
+  type: float
+- column: value_Sordaria.type_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Sordaria-type
+  type: float
+- column: value_Gelasinospora_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Gelasinospora
+  type: float
+- column: value_Glomus_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Glomus
+  type: float
+- column: value_Citrus_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Citrus
+  type: float
+- column: value_Sporormiella_1
+  neotoma: ndb.data.value
+  notes:
+  required:
+  rowwise: true
+  taxonname: Sporormiella
+  type: float
+# - column: units_Sample.quantity_1
+#   neotoma: ndb.variables.variableunitsid
+#   notes:
+#   required:
+#   rowwise: true
+#   taxonname: Sample quantity
+#   type: string
+# - column: units_Lycopodium.tablets_1
+#   neotoma: ndb.variables.variableunitsid
+#   notes:
+#   required:
+#   rowwise: true
+#   taxonname: Lycopodium tablets
+#   type: string
+- column: units_cf..Clausena_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Clausena
+  type: string
+- column: units_cf..Elaeis_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Elaeis
+  type: string
+- column: units_Maytenus_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Maytenus
+  type: string
+- column: units_cf..Motandra_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Motandra
+  type: string
+- column: units_cf.poleonaea_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Napoleonaea
+  type: string
+- column: units_cf..Nesogordonia_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Nesogordonia
+  type: string
+- column: units_Gerbera.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Gerbera-type
+  type: string
+- column: units_Holoptelea_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Holoptelea
+  type: string
+- column: units_cf..Quercus_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Quercus
+  type: string
+- column: units_cf..Trifolium_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Trifolium
+  type: string
+- column: units_cf..Hydrocotyle_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Hydrocotyle
+  type: string
+- column: units_cf..Argomuellera_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Argomuellera
+  type: string
+- column: units_Pinus_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Pinus
+  type: string
+- column: units_Eucalyptus_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Eucalyptus
+  type: string
+- column: units_Dodonaea_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Dodonaea
+  type: string
+- column: units_Poaceae_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Poaceae
+  type: string
+- column: units_Cyperaceae_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cyperaceae
+  type: string
+- column: units_Cyperus.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cyperus-type
+  type: string
+- column: units_Artemisia_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Artemisia
+  type: string
+- column: units_Asteroideae_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Asteroideae
+  type: string
+- column: units_Cichorioideae_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cichorioideae
+  type: string
+- column: units_Alchemilla_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Alchemilla
+  type: string
+- column: units_Apiaceae_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Apiaceae
+  type: string
+- column: units_Bidens.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Bidens-type
+  type: string
+- column: units_Brassicaceae_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Brassicaceae
+  type: string
+- column: units_Centaurea_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Centaurea
+  type: string
+- column: units_Herniaria_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Herniaria
+  type: string
+- column: units_Caryophyllaceae_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Caryophyllaceae
+  type: string
+- column: units_Poaceae..Cerealia.type._1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Poaceae (Cerealia-type)
+  type: string
+- column: units_Zea.mays_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Zea mays
+  type: string
+- column: units_Amaranthaceae_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Amaranthaceae
+  type: string
+- column: units_Commelina.africana_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Commelina africana
+  type: string
+- column: units_Conyza.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Conyza-type
+  type: string
+- column: units_Senecio.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Senecio-type
+  type: string
+- column: units_Xanthium_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Xanthium
+  type: string
+- column: units_Euphorbia_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Euphorbia
+  type: string
+- column: units_Grewia_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Grewia
+  type: string
+- column: units_Gunnera_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Gunnera
+  type: string
+- column: units_Hypericum.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Hypericum-type
+  type: string
+- column: units_Justicia.diclipteroides.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Justicia diclipteroides-type
+  type: string
+- column: units_Justicia.flava_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Justicia flava
+  type: string
+- column: units_Impatiens_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Impatiens
+  type: string
+- column: units_Indigofera_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Indigofera
+  type: string
+- column: units_Lamiaceae_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Lamiaceae
+  type: string
+- column: units_Liliaceae.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Liliaceae-type
+  type: string
+- column: units_Malvaceae_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Malvaceae
+  type: string
+- column: units_Plantago.lanceolata_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Plantago lanceolata
+  type: string
+- column: units_Psoralea_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Psoralea
+  type: string
+- column: units_Ranunculus.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Ranunculus-type
+  type: string
+- column: units_Rhynchosia.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Rhynchosia-type
+  type: string
+- column: units_Rumex_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Rumex
+  type: string
+- column: units_Solanum.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Solanum-type
+  type: string
+- column: units_Urera.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urera-type
+  type: string
+- column: units_Urtica.membranacea_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urtica membranacea
+  type: string
+- column: units_Urticaceae..type.2._1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urticaceae (type 2)
+  type: string
+- column: units_Urtica.pilulifera_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urtica pilulifera
+  type: string
+- column: units_Urticaceae.Moraceae..type.4._1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urticaceae/Moraceae (type 4)
+  type: string
+- column: units_Tarenna_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Tarenna
+  type: string
+- column: units_Unknown..other.pollen._1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Unknown (other pollen)
+  type: string
+- column: units_Actiniopteris_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Actiniopteris
+  type: string
+- column: units_Cyathea_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cyathea
+  type: string
+- column: units_Cystopteris_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cystopteris
+  type: string
+- column: units_Polypodiaceae..Lepisorus.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: 'Polypodiaceae: Lepisorus-type'
+  type: string
+- column: units_Pteridophyta..monolete._1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Pteridophyta (monolete)
+  type: string
+- column: units_Pteris_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Pteris
+  type: string
+- column: units_cf..Xiphopteris_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Xiphopteris
+  type: string
+- column: units_cf..Azolla_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Azolla
+  type: string
+- column: units_cf..Loxogramme_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Loxogramme
+  type: string
+- column: units_Typha.angustifolia_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Typha angustifolia
+  type: string
+- column: units_Typha.latifolia_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Typha latifolia
+  type: string
+- column: units_Ustulina_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Ustulina
+  type: string
+- column: units_Sordaria.type_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Sordaria-type
+  type: string
+- column: units_Gelasinospora_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Gelasinospora
+  type: string
+- column: units_Glomus_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Glomus
+  type: string
+- column: units_Citrus_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Citrus
+  type: string
+- column: units_Sporormiella_1
+  neotoma: ndb.variables.variableunitsid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Sporormiella
+  type: string
+# - column: element_Sample.quantity_1
+#   neotoma: ndb.variables.variableelementid
+#   notes:
+#   required:
+#   rowwise: true
+#   taxonname: Sample quantity
+#   type: string
+# - column: element_Lycopodium.tablets_1
+#   neotoma: ndb.variables.variableelementid
+#   notes:
+#   required:
+#   rowwise: true
+#   taxonname: Lycopodium tablets
+#   type: string
+- column: element_cf..Clausena_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Clausena
+  type: string
+- column: element_cf..Elaeis_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Elaeis
+  type: string
+- column: element_Maytenus_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Maytenus
+  type: string
+- column: element_cf..Motandra_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Motandra
+  type: string
+- column: element_cf.poleonaea_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Napoleonaea
+  type: string
+- column: element_cf..Nesogordonia_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Nesogordonia
+  type: string
+- column: element_Gerbera.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Gerbera-type
+  type: string
+- column: element_Holoptelea_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Holoptelea
+  type: string
+- column: element_cf..Quercus_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Quercus
+  type: string
+- column: element_cf..Trifolium_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Trifolium
+  type: string
+- column: element_cf..Hydrocotyle_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Hydrocotyle
+  type: string
+- column: element_cf..Argomuellera_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Argomuellera
+  type: string
+- column: element_Pinus_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Pinus
+  type: string
+- column: element_Eucalyptus_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Eucalyptus
+  type: string
+- column: element_Dodonaea_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Dodonaea
+  type: string
+- column: element_Poaceae_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Poaceae
+  type: string
+- column: element_Cyperaceae_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cyperaceae
+  type: string
+- column: element_Cyperus.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cyperus-type
+  type: string
+- column: element_Artemisia_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Artemisia
+  type: string
+- column: element_Asteroideae_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Asteroideae
+  type: string
+- column: element_Cichorioideae_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cichorioideae
+  type: string
+- column: element_Alchemilla_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Alchemilla
+  type: string
+- column: element_Apiaceae_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Apiaceae
+  type: string
+- column: element_Bidens.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Bidens-type
+  type: string
+- column: element_Brassicaceae_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Brassicaceae
+  type: string
+- column: element_Centaurea_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Centaurea
+  type: string
+- column: element_Herniaria_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Herniaria
+  type: string
+- column: element_Caryophyllaceae_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Caryophyllaceae
+  type: string
+- column: element_Poaceae..Cerealia.type._1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Poaceae (Cerealia-type)
+  type: string
+- column: element_Zea.mays_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Zea mays
+  type: string
+- column: element_Amaranthaceae_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Amaranthaceae
+  type: string
+- column: element_Commelina.africana_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Commelina africana
+  type: string
+- column: element_Conyza.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Conyza-type
+  type: string
+- column: element_Senecio.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Senecio-type
+  type: string
+- column: element_Xanthium_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Xanthium
+  type: string
+- column: element_Euphorbia_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Euphorbia
+  type: string
+- column: element_Grewia_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Grewia
+  type: string
+- column: element_Gunnera_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Gunnera
+  type: string
+- column: element_Hypericum.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Hypericum-type
+  type: string
+- column: element_Justicia.diclipteroides.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Justicia diclipteroides-type
+  type: string
+- column: element_Justicia.flava_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Justicia flava
+  type: string
+- column: element_Impatiens_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Impatiens
+  type: string
+- column: element_Indigofera_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Indigofera
+  type: string
+- column: element_Lamiaceae_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Lamiaceae
+  type: string
+- column: element_Liliaceae.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Liliaceae-type
+  type: string
+- column: element_Malvaceae_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Malvaceae
+  type: string
+- column: element_Plantago.lanceolata_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Plantago lanceolata
+  type: string
+- column: element_Psoralea_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Psoralea
+  type: string
+- column: element_Ranunculus.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Ranunculus-type
+  type: string
+- column: element_Rhynchosia.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Rhynchosia-type
+  type: string
+- column: element_Rumex_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Rumex
+  type: string
+- column: element_Solanum.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Solanum-type
+  type: string
+- column: element_Urera.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urera-type
+  type: string
+- column: element_Urtica.membranacea_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urtica membranacea
+  type: string
+- column: element_Urticaceae..type.2._1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urticaceae (type 2)
+  type: string
+- column: element_Urtica.pilulifera_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urtica pilulifera
+  type: string
+- column: element_Urticaceae.Moraceae..type.4._1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Urticaceae/Moraceae (type 4)
+  type: string
+- column: element_Tarenna_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Tarenna
+  type: string
+- column: element_Unknown..other.pollen._1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Unknown (other pollen)
+  type: string
+- column: element_Actiniopteris_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Actiniopteris
+  type: string
+- column: element_Cyathea_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cyathea
+  type: string
+- column: element_Cystopteris_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Cystopteris
+  type: string
+- column: element_Polypodiaceae..Lepisorus.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: 'Polypodiaceae: Lepisorus-type'
+  type: string
+- column: element_Pteridophyta..monolete._1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Pteridophyta (monolete)
+  type: string
+- column: element_Pteris_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Pteris
+  type: string
+- column: element_cf..Xiphopteris_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Xiphopteris
+  type: string
+- column: element_cf..Azolla_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Azolla
+  type: string
+- column: element_cf..Loxogramme_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: cf. Loxogramme
+  type: string
+- column: element_Typha.angustifolia_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Typha angustifolia
+  type: string
+- column: element_Typha.latifolia_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Typha latifolia
+  type: string
+- column: element_Ustulina_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Ustulina
+  type: string
+- column: element_Sordaria.type_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Sordaria-type
+  type: string
+- column: element_Gelasinospora_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Gelasinospora
+  type: string
+- column: element_Glomus_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Glomus
+  type: string
+- column: element_Citrus_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Citrus
+  type: string
+- column: element_Sporormiella_1
+  neotoma: ndb.variables.variableelementid
+  notes:
+  required:
+  rowwise: true
+  taxonname: Sporormiella
+  type: string
+- column: SiteName
+  neotoma: ndb.sites.sitename
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: SiteID
+  neotoma: ndb.sites.siteid
+  notes:
+  required:
+  rowwise: no
+  type: int
+- column: LongEast
+  neotoma: ndb.sites.geog.longitude
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: LatNorth
+  neotoma: ndb.sites.geog.latitude
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: Altitude
+  neotoma: ndb.sites.altitude
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: Area
+  neotoma: ndb.sites.area
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: Country
+  neotoma: ndb.sitegeopolitical.national_unit
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: State
+  neotoma: ndb.sitegeopolitical.subnational_unit_lv1
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: County
+  neotoma: ndb.sitegeopolitical.subnational_unit_lv2
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: SiteDescription
+  neotoma: ndb.sites.sitedescription
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: SiteNotes
+  neotoma: ndb.sites.notes
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Handle
+  neotoma: ndb.collectionunits.handle
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: CollectionName
+  neotoma: ndb.collectionunits.collunitname
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: CollectionType
+  neotoma: ndb.collectionunits.colltypeid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: CollectionDevice
+  neotoma: ndb.collectionunits.colldevice
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: CollectionDate
+  neotoma: db.collectionunits.colldate
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: CUNotes
+  neotoma: ndb.collectionunits.notes
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: DepositionalEnvironment
+  neotoma: ndb.collectionunits.depenvtid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: WaterDepth
+  neotoma: ndb.collectionunits.waterdepth
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: Location
+  neotoma: ndb.collectionunits.location
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: GPSLat
+  neotoma: ndb.collectionunits.geog.latitude
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: GPSLong
+  neotoma: ndb.collectionunits.geog.longitude
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: GPSError
+  neotoma: ndb.collectionunits.gpserror
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: GPSAltitude
+  neotoma: ndb.collectionunits.gpsaltitude
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: Substrate
+  neotoma: ndb.collectionunits.substrateid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: SlopeAngle
+  neotoma: ndb.collectionunits.slopeangle
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: SlopeAspect
+  neotoma: ndb.collectionunits.slopeaspect
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: Collectors_ID
+  neotoma: ndb.collectors.contactid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Collectors_Names
+  neotoma: ndb.collectors.contactname
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Method
+  neotoma: ndb.geochronology.geochrontypeid
+  notes:
+  required:
+  rowwise: true
+  type: string
+- column: chronmethod
+  neotoma: ndb.chroncontrols.chroncontroltypeid
+  notes:
+  required:
+  rowwise: true
+  type: string
+- column: AgeUnits_Sample
+  neotoma: ndb.chroncontrols.agetypeid
+  notes:
+  required:
+  rowwise: true
+  type: string
+- column: AgeUnits_Sample
+  neotoma: ndb.geochronology.agetypeid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: SampleAge
+  neotoma: ndb.chroncontrols.age
+  notes:
+  required:
+  rowwise: true
+  type: float
+#- column: AgeUnits_Sample
+#  neotoma: ndb.sampleages.agetype
+#  notes:
+#  required:
+#  rowwise: no
+#  type: string
+- column: geochron_depth
+  neotoma: ndb.chroncontrols.depth
+  notes:
+  required:
+  rowwise: true
+  type: float
+- column: geochron_depth
+  neotoma: ndb.analysisunits.depth
+  notes:
+  required:
+  rowwise: true
+  type: float
+- column: Thickness
+  neotoma: ndb.chroncontrols.thickness
+  notes:
+  required:
+  rowwise: true
+  type: float
+- column: LabNumber
+  neotoma: ndb.geochronology.labnumber
+  notes:
+  required:
+  rowwise: true
+  type: string
+- column: SampleAge
+  neotoma: ndb.geochronology.age
+  notes:
+  required:
+  rowwise: true
+  type: float
+- column: OlderSampleAge
+  neotoma: ndb.chroncontrols.agelimitolder
+  notes:
+  required:
+  rowwise: true
+  type: float
+- column: ErrorOlder
+  neotoma: ndb.geochronology.errorolder
+  notes:
+  required:
+  rowwise: true
+  type: float
+- column: ErrorYounger
+  neotoma: ndb.geochronology.erroryounger
+  notes:
+  required:
+  rowwise: true
+  type: float
+- column: YoungerSampleAge
+  neotoma: ndb.chroncontrols.agelimityounger
+  notes:
+  required:
+  rowwise: true
+  type: float
+- column: MaterialDated
+  neotoma: ndb.geochronology.materialdated
+  notes:
+  required:
+  rowwise: true
+  type: string
+- column: SampleNotes
+  neotoma: ndb.geochronology.notes
+  notes:
+  required:
+  rowwise: true
+  type: string
+- column: SampleNotes
+  neotoma: ndb.chroncontrols.notes
+  notes:
+  required:
+  rowwise: true
+  type: string
+- column: Investigators_geochron_neoID
+  neotoma: ndb.chronologies.contactid
+  notes:
+  required:
+  rowwise: no
+  type: string
+  chronologyname: Temoltzin-Loranca et al. (2023)
+#- column: OlderSampleAge
+#  neotoma: ndb.sampleages.ageolder
+#  notes:
+#  required:
+#  rowwise: true
+#  type: float
+- column: NeotomaContactID
+  neotoma: ndb.contacts.contactid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: NeotomaAliasID
+  neotoma: ndb.contacts.contactid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: FullContactName
+  neotoma: ndb.contacts.contactname
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: FamilyName
+  neotoma: ndb.contacts.familyname
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: GivenNames
+  neotoma: ndb.contacts.givennames
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: LeadingInitials
+  neotoma: ndb.contacts.leadinginitials
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: ContactTitle
+  neotoma: ndb.contacts.title
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Address
+  neotoma: ndb.contacts.address
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Email
+  neotoma: ndb.contacts.email
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Telephone
+  neotoma: ndb.contacts.phone
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: PublicationType
+  neotoma: ndb.publications.pubtypeid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: NeotomaID_pub
+  neotoma: ndb.publications.publicationid
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: DOI_pub
+  neotoma: ndb.publications.doi
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: PublicationYear
+  neotoma: ndb.publications.year
+  notes:
+  required:
+  rowwise: no
+  type: float
+- column: Citation
+  neotoma: ndb.publications.citation
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Title
+  neotoma: ndb.publications.articletitle
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Journal
+  neotoma: ndb.publications.journal
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Volume
+  neotoma: ndb.publications.volume
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Pages
+  neotoma: ndb.publications.pages
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: authorIDs
+  neotoma: ndb.publicationauthors.contactid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Processors_ID
+  neotoma: ndb.datasetprocessor.contactid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Investigators_ID
+  neotoma: ndb.datasetpis.contactid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Processors_Names
+  neotoma: ndb.dataprocessors.contactname
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Investigators_Names
+  neotoma: ndb.datasetpis.contactname
+  notes:
+  required:
+  rowwise: no
+  type: string
+#- column: DatasetType
+#  neotoma: ndb.datasets.datasettype
+#  notes:
+#  required:
+#  rowwise: no
+#  type: string
+- column: Name
+  neotoma: ndb.datasets.datasetname
+  notes:
+  required:
+  value: LV2 pollen
+  rowwise: no
+  type: string
+- column: ChronologyName
+  neotoma: ndb.chronologies.chronologyname
+  notes:
+  required:
+  rowwise: no
+  type: string
+  chronologyname: Temoltzin-Loranca et al. (2023)
+- column: AgeUnits
+  neotoma: ndb.chronologies.agetypeid
+  notes:
+  required:
+  rowwise: no
+  type: string
+  chronologyname: Temoltzin-Loranca et al. (2023)
+- column: Default
+  neotoma: ndb.chronologies.isdefault
+  notes:
+  required:
+  rowwise: no
+  type: string
+  chronologyname: Temoltzin-Loranca et al. (2023)
+- column: DatePrepared
+  neotoma: ndb.chronologies.dateprepared
+  notes:
+  required:
+  rowwise: no
+  type: float
+  chronologyname: Temoltzin-Loranca et al. (2023)
+- column: Model
+  neotoma: ndb.chronologies.agemodel
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Model
+  neotoma: ndb.sampleages.agemodel
+  notes:
+  required:
+  rowwise: no
+  type: string
+  chronologyname: Temoltzin-Loranca et al. (2023)
+- column: AgeBoundOlder
+  neotoma: ndb.chronologies.ageboundolder
+  notes:
+  required:
+  rowwise: no
+  type: float
+  chronologyname: Temoltzin-Loranca et al. (2023)
+- column: AgeBoundYounger
+  neotoma: ndb.chronologies.ageboundyounger
+  notes:
+  required:
+  rowwise: no
+  type: float
+  chronologyname: Temoltzin-Loranca et al. (2023)
+- column: AgeModelNotes
+  neotoma: ndb.chronologies.notes
+  notes:
+  required:
+  rowwise: no
+  type: string
+  chronologyname: Temoltzin-Loranca et al. (2023)
+- column: PreparersContactID_neo
+  neotoma: ndb.chronologies.contactid
+  notes:
+  required:
+  rowwise: no
+  type: string
+  chronologyname: Temoltzin-Loranca et al. (2023)
+#- column: Preparers_Name
+#  neotoma: ndb.chronologies.contactname
+#  notes:
+#  required:
+#  rowwise: no
+#  type: string
+#  chronologyname: Temoltzin-Loranca et al. (2023)
+- column: SampAnalyst_neoID
+  neotoma: ndb.sampleanalysts.contactid
+  notes:
+  required:
+  rowwise: no
+  type: string
+- column: Samp.Analyst
+  neotoma: ndb.sampleanalysts.contactname
+  notes:
+  required:
+  rowwise: no
+  type: string

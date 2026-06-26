@@ -80,7 +80,7 @@ for filename in filenames:
         logfile = logging_response(uploader['collunitid'], logfile)
 
         logfile.append('\n=== Inserting Collector ===')
-        uploader['collector'] = nu.insert_collector(**inputs)
+        uploader['collector'] = nu.insert_collector2(**inputs)
         logfile = logging_response(uploader['collector'], logfile)
 
         logfile.append('\n=== Inserting Analysis Units ===')
@@ -96,11 +96,11 @@ for filename in filenames:
         logfile = logging_response(uploader['datasets'], logfile)
 
         logfile.append('\n=== Inserting Dataset PI ===')
-        uploader['datasetpi'] = nu.insert_dataset_pi(**inputs)
+        uploader['datasetpi'] = nu.insert_dataset_pi2(**inputs)
         logfile = logging_response(uploader['datasetpi'], logfile)
         
         logfile.append('\n=== Inserting Data Processor ===')
-        uploader['processor'] = nu.insert_data_processor(**inputs)
+        uploader['processor'] = nu.insert_data_processor2(**inputs)
         logfile = logging_response(uploader['processor'], logfile)
 
         logfile.append('\n=== Inserting Dataset Database ===')
