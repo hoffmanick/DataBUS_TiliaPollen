@@ -4952,6 +4952,12 @@ metadata:
   required:
   rowwise: true
   type: float
+- column: SampleID
+  neotoma: _link_chroncontrol
+  link_id: chroncontrol
+  required: true
+  rowwise: true
+  type: int
 - column: OlderSampleAge
   neotoma: ndb.chroncontrols.agelimitolder
   notes:

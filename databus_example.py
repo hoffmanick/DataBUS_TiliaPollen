@@ -33,7 +33,7 @@ args = nh.parse_arguments()
 # This should be renamed to .env and updated with the appropriate database connection
 # information for your environment.
 load_dotenv()
-connection = json.loads(os.getenv("PGDB_LOCAL"))
+connection = json.loads(os.getenv("PGDB_PROD"))
 
 # Load YAML template and CSV files
 filenames = glob.glob(args["data"] + "*.csv")
